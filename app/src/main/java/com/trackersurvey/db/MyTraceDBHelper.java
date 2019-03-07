@@ -299,7 +299,7 @@ public class MyTraceDBHelper {
                 values.put(COLUMNS2[10], data.getPoiCount());
                 values.put(COLUMNS2[11], data.getSteps());
                 long row = db.update(TABLE2_NAME, values, " userID='"+userID+"'"+" and TraceID=('"+traceID+"')", null);
-                Log.i("TraceDBTrail", "updateTrail row:" + row);
+                Log.i("TraceDBTrail", "updateTrail row:" + row + " data.getDuration() : " + data.getDuration());
             }catch(SQLException e){
 
             }
@@ -308,6 +308,7 @@ public class MyTraceDBHelper {
             insertintoTrail(data);
         }
     }
+
     // 更新步数表
     public void updatesteps(StepData data, long traceID, String userID){
         if(isStepExists(traceID, userID)){
@@ -320,7 +321,7 @@ public class MyTraceDBHelper {
                 values.put(COLUMNS4[2], data.getSteps());
 
                 long row = db.update(TABLE4_NAME, values, " userID='"+userID+"'"+" and TraceID=('"+traceID+"')", null);
-                Log.i("MyTraceDB updatesteps", "step:row:"+row);
+                Log.i("MyTraceDBDupdatesteps", "step:row:"+row);
             }
             catch(SQLException e){
             }
@@ -594,9 +595,8 @@ public class MyTraceDBHelper {
         SQLiteDatabase db = dbhelper.getReadableDatabase();
         ArrayList<TraceData> datalist=new ArrayList<TraceData>();
 
-        Cursor cursor=db.query(TABLE2_NAME, null,
-
-                "  userID='"+userID+"'", null, null, null, " StartTime desc");
+        Cursor cursor=db.query(TABLE2_NAME, null, "  userID='"+userID+"'",
+                null, null, null, " StartTime desc");
         int rows=cursor.getCount();
         if(rows!=0){
             cursor.moveToFirst();
