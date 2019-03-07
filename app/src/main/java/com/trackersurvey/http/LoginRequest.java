@@ -22,6 +22,7 @@ public class LoginRequest extends HttpUtil {
 //    private String userID = "";
     private String loginName = "";
     private String password = "";
+    private String marshmallowMacAddress;
 
 //    public LoginRequest(String userID, String password, String deviceId) {
 //        this.userID = userID;
@@ -29,9 +30,10 @@ public class LoginRequest extends HttpUtil {
 //        this.deviceId = deviceId;
 //    }
 
-    public LoginRequest(String loginName, String password) {
+    public LoginRequest(String loginName, String password, String marshmallowMacAddress) {
         this.loginName = loginName;
         this.password = password;
+        this.marshmallowMacAddress = marshmallowMacAddress;
     }
 
     @Override
@@ -56,6 +58,7 @@ public class LoginRequest extends HttpUtil {
         RequestBody requestBody = new FormBody.Builder()
                 .add("loginName", loginName)
                 .add("password", password)
+                .add("macAddress", marshmallowMacAddress)
                 .build();
         return requestBody;
     }
