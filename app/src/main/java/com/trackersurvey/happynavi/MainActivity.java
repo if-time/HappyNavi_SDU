@@ -154,10 +154,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 }else {
                     transaction.show(discoverFragment);
                 }
-//                Intent refreshintent = new Intent();
-//                refreshintent.setAction(REFRESH_ACTION);
-//                Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
-//                sendBroadcast(refreshintent);
                 break;
             case 3:
                 mineImage.setImageResource(R.mipmap.mine_select);

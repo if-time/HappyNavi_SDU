@@ -162,7 +162,7 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
     private void init(){
         initLocalTrace();
         if(Common.isNetConnected){ // 有网络状态下才请求云端
-            showDialog(getResources().getString(R.string.tips_dlgtle_init), getResources().getString(R.string.tips_dlgmsg_inittracelist));
+//            showDialog(getResources().getString(R.string.tips_dlgtle_init), getResources().getString(R.string.tips_dlgmsg_inittracelist));
             initCloudTrace();
         } else {
             initBothTrace();
@@ -202,7 +202,7 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
     }
 
     private void refreshLocalTrace() {
-        helper = new MyTraceDBHelper(getContext());
+//        helper = new MyTraceDBHelper(getContext());
         trace_Local = helper.getallTrail(userID);
         steps_Local = helper.getallSteps(userID);
 
@@ -234,7 +234,7 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
                             if (trace_Cloud != null) {
                                 initBothTrace();
                             }
-                            //adapter.notifyDataSetChanged();
+                            adapter.notifyDataSetChanged();
                             mPullToRefreshView.onHeaderRefreshComplete("更新于:"+new Date().toLocaleString());
                         }
                     });

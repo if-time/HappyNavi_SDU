@@ -876,10 +876,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     //showDialog("正在请求..","请求中..请稍后....");
                     //PostStartTrail startTrailThread=new PostStartTrail(handler,URL_STARTTRAIL,Common.userId);
                     //startTrailThread.start();
-                    Intent intent = new Intent();
-                    intent.setAction(REFRESH_ACTION);
-                    Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
-                    getContext().sendBroadcast(intent);
+//                    Intent intent = new Intent();
+//                    intent.setAction(REFRESH_ACTION);
+//                    Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
+//                    getContext().sendBroadcast(intent);
                 } else {
 //                    Toast.makeText(getContext(), "取消记录", Toast.LENGTH_SHORT).show();
                 }
@@ -983,8 +983,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         if (tracedata.getSportTypes() == 1) {
             //轨迹类型为步行，记录步数
             locationService.changeSportType(true);
-            StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserId(getContext()))
-                    .getSteps();
+            StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserId(getContext())).getSteps();
             total_step = StepDetector.CURRENT_STEP;
             getActivity().startService(stepCountServiceIntent);
             iscountstep = true;
@@ -1345,7 +1344,26 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                             Log.i("mmmmmmmmmmmmmmm", "refresh traceDBHelper.updatetrail(tracedata,traceID,Common.getUserID(getContext()));");
                             Log.i("LogDemo", "轨迹表更新数据了");
                             Log.i("LogDemo", "traceData:" + GsonHelper.toJson(tracedata));
-                            traceDBHelper.updateStatus(traceID, 1, Common.getUserID(getContext()));
+
+                            String traceInfo = GsonHelper.toJson(tracedata);
+
+                            EndTraceRequest endTraceRequest = new EndTraceRequest(sp.getString("token", ""), traceInfo);
+                            endTraceRequest.requestHttpData(new ResponseData() {
+                                @Override
+                                public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
+                                    if (isSuccess) {
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+//                                                Toast.makeText(getContext(), "上传轨迹成功", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        });
+                                    } else {
+
+                                    }
+                                }});
+                            traceDBHelper.updateStatus(traceID, 2, Common.getUserID(getContext()));
                             TraceData traceListTemp = traceDBHelper.queryfromTrailbytraceID(traceID, Common.getUserID(getContext()));
                             Log.i("HomePage", "UpdateTrail:" + GsonHelper.toJson(traceListTemp));
                         }
