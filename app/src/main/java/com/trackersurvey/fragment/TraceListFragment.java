@@ -108,7 +108,8 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            init();
+                            if (!isFirstCreateAdatper)
+                                initBothTrace();
                         }
                     }).start();
                     break;
@@ -227,7 +228,7 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
     }
 
     private void refreshLocalTrace() {
-        //        helper = new MyTraceDBHelper(getContext());
+        helper = new MyTraceDBHelper(getContext());
         trace_Local = helper.getallTrail(userID);
         steps_Local = helper.getallSteps(userID);
 
@@ -281,6 +282,49 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
     }
 
     /**
+     * 实时刷新UI
+     */
+    private void refreshView() {
+        refreshLocalTrace();
+        int lastItemsSize = traceItems.size();
+        traceItems.clear();
+        ArrayList<Long> dealedTraceNo = new ArrayList<Long>();//保存已处理过的轨迹号（其实就是本地的轨迹号！）
+        for (int i = 0; i < trace_Local.size(); i++) {
+            long traceNo = trace_Local.get(i).getTraceID();
+            dealedTraceNo.add(traceNo);
+            boolean isCloud = false;
+            for (int j = 0; j < trace_Cloud.size(); j++) {
+                if (traceNo == trace_Cloud.get(j).getTraceID()) {//云端本地都有
+                    isCloud = true;
+                    break;
+                }
+            }
+            TraceListItemData item = new TraceListItemData();
+            item.setTrace(trace_Local.get(i));
+            item.setLocal(true);
+            item.setCloud(isCloud);
+            traceItems.add(item);
+        }
+
+        if (isFirstCreateAdatper) {
+            initAdapter(); //首次加载时执行
+            isFirstCreateAdatper = false;
+        } else {
+            if (lastItemsSize == traceItems.size()) {
+                // 数据数量不变，考虑正在记录时轨迹数据的刷新
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.setDataSource(traceItems, steps_Both);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }
+    }
+
+
+    /**
      * 合并云端和本地轨迹，并分析某条轨迹在本地or云端or二者都有
      */
     private void initBothTrace() {
@@ -325,15 +369,40 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
             //没有轨迹，可能原因：1、用户的轨迹都在云端，没联网，固然得不到；2、新用户，没有记录过轨迹。
             //对于这两种情况，分别显示不同的提示性文字，供用户参考
             if (!Common.isNetConnected) {//原因1
-                tv_tip.setText(getResources().getString(R.string.tips_cloudnotrace_nonet));
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv_tip.setText(getResources().getString(R.string.tips_cloudnotrace_nonet));
+                    }
+                });
+
             } else {//原因2
-                tv_tip.setText(getResources().getString(R.string.tips_localnotrace));
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv_tip.setText(getResources().getString(R.string.tips_localnotrace));
+                    }
+                });
+
             }
-            tv_tip.setVisibility(View.VISIBLE);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tv_tip.setVisibility(View.VISIBLE);
+                }
+            });
+
             return;
         } else {
-            tv_tip.setVisibility(View.INVISIBLE);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tv_tip.setVisibility(View.INVISIBLE);
+                }
+            });
+
         }
+
         //步数信息操作同上
         steps_Both.clear();
         ArrayList<Long> dealedStepsNo = new ArrayList<Long>();
@@ -360,13 +429,24 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
             isFirstCreateAdatper = false;
         } else {
             if (lastItemsSize == traceItems.size()) {//数据数量不变，考虑正在记录时轨迹数据的刷新
-                //adapter.setDataSource(traceItems, steps_Both);
-                //adapter.notifyDataSetChanged();
 
-                adapter.setDataSource(traceItems, steps_Both);
-                adapter.notifyDataSetChanged();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.setDataSource(traceItems, steps_Both);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
+
             } else {//数据数量变化，关闭菜单
-                showMenu(false, true);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showMenu(false, true);
+                    }
+                });
+
             }
         }
     }
