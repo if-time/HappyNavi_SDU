@@ -1333,6 +1333,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                 cursor.close();
                             }
 
+                            cursor = photoHelper.selectEvent(null, PhotoDBHelper.COLUMNS_UE[10] + "="
+                                    + Common.getUserId(getContext()) + " and datetime("
+                                    + PhotoDBHelper.COLUMNS_UE[0] + ") between '" + tracedata.getStartTime() +
+                                    "' and '" + tracedata.getEndTime() + "'", null, null, null, null);
+                            int poiCount = cursor.getCount();
+                            tracedata.setPoiCount(poiCount);
+
                             traceDBHelper.updatetrail(tracedata, traceID, Common.getUserID(getContext()));
 
                             String traceInfo = GsonHelper.toJson(tracedata);
