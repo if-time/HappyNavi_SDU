@@ -882,6 +882,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 //                    getContext().sendBroadcast(intent);
                 } else {
 //                    Toast.makeText(getContext(), "取消记录", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
                 }
             }
         });
@@ -1668,7 +1669,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                         arg0.dismiss();
                     }
                 });
-        builder.create().show();
+         builder.create().show();
     }
 
     private void showDlg_badloc() { //无法定位时弹出提示

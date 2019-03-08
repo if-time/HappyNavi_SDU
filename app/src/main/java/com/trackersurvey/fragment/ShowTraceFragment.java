@@ -66,25 +66,25 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 import com.trackersurvey.adapter.ListBaseAdapter3;
-import com.trackersurvey.bean.TraceLatLng;
-import com.trackersurvey.http.DeleteTraceRequest;
-import com.trackersurvey.http.DownloadPoiChoices;
-import com.trackersurvey.http.ResponseData;
-import com.trackersurvey.http.UpLoadGpsRequest;
-import com.trackersurvey.model.GpsData;
 import com.trackersurvey.bean.ListItemData;
 import com.trackersurvey.bean.PointOfInterestData;
-import com.trackersurvey.model.PoiChoiceModel;
-import com.trackersurvey.model.StepData;
-import com.trackersurvey.model.TraceData;
+import com.trackersurvey.bean.TraceLatLng;
+import com.trackersurvey.db.MyTraceDBHelper;
 import com.trackersurvey.db.PhotoDBHelper;
 import com.trackersurvey.db.PointOfInterestDBHelper;
-import com.trackersurvey.db.MyTraceDBHelper;
 import com.trackersurvey.happynavi.CommentActivity;
 import com.trackersurvey.happynavi.LoginActivity;
 import com.trackersurvey.happynavi.R;
+import com.trackersurvey.http.DeleteTraceRequest;
+import com.trackersurvey.http.DownloadPoiChoices;
 import com.trackersurvey.http.DownloadTraceDetailRequest;
+import com.trackersurvey.http.ResponseData;
+import com.trackersurvey.http.UpLoadGpsRequest;
+import com.trackersurvey.model.GpsData;
 import com.trackersurvey.model.MyCommentModel;
+import com.trackersurvey.model.PoiChoiceModel;
+import com.trackersurvey.model.StepData;
+import com.trackersurvey.model.TraceData;
 import com.trackersurvey.photoview.SlideListView;
 import com.trackersurvey.service.CommentUploadService;
 import com.trackersurvey.util.AMapUtil;
@@ -479,27 +479,34 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addmark:
-                markLatLng = new LatLng(tracePoints.get(praseProgressToPosition(currentProgress)).getLatLng().latitude,
-                        tracePoints.get(praseProgressToPosition(currentProgress)).getLatLng().longitude);
-                //                markLatLonPoint = new LatLonPoint(markLatLng.latitude, markLatLng.longitude);
-                //                RegeocodeQuery regeocodeQuery = new RegeocodeQuery(markLatLonPoint, 500f, GeocodeSearch.AMAP);
-                //                geocodeSearch = new GeocodeSearch(getContext());
-                //                geocodeSearch.setOnGeocodeSearchListener(this);
-                //从POI数据库中取数据
-                ArrayList<String> behaviour = helper2.getBehaviour();
-                ArrayList<String> duration = helper2.getDuration();
-                ArrayList<String> partnerNum = helper2.getPartnerNum();
-                ArrayList<String> relation = helper2.getRelation();
-                //Log.i("duration", duration.toString());
-                Intent intent = new Intent();
-                intent.setClass(context, CommentActivity.class);
-                intent.putExtra("martLatLng", markLatLng);
-                intent.putExtra("longitude", markLatLng.longitude);
-                intent.putExtra("latitude", markLatLng.latitude);
-                intent.putExtra("altitude", traces.get(praseProgressToPosition(currentProgress)).getAltitude());
-                intent.putExtra("placeName", "");
-                intent.putExtra("createTime", traces.get(praseProgressToPosition(currentProgress)).getCreateTime());
-                intent.putExtra("traceID", traces.get(praseProgressToPosition(currentProgress)).getTraceID());
+
+
+                if (tracePoints.size()==0){
+
+                }else {
+                    markLatLng = new LatLng(tracePoints.get(praseProgressToPosition(currentProgress)).getLatLng().latitude,
+                            tracePoints.get(praseProgressToPosition(currentProgress)).getLatLng().longitude);
+//                markLatLonPoint = new LatLonPoint(markLatLng.latitude, markLatLng.longitude);
+//                RegeocodeQuery regeocodeQuery = new RegeocodeQuery(markLatLonPoint, 500f, GeocodeSearch.AMAP);
+//                geocodeSearch = new GeocodeSearch(getContext());
+//                geocodeSearch.setOnGeocodeSearchListener(this);
+                    //从POI数据库中取数据
+                    ArrayList<String> behaviour = helper2.getBehaviour();
+                    ArrayList<String> duration = helper2.getDuration();
+                    ArrayList<String> partnerNum = helper2.getPartnerNum();
+                    ArrayList<String> relation = helper2.getRelation();
+                    //Log.i("duration", duration.toString());
+                    Intent intent = new Intent();
+                    intent.setClass(context, CommentActivity.class);
+                    intent.putExtra("martLatLng", markLatLng);
+//                double longitude = markLatLng.longitude;
+                    intent.putExtra("longitude", markLatLng.longitude);
+                    intent.putExtra("latitude", markLatLng.latitude);
+                    intent.putExtra("altitude", traces.get(praseProgressToPosition(currentProgress)).getAltitude());
+                    intent.putExtra("placeName", "");
+                    intent.putExtra("createTime", traces.get(praseProgressToPosition(currentProgress)).getCreateTime());
+                    intent.putExtra("traceID", traces.get(praseProgressToPosition(currentProgress)).getTraceID());
+
 
 			/*Resources r = context.getApplicationContext().getResources();
 			Uri uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE+"://"
@@ -509,17 +516,19 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
 			String a = uri.toString();
 			Log.i("1005", a);*/
 
-                //传递POI数据（字符串数组）到添加兴趣点页面
-                try {
-                    intent.putStringArrayListExtra("behaviour", behaviour);
-                    intent.putStringArrayListExtra("duration", duration);
-                    intent.putStringArrayListExtra("partnerNum", partnerNum);
-                    intent.putStringArrayListExtra("relation", relation);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    //传递POI数据（字符串数组）到添加兴趣点页面
+                    try {
+                        intent.putStringArrayListExtra("behaviour", behaviour);
+                        intent.putStringArrayListExtra("duration", duration);
+                        intent.putStringArrayListExtra("partnerNum", partnerNum);
+                        intent.putStringArrayListExtra("relation", relation);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("///", "onClick: " + e);
+                    }
+                    startActivityForResult(intent, REQUESTMARK);
                 }
-                startActivityForResult(intent, REQUESTMARK);
-
+                ToastUtil.show(context,"暂无轨迹");
                 break;
             case R.id.checktraceinfo:
                 if (mPopupWindow == null) {
@@ -1289,6 +1298,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
         }
         // Log.i("mark","progress = "+progress+ ",current pos = "+position);
         return position;
+
     }
 
     @Override

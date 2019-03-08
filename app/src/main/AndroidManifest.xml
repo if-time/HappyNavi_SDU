@@ -118,7 +118,9 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             ></activity>
 
-        <activity android:name=".CommentActivity" />
+        <activity android:name=".CommentActivity"
+            android:windowSoftInputMode="stateHidden"
+            />
         <activity android:name=".BGRunningGuideActivity" />
         <activity android:name=".PictureBrowserActivity" />
         <activity android:name=".SelectedPictureActivity" />
