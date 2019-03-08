@@ -306,7 +306,6 @@ public class ListBaseAdapter extends BaseAdapter {
 
         // 用户事件文件
         CommentMediaFilesData imageUrls[] = itemEntity.getFiles();
-        Log.i("dongsiyuanimageUrls", "getView: " + imageUrls.length + " imageUrls: " + imageUrls[0].toString() );
         ArrayList<HashMap<String, String>> imageItems = new ArrayList<HashMap<String, String>>();
         holder.gridview.setVisibility(View.VISIBLE);
         if (imageUrls == null || imageUrls.length == 0) { // 没有图片资源就隐藏GridView

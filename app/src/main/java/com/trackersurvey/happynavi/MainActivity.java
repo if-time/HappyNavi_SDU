@@ -131,6 +131,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 }
                 break;
             case 1:
+                Intent intent = new Intent();
+                intent.setAction(REFRESH_ACTION);
+                Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
+                sendBroadcast(intent);
                 shareImage.setImageResource(R.mipmap.share_select);
                 shareText.setTextColor(Color.parseColor("#1296DB"));
                 if(shareFragment == null){
@@ -139,6 +143,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 }else {
                     transaction.show(shareFragment);
                 }
+
                 break;
             case 2:
                 discoverImage.setImageResource(R.mipmap.discover_select);
@@ -149,10 +154,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 }else {
                     transaction.show(discoverFragment);
                 }
-                Intent intent = new Intent();
-                intent.setAction(REFRESH_ACTION);
-                Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
-                sendBroadcast(intent);
                 break;
             case 3:
                 mineImage.setImageResource(R.mipmap.mine_select);

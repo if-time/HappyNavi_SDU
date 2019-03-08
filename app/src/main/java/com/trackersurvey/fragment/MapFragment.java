@@ -101,6 +101,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -875,10 +876,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     //showDialog("正在请求..","请求中..请稍后....");
                     //PostStartTrail startTrailThread=new PostStartTrail(handler,URL_STARTTRAIL,Common.userId);
                     //startTrailThread.start();
-                    Intent intent = new Intent();
-                    intent.setAction(REFRESH_ACTION);
-                    Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
-                    getContext().sendBroadcast(intent);
+//                    Intent intent = new Intent();
+//                    intent.setAction(REFRESH_ACTION);
+//                    Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
+//                    getContext().sendBroadcast(intent);
                 } else {
 //                    Toast.makeText(getContext(), "取消记录", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
@@ -911,11 +912,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 
         // 先上传一次轨迹信息，获取轨迹号，在service中更改轨迹号。、
         Log.i("mmmmmmmmmmmmmmm", "请求接口获取轨迹号");
-        StartTraceRequest startTraceRequest = new StartTraceRequest(sp.getString("token", ""),
-                tracedata.getTraceName(), tracedata.getStartTime(), String.valueOf(tracedata.getSportTypes()));
-        startTraceRequest.requestHttpData(new ResponseData() {
-            @Override
-            public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
+                StartTraceRequest startTraceRequest = new StartTraceRequest(sp.getString("token", ""),
+                        tracedata.getTraceName(), tracedata.getStartTime(), String.valueOf(tracedata.getSportTypes()));
+                startTraceRequest.requestHttpData(new ResponseData() {
+                    @Override
+                    public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
                 if (isSuccess) {
                     if (code.equals("0")) {
                         try {
@@ -983,8 +984,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         if (tracedata.getSportTypes() == 1) {
             //轨迹类型为步行，记录步数
             locationService.changeSportType(true);
-            StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserId(getContext()))
-                    .getSteps();
+            StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserId(getContext())).getSteps();
             total_step = StepDetector.CURRENT_STEP;
             getActivity().startService(stepCountServiceIntent);
             iscountstep = true;
@@ -1161,6 +1161,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 }
             }
             tracedata.setDistance(distance);
+            Log.i("dongiyuansetDuration", "duration: " + duration + " distance: " + distance);
             if (tracedata.getSportTypes() == 1) {
                 stepdata.setSteps(total_step);
                 traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
@@ -1170,12 +1171,12 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             }
             if (tracedata.getSportTypes() == 2) {
                 tracedata.setCalorie(calculateCalorie_Ride(distance, duration));
-
             }
             PhotoDBHelper photoHelper = new PhotoDBHelper(getContext(), PhotoDBHelper.DBREAD);
             if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
+
             cursor = photoHelper.selectEvent(null, PhotoDBHelper.COLUMNS_UE[10] + "="
                     + Common.getUserId(getContext()) + " and datetime("
                     + PhotoDBHelper.COLUMNS_UE[0] + ") between '" + tracedata.getStartTime() +
@@ -1296,6 +1297,78 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     if (tracedata.getSportTypes() == 1) {
                         stepdata.setSteps(total_step);
                         traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
+                        Log.i("MyTraceDBDupdatesteps", "step:row:"+ traceDBHelper);
+
+                        tracegps = traceDBHelper.queryfromGpsbytraceID(traceID, Common.getUserID(getContext()));
+                        Log.i("LogDemo", "tracegps coontent:" + GsonHelper.toJson(tracedata));
+                        Log.i("LogDemo", "tracegps size:" + tracegps.size());
+                        if (tracegps.size() > 0) {
+                            tracedata.setEndTime(Common.currentTime());
+                            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            long duration = 0;
+                           //计算时间差
+                            Date d1 = null;
+                            try {
+                                d1 = df.parse(tracedata.getStartTime());
+                                Date d2 = df.parse(tracedata.getEndTime());
+                                duration = d2.getTime() - d1.getTime();
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            tracedata.setDuration(duration);
+                            //计算距离
+                            double distance = 0.0;
+                            if (tracegps.size() > 1) {
+                                for (int i = 0; i < tracegps.size() - 1; i++) {
+                                    distance += AMapUtils.calculateLineDistance(new LatLng(tracegps.get(i).getLatitude(),
+                                                    tracegps.get(i).getLongitude()),
+                                            new LatLng(tracegps.get(i + 1).getLatitude(), tracegps.get(i + 1).getLongitude()));
+                                }
+                            }
+                            tracedata.setDistance(distance);
+                            Log.i("dongiyuansetDuration1", "duration: " + duration + " distance: " + distance);
+
+                            PhotoDBHelper photoHelper = new PhotoDBHelper(getContext(), PhotoDBHelper.DBREAD);
+                            if (cursor != null && !cursor.isClosed()) {
+                                cursor.close();
+                            }
+
+                            cursor = photoHelper.selectEvent(null, PhotoDBHelper.COLUMNS_UE[10] + "="
+                                    + Common.getUserId(getContext()) + " and datetime("
+                                    + PhotoDBHelper.COLUMNS_UE[0] + ") between '" + tracedata.getStartTime() +
+                                    "' and '" + tracedata.getEndTime() + "'", null, null, null, null);
+                            int poiCount = cursor.getCount();
+                            tracedata.setPoiCount(poiCount);
+                            Log.i("mmmmmmmmmmmmmmm", "traceID:" + traceID);
+                            Log.i("mmmmmmmmmmmmmmm", "本地插入了一条轨迹");
+                            traceDBHelper.updatetrail(tracedata, traceID, Common.getUserID(getContext()));
+                            Log.i("mmmmmmmmmmmmmmm", "refresh traceDBHelper.updatetrail(tracedata,traceID,Common.getUserID(getContext()));");
+                            Log.i("LogDemo", "轨迹表更新数据了");
+                            Log.i("LogDemo", "traceData:" + GsonHelper.toJson(tracedata));
+
+                            String traceInfo = GsonHelper.toJson(tracedata);
+
+                            EndTraceRequest endTraceRequest = new EndTraceRequest(sp.getString("token", ""), traceInfo);
+                            endTraceRequest.requestHttpData(new ResponseData() {
+                                @Override
+                                public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
+                                    if (isSuccess) {
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+//                                                Toast.makeText(getContext(), "上传轨迹成功", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                }});
+                            traceDBHelper.updateStatus(traceID, 2, Common.getUserID(getContext()));
+                            TraceData traceListTemp = traceDBHelper.queryfromTrailbytraceID(traceID, Common.getUserID(getContext()));
+                            Log.i("HomePage", "UpdateTrail:" + GsonHelper.toJson(traceListTemp));
+                        }
+//                        Intent refreshintent = new Intent();
+//                        refreshintent.setAction(REFRESH_ACTION);
+//                        Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
+//                        getContext().sendBroadcast(refreshintent);
                     }
                     break;
                 case 10:

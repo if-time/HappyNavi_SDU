@@ -484,6 +484,8 @@
     <string name="close">close </string>
         
     <string name="idpwdcannotnull"> account password can not be empty </string>
+
+    <string name="marshmallowMacAddresserror">Unable to get the MAC address, please open WI-FI to log in again.</string>
         
     <string name="tips_dlgtle_login">Logging in</string>
         

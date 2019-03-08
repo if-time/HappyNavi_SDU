@@ -68,6 +68,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     long lastClick; //用户上次单击时间
     private ProgressDialog proDialog = null;
     public static String token = "";
+    private String marshmallowMacAddress = "02:00:00:00:00:00";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,6 +178,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         }
         login_url = Common.url + "userLogin.aspx";
         register_information_url = Common.url + "reqRegInfo.aspx";
+
+        Common.getAdresseMAC(LoginActivity.this);
+        Log.i("dongiydangetAdresseMAC", "onCreate: " + Common.getAdresseMAC(LoginActivity.this));
     }
 
     @Override
@@ -185,6 +189,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
             case R.id.btn_login:
 //                Intent intentM = new Intent(LoginActivity.this, MainActivity.class);
 //                startActivity(intentM);
+
+                marshmallowMacAddress = Common.getAdresseMAC(LoginActivity.this);
+                Log.i("dongiydangetAdresseMAC", "onCreate: " + Common.getAdresseMAC(LoginActivity.this) +
+                        " marshmallowMacAddress: " + marshmallowMacAddress);
+
                 login(); // 新接口
                 // submit(); // 旧接口
                 break;
@@ -201,7 +210,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         String pwdMD5 = MD5Util.string2MD5(pwd);
 //        String pwdSHA1 = HMAC_SHA1_Util.genHMAC(pwd, );
         if (uid.equals("") || pwd.equals("")) {
-            Toast.makeText(this,getResources().getString(R.string.idpwdcannotnull), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.idpwdcannotnull), Toast.LENGTH_SHORT).show();
+        } else if (marshmallowMacAddress.equals("02:00:00:00:00:00")){
+            Toast.makeText(this, getResources().getString(R.string.marshmallowMacAddresserror), Toast.LENGTH_SHORT).show();
         }else {
             //获取到一个参数文件编辑器
             SharedPreferences.Editor editor = sp.edit();
@@ -218,7 +229,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                 showDialog(getResources().getString(R.string.tips_dlgtle_login),
                         getResources().getString(R.string.tips_dlgmsg_login));
                 // 调用登录接口
-                LoginRequest loginRequest = new LoginRequest(uid, pwd.toUpperCase());
+                LoginRequest loginRequest = new LoginRequest(uid, pwd.toUpperCase(), marshmallowMacAddress);
                 loginRequest.requestHttpData(new ResponseData() {
                     @Override
                     public void onResponseData(boolean isSuccess, String code, Object responseObject, final String msg) throws IOException {

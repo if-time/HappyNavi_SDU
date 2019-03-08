@@ -244,6 +244,7 @@
     <string name="tips_pwdtiperrpor">验证失败：密码提示信息不正确</string>
     <string name="close">关闭</string>
     <string name="idpwdcannotnull">账号密码不能为空</string>
+    <string name="marshmallowMacAddresserror">无法获取MAC地址，请打开WI-FI重新登录</string>
     <string name="tips_dlgtle_login">正在登录</string>
     <string name="tips_dlgmsg_login">连接中..请稍后....</string>
     <string name="tips_dlgmsg_init">加载中，请稍后</string>
