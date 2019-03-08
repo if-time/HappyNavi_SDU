@@ -56,8 +56,8 @@
 
         <ImageButton
             android:id="@+id/imgbtn_endtrail"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@mipmap/ic_stop"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
