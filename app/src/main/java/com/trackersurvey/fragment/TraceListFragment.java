@@ -108,8 +108,7 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-
-                                initBothTrace();
+                            init();
                         }
                     }).start();
                     break;
