@@ -1356,11 +1356,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                             @Override
                                             public void run() {
 //                                                Toast.makeText(getContext(), "上传轨迹成功", Toast.LENGTH_SHORT).show();
-
                                             }
                                         });
-                                    } else {
-
                                     }
                                 }});
                             traceDBHelper.updateStatus(traceID, 2, Common.getUserID(getContext()));
