@@ -185,6 +185,7 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
     }
 
     private void init() {
+//        helper = new MyTraceDBHelper(getContext());
         initLocalTrace();
         if (Common.isNetConnected) { // 有网络状态下才请求云端
             //            showDialog(getResources().getString(R.string.tips_dlgtle_init), getResources().getString(R.string.tips_dlgmsg_inittracelist));
@@ -279,7 +280,7 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
         });
 
     }
-    
+
     /**
      * 合并云端和本地轨迹，并分析某条轨迹在本地or云端or二者都有
      */
