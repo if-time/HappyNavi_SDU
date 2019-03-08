@@ -279,50 +279,7 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
         });
 
     }
-
-    /**
-     * 实时刷新UI
-     */
-    private void refreshView() {
-        refreshLocalTrace();
-        int lastItemsSize = traceItems.size();
-        traceItems.clear();
-        ArrayList<Long> dealedTraceNo = new ArrayList<Long>();//保存已处理过的轨迹号（其实就是本地的轨迹号！）
-        for (int i = 0; i < trace_Local.size(); i++) {
-            long traceNo = trace_Local.get(i).getTraceID();
-            dealedTraceNo.add(traceNo);
-            boolean isCloud = false;
-            for (int j = 0; j < trace_Cloud.size(); j++) {
-                if (traceNo == trace_Cloud.get(j).getTraceID()) {//云端本地都有
-                    isCloud = true;
-                    break;
-                }
-            }
-            TraceListItemData item = new TraceListItemData();
-            item.setTrace(trace_Local.get(i));
-            item.setLocal(true);
-            item.setCloud(isCloud);
-            traceItems.add(item);
-        }
-
-        if (isFirstCreateAdatper) {
-            initAdapter(); //首次加载时执行
-            isFirstCreateAdatper = false;
-        } else {
-            if (lastItemsSize == traceItems.size()) {
-                // 数据数量不变，考虑正在记录时轨迹数据的刷新
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.setDataSource(traceItems, steps_Both);
-                        adapter.notifyDataSetChanged();
-                    }
-                });
-            }
-        }
-    }
-
-
+    
     /**
      * 合并云端和本地轨迹，并分析某条轨迹在本地or云端or二者都有
      */
