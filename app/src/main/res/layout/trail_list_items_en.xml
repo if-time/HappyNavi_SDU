@@ -27,7 +27,7 @@
 			android:layout_height="wrap_content"
 			android:text="@string/testtrace"
 			android:textSize="18sp"
-			android:textColor="#000000"
+			android:textColor="@color/black"
 			android:singleLine="true" />
 	</LinearLayout>
 	<ImageView
@@ -63,7 +63,7 @@
 			android:layout_height="wrap_content"
 			android:text="@string/start_time"
 			android:textSize="15sp"
-			android:textColor="#000000"
+			android:textColor="#ff666666"
 			android:layout_marginTop="5dp" />
 		<TextView
 			android:id="@+id/start_time_tv"
@@ -76,7 +76,7 @@
 			android:layout_weight="3"
 			android:singleLine="true"
 			android:textSize="15sp"
-			android:textColor="#000000" />
+			android:textColor="#ff666666" />
 		<TextView
 			android:id="@+id/distance_label_tv"
 			android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
 			android:layout_below="@id/time_label_tv"
 			android:text="@string/distance_label"
 			android:textSize="15sp"
-			android:textColor="#000000" />
+			android:textColor="#ff666666" />
 		<TextView
 			android:id="@+id/distance_tv"
 			android:layout_width="wrap_content"
@@ -94,7 +94,7 @@
 			android:layout_marginLeft="5dp"
 			android:text="@string/distance"
 			android:textSize="15sp"
-			android:textColor="#000000" />
+			android:textColor="#ff666666" />
 
 		<TextView
 			android:id="@+id/duration_label_tv"
@@ -105,7 +105,7 @@
 			android:layout_marginLeft="5dp"
 			android:text="@string/duration_label"
 			android:textSize="15sp"
-			android:textColor="#000000" />
+			android:textColor="#ff666666" />
 		<TextView
 			android:id="@+id/duration_tv"
 			android:layout_width="wrap_content"
@@ -116,7 +116,7 @@
 			android:text="@string/time_value"
 			android:singleLine="true"
 			android:textSize="15sp"
-			android:textColor="#000000" />
+			android:textColor="#ff666666" />
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="8dp"
@@ -127,14 +127,14 @@
 			android:layout_height="wrap_content"
 			android:text="@string/interest_point"
 			android:textSize="15sp"
-			android:textColor="#000000"
+			android:textColor="#ff666666"
 			android:layout_below="@id/duration_tv"/>
 		<TextView
 			android:id="@+id/poi_num_tv"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textSize="15sp"
-			android:textColor="#000000"
+			android:textColor="#ff666666"
 			android:layout_below="@id/duration_tv"
 			android:layout_toRightOf="@id/poi_label_tv"
 			android:layout_marginLeft="5dp" />

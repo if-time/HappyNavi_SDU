@@ -4,11 +4,30 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/relativelayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        >
+
+        <TextView
+            android:id="@+id/tv_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/blue"
+            android:textColor="#FFFFFF"
+            android:gravity="left"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/relativelayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="19dp">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <com.amap.api.maps.MapView
             android:id="@+id/map"
@@ -37,8 +56,8 @@
 
         <ImageButton
             android:id="@+id/imgbtn_endtrail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@mipmap/ic_stop"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
@@ -64,24 +83,6 @@
             android:textSize="20sp"
             android:textColor="@color/black"
             android:visibility="gone"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/relativelayout3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        >
-
-        <TextView
-            android:id="@+id/tv_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/blue"
-            android:textColor="#FFFFFF"
-            android:gravity="left"
-            />
 
     </RelativeLayout>
 

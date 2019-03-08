@@ -8,6 +8,10 @@
     tools:ignore="MergeRootFrame"
     android:background="#FFFFFF">
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></LinearLayout>
     <!-- 底部按钮 -->
 
     <RelativeLayout
@@ -19,6 +23,7 @@
         android:gravity="center" >
 
         <ImageView
+            android:visibility="visible"
             android:id="@+id/comment_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,11 +69,10 @@
             <EditText
                 android:id="@+id/editComment"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="150dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="2dp"
-                android:layout_weight="4.7"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:gravity="top|left"
@@ -76,7 +80,7 @@
                 android:hint="@string/saysomethint"
                 android:maxLength="500"
                 android:textColor="#000000"
-                android:textSize="20dp" />
+                android:textSize="16dp" />
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -169,6 +173,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/duration"
+                    android:textColor="@color/black"
                     android:textSize="16dp"
                     android:layout_toRightOf="@id/drop_down_list_view_behaviour"
                     android:layout_below="@id/mood_label"
@@ -272,6 +277,7 @@
             </GridView>
 
             <RelativeLayout
+                android:visibility="invisible"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="#FFFFFF"

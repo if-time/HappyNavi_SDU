@@ -3,7 +3,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,28 +20,40 @@
     </RelativeLayout>
 
     <RelativeLayout
+
+        android:background="@drawable/beijing"
         android:id="@+id/user_info_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:orientation="horizontal" >
+        android:layout_height="183dp"
 
-        <com.trackersurvey.util.RoundImageView
+         >
+
+        <com.trackersurvey.util.CircleImageView
             android:id="@+id/mine_mian_img"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="start"
-            android:layout_marginStart="20dip"
-            android:layout_marginLeft="20dp" />
+
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/head"
+            app:border_width="0dp"
+          />
+        <LinearLayout
+            android:id="@+id/id1"
+           android:gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/mine_mian_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <TextView
+            android:visibility="gone"
             android:id="@+id/lable_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/mine_mian_img"
             android:layout_toRightOf="@id/mine_mian_img"
             android:textSize="18sp"
-            android:textColor="#000000"
+            android:textColor="#ffffff"
             android:padding="5dp"
             android:text="@string/nickname" />
         <TextView
@@ -48,43 +61,44 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:text="--"
+            android:text="  "
             android:layout_toEndOf="@id/lable_nickname"
             android:layout_toRightOf="@id/lable_nickname"
             android:layout_alignBottom="@id/lable_nickname"
             android:textSize="18sp"
-            android:textColor="#000000"
+            android:textColor="#fff"
             android:padding="5dp"
             />
+        </LinearLayout>
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/id1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <TextView
+            android:visibility="gone"
             android:id="@+id/lable_userId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/mine_mian_img"
-            android:layout_toRightOf="@id/mine_mian_img"
-            android:layout_below="@id/lable_nickname"
-            android:textSize="18sp"
-            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textColor="#fff"
             android:padding="5dp"
             android:text="@string/idlable_div" />
         <TextView
             android:id="@+id/mine_mobilePhone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:text="--"
-            android:layout_toEndOf="@id/lable_userId"
-            android:layout_toRightOf="@id/lable_userId"
-            android:layout_below="@id/mine_nickname"
-            android:layout_alignLeft="@id/mine_nickname"
-
-            android:textSize="18sp"
-            android:textColor="#000000"
+            android:text="  "
+            android:textSize="16sp"
+            android:textColor="#fff"
             android:padding="5dp"
             />
+        </LinearLayout>
     </RelativeLayout>
 
     <TextView
+        android:visibility="gone"
         android:id="@+id/dividertxt"
         android:layout_width="fill_parent"
         android:layout_height="20dip"
@@ -145,6 +159,7 @@
                 android:layout_marginLeft="20dp"/>
         </LinearLayout>-->
         <TextView
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="0.1dp"
             android:background="@color/gray_b"
@@ -157,21 +172,25 @@
             android:layout_height="43dp"
             android:background="@drawable/bg_mine_layout_press">
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="29dp"
+                android:layout_height="29dp"
                 android:src="@mipmap/ic_mine_group"
                 android:layout_gravity="center"
                 android:layout_marginLeft="30dp"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/mine_group"
-                android:textSize="18sp"
-                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textColor="#333333"
                 android:layout_gravity="center"
-                android:layout_marginLeft="20dp"/>
+                android:layout_marginLeft="20dp"
+                android:id="@+id/textView" />
+
         </LinearLayout>
         <TextView
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="0.1dp"
             android:background="@color/gray_b"
@@ -199,6 +218,7 @@
                 android:layout_marginLeft="20dp"/>
         </LinearLayout>-->
         <TextView
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="0.1dp"
             android:background="@color/gray_b"
@@ -226,6 +246,7 @@
                 android:layout_marginLeft="20dp"/>
         </LinearLayout>-->
         <TextView
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="0.1dp"
             android:background="@color/gray_b"
@@ -253,6 +274,7 @@
                 android:layout_marginLeft="20dp"/>
         </LinearLayout>-->
         <TextView
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="0.1dp"
             android:background="@color/gray_b"
@@ -260,13 +282,14 @@
             android:layout_marginRight="35dp"/>
 
         <LinearLayout
+            android:layout_marginTop="2dp"
             android:id="@+id/my_setting_layout"
             android:layout_width="match_parent"
             android:layout_height="43dp"
             android:background="@drawable/bg_mine_layout_press">
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="29dp"
+                android:layout_height="29dp"
                 android:src="@mipmap/ic_mine_setting"
                 android:layout_gravity="center"
                 android:layout_marginLeft="30dp"/>
@@ -274,12 +297,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/mine_setting"
-                android:textSize="18sp"
-                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textColor="#333333"
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"/>
         </LinearLayout>
         <TextView
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="0.1dp"
             android:background="@color/gray_b"
@@ -287,23 +311,27 @@
             android:layout_marginRight="35dp"/>
 
         <LinearLayout
+            android:layout_marginTop="2dp"
             android:id="@+id/ll_exit_app"
             android:layout_width="match_parent"
             android:layout_height="43dp"
             android:background="@drawable/bg_mine_layout_press"
             >
+
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="29dp"
+                android:layout_height="29dp"
                 android:src="@mipmap/ic_exit_app"
                 android:layout_gravity="center"
-                android:layout_marginLeft="30dp"/>
+                android:layout_marginLeft="30dp"
+                android:id="@+id/imageView" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/exit_app"
-                android:textSize="18sp"
-                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textColor="#333333"
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"/>
         </LinearLayout>
@@ -330,6 +358,7 @@
                 android:layout_marginLeft="20dp"/>
         </LinearLayout>
         <TextView
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="0.1dp"
             android:background="@color/gray_b"

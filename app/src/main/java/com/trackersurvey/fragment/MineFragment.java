@@ -25,9 +25,9 @@ import com.trackersurvey.http.ResponseData;
 import com.trackersurvey.http.TestRequest;
 import com.trackersurvey.service.LocationService;
 import com.trackersurvey.util.AppManager;
+import com.trackersurvey.util.CircleImageView;
 import com.trackersurvey.util.Common;
 import com.trackersurvey.util.CustomDialog;
-import com.trackersurvey.util.RoundImageView;
 
 import java.io.IOException;
 
@@ -39,7 +39,7 @@ import java.io.IOException;
 public class MineFragment extends Fragment implements View.OnClickListener {
 
     private SharedPreferences sp;
-    private RoundImageView    headImg;
+    private CircleImageView headImg;
     private TextView          nickNameTv;
     private TextView          mobilePhoneTv;
 
@@ -48,14 +48,20 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View meLayout = inflater.inflate(R.layout.fragment_mine, container, false);
         sp = getActivity().getSharedPreferences("config", Context.MODE_PRIVATE);
-        headImg = (RoundImageView) meLayout.findViewById(R.id.mine_mian_img);
+        headImg = (CircleImageView) meLayout.findViewById(R.id.mine_mian_img);
         Glide.with(this).load("http://211.87.227.204:8089"
                 + sp.getString("headurl", "") + "?token="
                 + sp.getString("token", "")).into(headImg);
         nickNameTv = (TextView) meLayout.findViewById(R.id.mine_nickname);
-        nickNameTv.setText(sp.getString("nickname", ""));
+        String nickname = sp.getString("nickname", "");
+
+        if (nickname==null||nickname.equals("")){
+
+        }else {
+            nickNameTv.setText("昵称：" + sp.getString("nickname", ""));
+        }
         mobilePhoneTv = (TextView) meLayout.findViewById(R.id.mine_mobilePhone);
-        mobilePhoneTv.setText(sp.getString("mobilePhone", ""));
+        mobilePhoneTv.setText("账号："+sp.getString("mobilePhone", ""));
         RelativeLayout userInfoLayout = (RelativeLayout) meLayout.findViewById(R.id.user_info_layout);
         LinearLayout myAlbumLayout = (LinearLayout) meLayout.findViewById(R.id.my_album_layout); // 我的相册
         LinearLayout myGroupLayout = (LinearLayout) meLayout.findViewById(R.id.my_group_layout); // 我的群组
@@ -145,7 +151,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         Glide.with(this).load("http://211.87.227.204:8089"
                 + sp.getString("headurl", "") + "?token="
                 + sp.getString("token", "")).into(headImg);
-        nickNameTv.setText(sp.getString("nickname", ""));
-        mobilePhoneTv.setText(sp.getString("mobilePhone", ""));
+        nickNameTv.setText("昵称："+sp.getString("nickname", ""));
+        mobilePhoneTv.setText("账号："+sp.getString("mobilePhone", ""));
     }
 }
