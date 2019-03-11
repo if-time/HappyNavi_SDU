@@ -63,7 +63,6 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
 
     public static final int MSG_ONE = 1;
 
-
     private View                                      traceListLayout;
     //private RecyclerView traceListRv;
     private ListView                                  traceList;
@@ -108,7 +107,7 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            init();
+//                            init();
                         }
                     }).start();
                     break;
@@ -180,11 +179,12 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
         deviceID = Common.getDeviceId(getContext());
         init();
 
-        new TimeThread().start();
+//        new TimeThread().start();
         return traceListLayout;
     }
 
     private void init() {
+//        helper = new MyTraceDBHelper(getContext());
         initLocalTrace();
         if (Common.isNetConnected) { // 有网络状态下才请求云端
             //            showDialog(getResources().getString(R.string.tips_dlgtle_init), getResources().getString(R.string.tips_dlgmsg_inittracelist));
@@ -227,24 +227,25 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
     }
 
     private void refreshLocalTrace() {
-        //        helper = new MyTraceDBHelper(getContext());
+//        helper = new MyTraceDBHelper(getContext());
         trace_Local = helper.getallTrail(userID);
         steps_Local = helper.getallSteps(userID);
 
     }
 
+
     private void initCloudTrace() {
 
         // 测试请求轨迹列表
-        Log.i("HttpUtilTraceList", "token:" + sp.getString("token", ""));
-        DownLoadTraceList downLoadTraceList = new DownLoadTraceList(sp.getString("token", ""),
+        Log.i("HttpUtilTraceList", "token:" + sp.getString("token",""));
+        DownLoadTraceList downLoadTraceList = new DownLoadTraceList(sp.getString("token",""),
                 String.valueOf(1), String.valueOf(100));
         downLoadTraceList.requestHttpData(new ResponseData() {
             @Override
             public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
                 if (isSuccess) {
                     trace_Cloud = (ArrayList<TraceData>) responseObject;
-//                    Log.i("TraceListActivity", "请求到的轨迹条数：" + trace_Cloud.size());
+
                     for (int i = 0; i < trace_Cloud.size(); i++) {
                         StepData stepData = new StepData();
                         stepData.setUserID(trace_Cloud.get(i).getUserID());
@@ -260,8 +261,8 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
                             if (trace_Cloud != null) {
                                 initBothTrace();
                             }
-                            adapter.notifyDataSetChanged();
-                            mPullToRefreshView.onHeaderRefreshComplete("更新于:" + new Date().toLocaleString());
+                            //adapter.notifyDataSetChanged();
+                            mPullToRefreshView.onHeaderRefreshComplete("更新于:"+new Date().toLocaleString());
                         }
                     });
                 } else {
@@ -271,13 +272,12 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
                             dismissDialog();
                             initBothTrace();
                             mPullToRefreshView.onHeaderRefreshComplete("更新失败，请稍后再试");
-                            Toast.makeText(getContext(), R.string.tips_postfail, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(),R.string.tips_postfail, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
             }
         });
-
     }
 
     /**
@@ -287,12 +287,12 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
         int lastItemsSize = traceItems.size();
         traceItems.clear();
         ArrayList<Long> dealedTraceNo = new ArrayList<Long>();//保存已处理过的轨迹号（其实就是本地的轨迹号！）
-        for (int i = 0; i < trace_Local.size(); i++) {
+        for(int i = 0; i < trace_Local.size(); i++) {
             long traceNo = trace_Local.get(i).getTraceID();
             dealedTraceNo.add(traceNo);
             boolean isCloud = false;
-            for (int j = 0; j < trace_Cloud.size(); j++) {
-                if (traceNo == trace_Cloud.get(j).getTraceID()) {//云端本地都有
+            for(int j = 0; j < trace_Cloud.size(); j++) {
+                if(traceNo == trace_Cloud.get(j).getTraceID()) {//云端本地都有
                     isCloud = true;
                     break;
                 }
@@ -303,16 +303,16 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
             item.setCloud(isCloud);
             traceItems.add(item);
         }
-        for (int j = 0; j < trace_Cloud.size(); j++) {
+        for(int j = 0; j < trace_Cloud.size();j++) {
             long traceNo = trace_Cloud.get(j).getTraceID();
             boolean isLocal = false;
-            for (int k = 0; k < dealedTraceNo.size(); k++) {
-                if (traceNo == dealedTraceNo.get(k).longValue()) {//在处理本地轨迹时已处理过该轨迹，跳过
+            for(int k = 0;k<dealedTraceNo.size();k++) {
+                if(traceNo == dealedTraceNo.get(k).longValue()) {//在处理本地轨迹时已处理过该轨迹，跳过
                     isLocal = true;
                     break;
                 }
             }
-            if (!isLocal) {//云端有本地没有
+            if(!isLocal) {//云端有本地没有
                 Log.i("TraceListFragment", "云端有本地没有啊啊啊啊啊");
                 TraceListItemData item = new TraceListItemData();
                 item.setTrace(trace_Cloud.get(j));
@@ -321,51 +321,51 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
                 traceItems.add(item);
             }
         }
-        if (traceItems.size() == 0) {
+        if(traceItems.size() == 0) {
             //没有轨迹，可能原因：1、用户的轨迹都在云端，没联网，固然得不到；2、新用户，没有记录过轨迹。
             //对于这两种情况，分别显示不同的提示性文字，供用户参考
-            if (!Common.isNetConnected) {//原因1
+            if(!Common.isNetConnected) {//原因1
                 tv_tip.setText(getResources().getString(R.string.tips_cloudnotrace_nonet));
             } else {//原因2
                 tv_tip.setText(getResources().getString(R.string.tips_localnotrace));
             }
             tv_tip.setVisibility(View.VISIBLE);
             return;
-        } else {
+        }else{
             tv_tip.setVisibility(View.INVISIBLE);
         }
         //步数信息操作同上
         steps_Both.clear();
         ArrayList<Long> dealedStepsNo = new ArrayList<Long>();
-        for (int i = 0; i < steps_Local.size(); i++) {
+        for(int i = 0; i < steps_Local.size(); i++){
             steps_Both.add(steps_Local.get(i));
             dealedStepsNo.add(steps_Local.get(i).getTraceID());
         }
-        for (int j = 0; j < steps_Cloud.size(); j++) {
+        for(int j = 0;j < steps_Cloud.size(); j++){
             long traceNo = steps_Cloud.get(j).getTraceID();
             boolean isOnlyCloud = true;
-            for (int k = 0; k < dealedStepsNo.size(); k++) {
-                if (traceNo == dealedStepsNo.get(k).longValue()) {
+            for(int k = 0; k < dealedStepsNo.size(); k++){
+                if(traceNo == dealedStepsNo.get(k).longValue()){
                     isOnlyCloud = false;
                     break;
                 }
             }
-            if (isOnlyCloud) {
+            if(isOnlyCloud){
                 steps_Both.add(steps_Cloud.get(j));
             }
         }
         Collections.sort(traceItems, new TraceListFragment.SortByTraceNo());//按时间排序
-        if (isFirstCreateAdatper) {
+        if(isFirstCreateAdatper){
             initAdapter();//首次加载时执行
             isFirstCreateAdatper = false;
-        } else {
-            if (lastItemsSize == traceItems.size()) {//数据数量不变，考虑正在记录时轨迹数据的刷新
+        }else{
+            if(lastItemsSize == traceItems.size()){//数据数量不变，考虑正在记录时轨迹数据的刷新
                 //adapter.setDataSource(traceItems, steps_Both);
                 //adapter.notifyDataSetChanged();
 
                 adapter.setDataSource(traceItems, steps_Both);
                 adapter.notifyDataSetChanged();
-            } else {//数据数量变化，关闭菜单
+            }else{//数据数量变化，关闭菜单
                 showMenu(false, true);
             }
         }

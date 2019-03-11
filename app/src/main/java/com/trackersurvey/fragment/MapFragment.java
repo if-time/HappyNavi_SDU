@@ -1339,12 +1339,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                     "' and '" + tracedata.getEndTime() + "'", null, null, null, null);
                             int poiCount = cursor.getCount();
                             tracedata.setPoiCount(poiCount);
-                            Log.i("mmmmmmmmmmmmmmm", "traceID:" + traceID);
-                            Log.i("mmmmmmmmmmmmmmm", "本地插入了一条轨迹");
+
                             traceDBHelper.updatetrail(tracedata, traceID, Common.getUserID(getContext()));
-                            Log.i("mmmmmmmmmmmmmmm", "refresh traceDBHelper.updatetrail(tracedata,traceID,Common.getUserID(getContext()));");
-                            Log.i("LogDemo", "轨迹表更新数据了");
-                            Log.i("LogDemo", "traceData:" + GsonHelper.toJson(tracedata));
 
                             String traceInfo = GsonHelper.toJson(tracedata);
 
