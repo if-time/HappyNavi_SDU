@@ -179,7 +179,7 @@ public class MyTraceDBHelper {
         }
         else{
             cursor.close();
-            db.close();
+//            db.close();
             return false;
         }
     }
@@ -193,7 +193,7 @@ public class MyTraceDBHelper {
             return true;
         }else {
             cursor.close();
-            db.close();
+//            db.close();
             return false;
         }
     }
@@ -214,7 +214,7 @@ public class MyTraceDBHelper {
             return true;
         }
         cursor.close();
-        db.close();
+//        db.close();
         return false;
     }
     public boolean isStepExists(long traceID, String userID){
@@ -228,7 +228,7 @@ public class MyTraceDBHelper {
             return true;
         }
         cursor.close();
-        db.close();
+//        db.close();
         return false;
     }
     public boolean isStatusExists(long num,String userID){
@@ -242,7 +242,7 @@ public class MyTraceDBHelper {
             return true;
         }
         cursor.close();
-        db.close();
+//        db.close();
         return false;
     }
     // 获得记录未结束的轨迹号
@@ -258,7 +258,7 @@ public class MyTraceDBHelper {
         }
 
         cursor.close();
-        db.close();
+//        db.close();
         return traceID;
     }
     public ArrayList<Long> getUnUploadStatusExists(String userID){
@@ -277,7 +277,7 @@ public class MyTraceDBHelper {
 
         }
         cursor.close();
-        db.close();
+//        db.close();
         return traceno_up;
     }
     // 更新轨迹记录表
@@ -303,7 +303,7 @@ public class MyTraceDBHelper {
             }catch(SQLException e){
 
             }
-            db.close();
+//            db.close();
         } else{
             insertintoTrail(data);
         }
@@ -325,7 +325,7 @@ public class MyTraceDBHelper {
             }
             catch(SQLException e){
             }
-            db.close();
+//            db.close();
         }
         else{
             insertintoSteps(data);
@@ -346,7 +346,7 @@ public class MyTraceDBHelper {
             catch(SQLException e){
 
             }
-            db.close();
+//            db.close();
         }
         else{
             insertintoStatus(traceNo, status,userID);
@@ -385,10 +385,10 @@ public class MyTraceDBHelper {
             Log.i("row", "row:" + row);
         }
         catch(SQLException e){
-            db.close();
+//            db.close();
             return -1;
         }
-        db.close();
+//        db.close();
         return 0;
     }
     public int insertintoGpswithDate(GpsData data){
@@ -406,10 +406,10 @@ public class MyTraceDBHelper {
             db.insert(TABLE1_NAME, null, values);
         }
         catch(SQLException e){
-            db.close();
+//            db.close();
             return -1;
         }
-        db.close();
+//        db.close();
         return 0;
     }
     public int insertintoTrail(TraceData data){
@@ -436,7 +436,7 @@ public class MyTraceDBHelper {
             db.close();
             return -1;
         }
-        db.close();
+//        db.close();
         return 0;
     }
 
@@ -458,7 +458,7 @@ public class MyTraceDBHelper {
             db.close();
             return -1;
         }
-        db.close();
+//        db.close();
         return 0;
     }
     public int insertintoSteps(StepData data){
@@ -475,7 +475,7 @@ public class MyTraceDBHelper {
             db.close();
             return -1;
         }
-        db.close();
+//        db.close();
         return 0;
     }
     public int insertintoStatus(long traceNo,int status,String userID){
@@ -489,10 +489,10 @@ public class MyTraceDBHelper {
             db.insert(TABLE5_NAME, null, values);
         }
         catch(SQLException e){
-            db.close();
+//            db.close();
             return -1;
         }
-        db.close();
+//        db.close();
         return 0;
     }
     public ArrayList<GpsData> queryfromGpsbytraceID(long traceID, String userID){
@@ -524,7 +524,7 @@ public class MyTraceDBHelper {
         }
 
         cursor.close();
-        db.close();
+//        db.close();
         return datalist;
     }
 
@@ -557,7 +557,7 @@ public class MyTraceDBHelper {
         }
 
         cursor.close();
-        db.close();
+//        db.close();
         return datalist;
     }
     public ArrayList<GpsData> getallGps(String userID)
@@ -587,7 +587,7 @@ public class MyTraceDBHelper {
         }
 
         cursor.close();
-        db.close();
+//        db.close();
         return datalist;
     }
     public ArrayList<TraceData> getallTrail(String userID)
@@ -621,7 +621,7 @@ public class MyTraceDBHelper {
         }
 
         cursor.close();
-        db.close();
+//        db.close();
         return datalist;
     }
 

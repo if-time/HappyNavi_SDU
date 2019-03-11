@@ -11,8 +11,6 @@ import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.lidroid.xutils.BitmapUtils;
-import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
-import com.lidroid.xutils.bitmap.core.BitmapSize;
 import com.trackersurvey.happynavi.R;
 
 import java.util.ArrayList;
@@ -71,9 +69,13 @@ public class GridItemAdapter extends BaseAdapter {
         pb = (ProgressBar) convertView.findViewById(R.id.down_img_pb);
         downImg.setMaxHeight(colWidth);
         downImg.setMinimumHeight(colWidth);
-
+        Log.i("bitmapUtil1111", "bitmapUtils: " + bitmapUtils);
         Log.i("dongsiyuancolWidth", "getView: " + colWidth);
+        String itemImage1 = imageItems.get(position).get("itemImage");
+        Log.e("?//////////", "getView: "+itemImage1 );
+        String itemImage = ((HashMap<String, String>) getItem(position)).get("itemImage");
 
+        Log.e("???????????", "getView: "+ itemImage);
         Glide.with(context)
                 .load(((HashMap<String, String>) getItem(position)).get("itemImage"))
                 .thumbnail(0.5f)

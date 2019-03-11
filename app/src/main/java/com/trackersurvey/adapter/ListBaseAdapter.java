@@ -328,6 +328,7 @@ public class ListBaseAdapter extends BaseAdapter {
                     Log.i("dongiysuanimgFile", "getView: " + imgFile);
                     if (imgFile.exists()) {
                         imgPath = thumbPic;
+                        Log.e("/////", "getView: "+imgPath );
                     } else {
                         allThumb = false;
                     }
@@ -335,14 +336,13 @@ public class ListBaseAdapter extends BaseAdapter {
                 map.put("itemImage", imgPath);
                 imageItems.add(map);
             }
+            Log.e("333", "GridItemAdapter: "+ imageItems.get(0));
             holder.sAdapter = new GridItemAdapter(context, imageItems, colWidth);
             holder.gridview.setAdapter(holder.sAdapter);
             // 点击九宫格，查看大图，当该评论所有图片本地都存在时，可滑动查看所有图片，
             // 当该评论有>=1张图片未成功下载时，只能查看点击的图片，不能滑动到相邻的图片。望以后改进！
             holder.gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
                 //private boolean isDownloaded;
-
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     //计算所点击的item之前的所有照片数
@@ -378,7 +378,7 @@ public class ListBaseAdapter extends BaseAdapter {
                                 Log.i("dongisyuanFileID", "onItemClick: " + FileID);
                                 pathes.add(pathName);
                                 thumbpathes.add(thumbpathName);
-                                //Log.i("pathes", pathes.toString());
+                                Log.i("----1321312", pathes.toString());
                                 // 如果本地没有该图片，向云端请求
                                 if ("".equals(pathName) || null == pathName
                                         || !(new File(pathName).exists())) {

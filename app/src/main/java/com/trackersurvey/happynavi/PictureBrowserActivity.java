@@ -8,10 +8,9 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.AdapterView;
@@ -37,7 +36,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class PictureBrowserActivity extends BaseActivity implements View.OnClickListener{
-
+    int currunt = 0;
     // 界面中的各个组件
     private GridView gView; // 显示图片的GridView
     private Spinner tvDirName; // 左下角文件夹名字按钮
@@ -60,12 +59,12 @@ public class PictureBrowserActivity extends BaseActivity implements View.OnClick
     // 存放有图片的文件夹名和对应路径
     private ArrayList<PicFolder> picFolders;
     private String[] dirs;
-
+    int totalPicNum;
     private ImageAdapter adapter;
     private LoadLocalPicture cursorTask;// 获取本地图片数据的异步线程类
     private AlphaAnimation inAlphaAni;// 每个图片加载时渐隐渐显的效果动画
     private AlphaAnimation outAlphaAni;// 每个图片加载时渐隐渐显的效果动画
-
+    Cursor cursor = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -252,15 +251,19 @@ public class PictureBrowserActivity extends BaseActivity implements View.OnClick
         protected Object doInBackground(Object... params) {
             PicFolder pf = null;
             Uri extUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-            Cursor cursor = null;
+
 
             // 获取所有图片文件夹
             String[] totalPicFold = { MediaStore.Images.Media._ID };
             cursor = MediaStore.Images.Media.query(mContentResolver, extUri,
                     totalPicFold, MediaStore.Images.Media.SIZE +">=?", new String[]{20*1024 +""},
                     MediaStore.Images.Media.DATE_ADDED + " desc");
-            int totalPicNum = cursor.getCount();
-            int currunt = 0;
+            if (cursor==null){
+              totalPicNum = cursor.getCount();
+                totalPicNum=0;
+            }
+
+
             if (totalPicNum > 0) {
                 cursor.moveToFirst();
                 pf = new PicFolder(getResources().getString(R.string.allpic),
