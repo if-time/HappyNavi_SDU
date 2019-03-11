@@ -1147,22 +1147,16 @@ public class MyCommentModel {
         Log.i("DownloadThumbMediaFiles", "downloadThumbFile: " + poiID);
 
         final ArrayList<HashMap<String, String>> images = new ArrayList<>();
+
         DownloadThumbMediaFiles downloadThumbMediaFiles = new DownloadThumbMediaFiles(sp.getString("token", ""), poiID);
         downloadThumbMediaFiles.requestHttpData(new ResponseData() {
             @Override
             public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
                 if (isSuccess) {
-
-//                    Gson gson = new Gson();
                     LinkedList<ThumbMediaFiles> thumbs = new LinkedList<>();
                     thumbs = (LinkedList<ThumbMediaFiles>) responseObject;
-//                    try {
-//                        java.lang.reflect.Type fileType = new TypeToken<LinkedList<ThumbMediaFiles>>() {}.getType();
-//                        thumbs = gson.fromJson(msg.obj.toString().trim(), fileType);
-//                    } catch (Exception e) {
-//                        mDownThumbFile.onThumbFileDownload(-1, position, images);
-//                    }
-                    // Log.d("Eaa", msg.obj.toString());
+//                    Log.i("dongsiyuanthumbs.size()", "onResponseData: " + thumbs.size());
+
                     if (thumbs.size() == 0) {
                         return;
                     }
@@ -1207,6 +1201,7 @@ public class MyCommentModel {
                             e.printStackTrace();
                         }
                         String imgPaht = file.getAbsolutePath();
+                        Log.i("dongsiyuanimgPaht", "onResponseData: " + imgPaht);
                         HashMap<String, String> map = new HashMap<String, String>();
                         map.put("itemImage", imgPaht);
                         images.add(map);
@@ -1229,6 +1224,8 @@ public class MyCommentModel {
                     }
                     fileCursor.close();
                     writeDBHelper.closeDB();
+                } else {
+                    Log.i("dongsiyuanCOde", "onResponseData: " + code);
                 }
                 Intent intent = new Intent();
                 intent.setAction(UPDATEUI_ACTION);

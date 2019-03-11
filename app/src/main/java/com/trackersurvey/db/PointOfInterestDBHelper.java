@@ -96,9 +96,9 @@ public class PointOfInterestDBHelper {
             db.insert(TABLE1_NAME, null, values);
         } catch (SQLException e) {
             // TODO Auto-generated catch block
-            db.close();
+//            db.close();
         }
-        db.close();
+//        db.close();
     }
     public void insertBehaviour(PointOfInterestData data) {
         SQLiteDatabase db = dbhelper.getWritableDatabase();
@@ -109,9 +109,9 @@ public class PointOfInterestDBHelper {
             db.insert(TABLE2_NAME, null, values);
         } catch (SQLException e) {
             // TODO Auto-generated catch block
-            db.close();
+//            db.close();
         }
-        db.close();
+//        db.close();
     }
     public void insertPartnerNum(PointOfInterestData data) {
         SQLiteDatabase db = dbhelper.getWritableDatabase();
@@ -122,9 +122,9 @@ public class PointOfInterestDBHelper {
             db.insert(TABLE3_NAME, null, values);
         } catch (SQLException e) {
             // TODO Auto-generated catch block
-            db.close();
+//            db.close();
         }
-        db.close();
+//        db.close();
     }
     public void insertPartnerRelation(PointOfInterestData data) {
         SQLiteDatabase db = dbhelper.getWritableDatabase();
@@ -135,9 +135,9 @@ public class PointOfInterestDBHelper {
             db.insert(TABLE4_NAME, null, values);
         } catch (SQLException e) {
             // TODO Auto-generated catch block
-            db.close();
+//            db.close();
         }
-        db.close();
+//        db.close();
     }
     public void delete(){
         SQLiteDatabase db = dbhelper.getWritableDatabase();
@@ -145,7 +145,7 @@ public class PointOfInterestDBHelper {
         db.execSQL("delete from BEHAVIOUR");
         db.execSQL("delete from PARTNERNUM");
         db.execSQL("delete from RELATION");
-        db.close();
+//        db.close();
     }
     public ArrayList<String> getDuration(){
         SQLiteDatabase db = dbhelper.getWritableDatabase();
@@ -163,7 +163,7 @@ public class PointOfInterestDBHelper {
             }
         }
         cursor.close();
-        db.close();
+//        db.close();
         return duration;
     }
     public ArrayList<String> getBehaviour(){
@@ -180,7 +180,7 @@ public class PointOfInterestDBHelper {
             }
         }
         cursor.close();
-        db.close();
+//        db.close();
         return behaviour;
     }
     public ArrayList<String> getPartnerNum(){
@@ -197,7 +197,7 @@ public class PointOfInterestDBHelper {
             }
         }
         cursor.close();
-        db.close();
+//        db.close();
         return partnerNum;
     }
     public ArrayList<String> getRelation(){
@@ -214,7 +214,7 @@ public class PointOfInterestDBHelper {
             }
         }
         cursor.close();
-        db.close();
+//        db.close();
         return relation;
     }
     public Cursor select(String[] columns, String selection,

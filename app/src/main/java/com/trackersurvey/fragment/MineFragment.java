@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.trackersurvey.db.MyTraceDBHelper;
 import com.trackersurvey.happynavi.MyAlbumActivity;
 import com.trackersurvey.happynavi.MyGroupActivity;
 import com.trackersurvey.happynavi.R;
@@ -134,6 +135,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 dialog.dismiss();
                 Intent stopIntent = new Intent(getActivity(), LocationService.class);
                 getActivity().stopService(stopIntent);//停止服务
+                new MyTraceDBHelper(getContext()).cloeDB();
                 Common.sendOffline(Common.getDeviceId(getContext()), getContext());
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     getActivity().finishAffinity();

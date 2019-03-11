@@ -115,7 +115,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private String             city;
     private String             placeName  = "实验室";
     private String             commentText;
-    private int                feeling    = 1; //心情
+    private int                feeling    = 0; //心情
     private int                behaviour; //行为类型
     private int                stay;    //停留时长
     private int                companion;//同伴人数

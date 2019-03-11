@@ -12,9 +12,9 @@ public class ThumbMediaFiles {
 
     public ThumbMediaFiles(String fileName, String fileNo, String fileBase64, String fileType) {
         this.fileName = fileName;
-        fileNo = fileNo;
-        fileBase64 = fileBase64;
-        fileType = fileType;
+        this.fileNo = fileNo;
+        this.fileBase64 = fileBase64;
+        this.fileType = fileType;
     }
 
     public ThumbMediaFiles(JSONObject jsonObject) {
