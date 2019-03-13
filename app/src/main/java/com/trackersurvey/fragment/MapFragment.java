@@ -415,11 +415,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     }
 
 
-    @Override
-    public void onStart() {      //测试
-        setUpService();
-        super.onStart();
-    }
+//    @Override
+//    public void onStart() {      //测试
+//        setUpService();
+//        super.onStart();
+//    }
 
     // 设置Service参数
     public void setUpService() {
