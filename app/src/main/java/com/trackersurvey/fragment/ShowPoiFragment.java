@@ -78,7 +78,6 @@ public class ShowPoiFragment extends Fragment {
     }
 
     private class PoiEventReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context context, Intent intent) {
 

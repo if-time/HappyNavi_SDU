@@ -32,7 +32,6 @@ import com.trackersurvey.http.DownloadPoiRequest;
 import com.trackersurvey.http.DownloadThumbMediaFiles;
 import com.trackersurvey.http.ResponseData;
 import com.trackersurvey.httpconnection.DeleteCloudComment;
-import com.trackersurvey.httpconnection.GetThumbPic;
 import com.trackersurvey.util.ByteHttpUtil;
 import com.trackersurvey.util.Common;
 import com.trackersurvey.util.GsonHelper;
@@ -1075,7 +1074,8 @@ public class MyCommentModel {
                         updateFile.setFileName(cloudVideo);
                         // 更新list
                         ((ListItemData) items.get(listPosition).get("listItem")).setOneFile(filePosition, updateFile);
-                        writeDBHelper.closeDB();
+//                        writeDBHelper.closeDB();// // TODO 待定
+
                         mDownFile.onFileDownload(0, listPosition, filePosition);
 //
 //                        HttpUtils http = new HttpUtils();
@@ -1084,7 +1084,7 @@ public class MyCommentModel {
 //                                new RequestCallBack<File>() {
 //                                    @Override
 //                                    public void onSuccess(ResponseInfo<File> arg0) {
-//                                        // TODO Auto-generated method stub
+//
 //
 //                                    }
 //

@@ -254,6 +254,12 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         initPOI(); // 获取兴趣点列表选项
         return homepageLayout;
     }
+//unregisterReceive
+    @Override
+    public void onDestroyView() {
+        getActivity().unregisterReceiver(myReceiver);
+        super.onDestroyView();
+    }
 
     private void initAMap() {
         //获取屏幕分辨率
@@ -408,6 +414,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                         .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
     }
 
+
+    @Override
+    public void onStart() {      //测试
+        setUpService();
+        super.onStart();
+    }
+
     // 设置Service参数
     public void setUpService() {
         //注册监听后台定位情况的广播，用于更新轨迹显示
@@ -473,11 +486,14 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 }
             };
         }
+
         /**
          判断上次轨迹记录是否意外中断，如果有意外中断，提醒用户是否继续记录
          */
         traceID = traceDBHelper.getUnStopStatusExists(Common.getUserId(getContext()));
         if (traceID != 0) { //存在中断的轨迹,0是轨迹号
+
+
             CustomDialog.Builder builder = new CustomDialog.Builder(getContext());
             builder.setTitle(getResources().getString(R.string.tip));
             builder.setMessage(getResources().getString(R.string.tips_interrupttrace_msg));
