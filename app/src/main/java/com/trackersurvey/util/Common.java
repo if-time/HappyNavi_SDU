@@ -59,14 +59,14 @@ import java.util.List;
 public class    Common {
 
     public static final String  version         = "2.0.1";
-    public static       boolean isUpdationg     = false;
-    public static       boolean isNetConnected  = true;
-    public static       boolean isWiFiConnected = false;
-    public static       boolean isRecording     = false;
-    public static       boolean isHighAccuracy  = true;
-    public static       int     layerid_main    = 0;
-    public static       int     layerid_path    = 0;
-    public static       String  url             = "http://219.218.118.176:8090/Communication/"; // 旧地址
+    public static boolean isUpdationg     = false;
+    public static boolean isNetConnected  = true;
+    public static boolean isWiFiConnected = false;
+    public static boolean isRecording     = false;
+    public static boolean isHighAccuracy  = true;
+    public static int     layerid_main    = 0;
+    public static int     layerid_path    = 0;
+    public static String  url             = "http://219.218.118.176:8090/Communication/"; // 旧地址
     public static       String  url_heart       = "http://219.218.118.176:8090/Communication/heartbeat.aspx";
     public static       String  url_crash       = url + "upExceptionInfo.aspx";
     public static       String  url_file        = "http://219.218.118.176:8089/Mobile/";
@@ -885,5 +885,4 @@ public class    Common {
             return "No Contents";
         }
     }
-
 }

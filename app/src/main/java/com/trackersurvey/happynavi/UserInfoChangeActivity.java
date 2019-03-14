@@ -57,60 +57,62 @@ import java.util.Calendar;
 
 import static com.trackersurvey.happynavi.R.id.user_info_income;
 
-public class UserInfoChangeActivity extends AppCompatActivity implements View.OnClickListener{
+public class UserInfoChangeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private RoundImageView headImgIv;
-    private EditText nicknameEt;
-    private EditText realNameEt;
-    private TextView birthDateTv;
+    private EditText       nicknameEt;
+    private EditText       realNameEt;
+    private TextView       birthDateTv;
     private RelativeLayout birthDateLayout;
-    private TextView sexTv;
+    private TextView       sexTv;
     private RelativeLayout sexLayout;
     // 下面是RegisterItems
-    private EditText nativePlaceEt;
-    private EditText addressEt;
-    private TextView educationTv;
+    private EditText       nativePlaceEt;
+    private EditText       addressEt;
+    private TextView       educationTv;
     private RelativeLayout educationLayout;
-    private TextView occupationTv;
+    private TextView       occupationTv;
     private RelativeLayout occupationLayout;
-    private TextView incomeTv;
+    private TextView       incomeTv;
     private RelativeLayout incomeLayout;
-    private TextView marriageTv;
+    private TextView       marriageTv;
     private RelativeLayout marriageLayout;
-    private TextView childNumTv;
+    private TextView       childNumTv;
     private RelativeLayout childNumLayout;
-    private Button save;
+    private Button         save;
 
     private SharedPreferences sp;
-    private String nicknameStr;
-    private String realNameStr;
-    private String birthDateStr;
-    private String sexStr;
-    private String nativePlaceStr;
-    private String addressStr;
-    private String occupationStr;
-    private String educationStr;
-    private String incomeStr;
-    private String marriageStr;
-    private String childNumStr;
-    private String[] birthDate;
-    private int sexChoice;
-    private int occupationChoice;
-    private int educationChoice;
-    private int incomeChoice;
-    private int marriageChoice;
-    private int childNumChoice;
+    private String            nicknameStr;
+    private String            realNameStr;
+    private String            birthDateStr;
+    private String            sexStr;
+    private String            nativePlaceStr;
+    private String            addressStr;
+    private String            occupationStr;
+    private String            educationStr;
+    private String            incomeStr;
+    private String            marriageStr;
+    private String            childNumStr;
+    private String[]          birthDate;
+    private int               sexChoice;
+    private int               occupationChoice;
+    private int               educationChoice;
+    private int               incomeChoice;
+    private int               marriageChoice;
+    private int               childNumChoice;
 
-    final  static  int  CAMERA =1;
-    final  static  int  ICON =2;
-    final  static  int  CAMERAPRESS =3;
-    final  static  int  ICONPRESS=4;
+    final static int CAMERA      = 1;
+    final static int ICON        = 2;
+    final static int CAMERAPRESS = 3;
+    final static int ICONPRESS   = 4;
 
     private File imageFile; //图片文件
-    private Uri imageUri; //图片路径
+    private Uri  imageUri; //图片路径
     String imagePath;
     Bitmap bitmapdown;
     private File file;
+
+    private String recentPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +121,7 @@ public class UserInfoChangeActivity extends AppCompatActivity implements View.On
         StatusBarCompat.setStatusBarColor(this, Color.BLACK); // 修改状态栏颜色
         // 隐藏原始标题栏
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null){
+        if (actionBar != null) {
             actionBar.hide();
         }
         AppManager.getAppManager().addActivity(this);
@@ -130,9 +132,10 @@ public class UserInfoChangeActivity extends AppCompatActivity implements View.On
         birthDateTv = (TextView) findViewById(R.id.user_info_birth_date);
         sexTv = (TextView) findViewById(R.id.user_info_sex);
 
-        Glide.with(this).load("http://211.87.227.204:8089"
-                + sp.getString("headurl", "") + "?token="
-                + sp.getString("token", "")).into(headImgIv);
+        Glide.with(this)
+                .load("http://211.87.227.204:8089" + sp.getString("headurl", "")
+                        + "?token=" + sp.getString("token", ""))
+                .into(headImgIv);
 
         birthDateLayout = (RelativeLayout) findViewById(R.id.birth_date_layout);
         sexLayout = (RelativeLayout) findViewById(R.id.sex_layout);
@@ -194,56 +197,56 @@ public class UserInfoChangeActivity extends AppCompatActivity implements View.On
             case R.id.user_head_img:
                 selectPicDialog();
                 break;
-                // 选择出生日期
+            // 选择出生日期
             case R.id.user_info_birth_date:
                 selectBirthDate();
                 break;
             case R.id.birth_date_layout:
                 selectBirthDate();
                 break;
-                // 选择性别
+            // 选择性别
             case R.id.user_info_sex:
                 selectSex();
                 break;
             case R.id.sex_layout:
                 selectSex();
                 break;
-                // 选择职业
+            // 选择职业
             case R.id.user_info_occupation:
                 selectOccupation();
                 break;
             case R.id.occupation_layout:
                 selectOccupation();
                 break;
-                // 选择教育程度
+            // 选择教育程度
             case R.id.user_info_education:
                 selectEducation();
                 break;
             case R.id.education_layout:
                 selectEducation();
                 break;
-                // 选择年收入
+            // 选择年收入
             case user_info_income:
                 selectIncome();
                 break;
             case R.id.income_layout:
                 selectIncome();
                 break;
-                // 选择婚姻状况
+            // 选择婚姻状况
             case R.id.user_info_marriage:
                 selectMarriage();
                 break;
             case R.id.marriage_layout:
                 selectMarriage();
                 break;
-                // 选择子女数
+            // 选择子女数
             case R.id.user_info_child_num:
                 selectChildNum();
                 break;
             case R.id.child_num_layout:
                 selectChildNum();
                 break;
-                // 保存
+            // 保存
             case R.id.save_user_info_btn:
                 UserInfoData userInfoData = new UserInfoData(
                         sp.getInt("userID", 0),
@@ -260,22 +263,21 @@ public class UserInfoChangeActivity extends AppCompatActivity implements View.On
                         childNumTv.getText().toString());
                 String userInfo = GsonHelper.toJson(userInfoData);
                 Log.i("UserInfoChange", "userInfo : " + userInfo);
-                Log.i("UserInfoChange", "_timestamp:"+String.valueOf(System.currentTimeMillis())
-                        +"|Token:"+sp.getString("Token", "")
-                        +"|nickname:"+nicknameEt.getText().toString()
-                        +"|realName:"+realNameEt.getText().toString()
-                        +"|birthDate:"+birthDateTv.getText().toString()
-                        +"|sex:"+String.valueOf(sexChoice)
-                        +"|hobbyIDs:"+""
-                        +"|nativePlace:"+nativePlaceEt.getText().toString()
-                        +"|address:"+addressEt.getText().toString()
-                        +"|education:"+educationTv.getText().toString()
-                        +"|income:"+incomeTv.getText().toString()
-                        +"|occupation:"+occupationTv.getText().toString()
-                        +"|marriage:"+marriageTv.getText().toString()
-                        +"|childNum:"+childNumTv.getText().toString());
-                UploadUserInfoRequest uploadUserInfoRequest = new UploadUserInfoRequest(
-                        sp.getString("token", ""),
+                Log.i("UserInfoChange", "_timestamp:" + String.valueOf(System.currentTimeMillis())
+                        + "|Token:" + sp.getString("Token", "")
+                        + "|nickname:" + nicknameEt.getText().toString()
+                        + "|realName:" + realNameEt.getText().toString()
+                        + "|birthDate:" + birthDateTv.getText().toString()
+                        + "|sex:" + String.valueOf(sexChoice)
+                        + "|hobbyIDs:" + ""
+                        + "|nativePlace:" + nativePlaceEt.getText().toString()
+                        + "|address:" + addressEt.getText().toString()
+                        + "|education:" + educationTv.getText().toString()
+                        + "|income:" + incomeTv.getText().toString()
+                        + "|occupation:" + occupationTv.getText().toString()
+                        + "|marriage:" + marriageTv.getText().toString()
+                        + "|childNum:" + childNumTv.getText().toString());
+                UploadUserInfoRequest uploadUserInfoRequest = new UploadUserInfoRequest(sp.getString("token", ""),
                         file == null ? "" : file.getPath(), userInfo);
                 uploadUserInfoRequest.requestHttpData(new ResponseData() {
                     @Override
@@ -337,46 +339,45 @@ public class UserInfoChangeActivity extends AppCompatActivity implements View.On
     }
 
     // 点击头像图标弹出对话框
-    private void selectPicDialog(){
+    private void selectPicDialog() {
         AlertDialog.Builder singleChoiceDialog = new AlertDialog.Builder(this);
         singleChoiceDialog.setItems(new String[]{"拍摄照片", "从相册选择"},
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
+                        switch (which) {
                             case 0:
-                                if( Build.VERSION.SDK_INT >= 23){ // 判断是否为android6.0及以上
-//                                    Toast.makeText(getContext(),"当前的版本号"+Build.VERSION.SDK_INT,Toast.LENGTH_LONG).show();
+                                // 判断是否为android6.0及以上
+                                if (Build.VERSION.SDK_INT >= 23) {
                                     //android 6.0权限问题
-                                    if (ContextCompat.checkSelfPermission(UserInfoChangeActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED||
+                                    if (ContextCompat.checkSelfPermission(UserInfoChangeActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
                                             ContextCompat.checkSelfPermission(UserInfoChangeActivity.this,
-                                                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                                                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                         ActivityCompat.requestPermissions(UserInfoChangeActivity.this,
-                                                new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},CAMERAPRESS);
-//                                        Toast.makeText(getContext(),"执行了权限请求",Toast.LENGTH_LONG).show();
-                                    }else {
+                                                new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERAPRESS);
+                                    } else {
                                         startCamera();
                                     }
-                                }else {
+                                } else {
                                     startCamera();
                                 }
                                 dialog.dismiss();
                                 break;
                             case 1:
-                                if( Build.VERSION.SDK_INT >= 23){
+                                if (Build.VERSION.SDK_INT >= 23) {
                                     // Toast.makeText(getContext(),"当前的版本号"+Build.VERSION.SDK_INT,Toast.LENGTH_LONG).show();
                                     // android 6.0权限问题
-                                    if (ContextCompat.checkSelfPermission(UserInfoChangeActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED||
+                                    if (ContextCompat.checkSelfPermission(UserInfoChangeActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
                                             ContextCompat.checkSelfPermission(getApplicationContext(),
-                                                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                                        Toast.makeText(UserInfoChangeActivity.this,"执行了权限请求",Toast.LENGTH_LONG).show();
+                                                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                        Toast.makeText(UserInfoChangeActivity.this, "执行了权限请求", Toast.LENGTH_LONG).show();
                                         ActivityCompat.requestPermissions(UserInfoChangeActivity.this,
-                                                new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},CAMERAPRESS);
-                                    }else {
+                                                new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERAPRESS);
+                                    } else {
                                         startIcon();
                                     }
 
-                                }else {
+                                } else {
                                     startIcon();
                                 }
                                 dialog.dismiss();
@@ -387,35 +388,43 @@ public class UserInfoChangeActivity extends AppCompatActivity implements View.On
     }
 
     // 开启相机
-    private void startCamera(){
+    private void startCamera() {
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
         imageFile = new File(path, "head.png");
+        recentPhoto = imageFile.getAbsolutePath();
+//        try {
+//            if (imageFile.exists()) {
+//                imageFile.delete();
+//            }
+//            imageFile.createNewFile();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         try {
-            if (imageFile.exists()) {
-                imageFile.delete();
-            }
             imageFile.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
         //将File对象转换为Uri并启动照相程序
-//        imageUri = Uri.fromFile(imageFile);
+        //        imageUri = Uri.fromFile(imageFile);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             imageUri = FileProvider.getUriForFile(UserInfoChangeActivity.this,
                     "com.trackersurvey.happynavi.fileProvider", imageFile);
         } else {
             imageUri = Uri.fromFile(imageFile);
         }
-//        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE"); //照相
+        Log.i("donfisyuanimageUri", "startCamera:imageUri:  " + imageUri + " recentPhoto : " + recentPhoto);
+        //        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE"); //照相
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); //照相
+        intent.putExtra(MediaStore.Images.Media.ORIENTATION, 1);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri); //指定图片输出地址
         startActivityForResult(intent, CAMERA); //启动照相
     }
 
     // 打开图库
-    private void startIcon(){
-        Intent intent1 = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent1.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
+    private void startIcon() {
+        Intent intent1 = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent1.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         startActivityForResult(intent1, ICON);
     }
 
@@ -526,15 +535,15 @@ public class UserInfoChangeActivity extends AppCompatActivity implements View.On
     }
 
     private void selectBirthDate() {
-//        birthDate = birthDateStr.split("-");
+        //        birthDate = birthDateStr.split("-");
         final Calendar calendar = Calendar.getInstance();
-//        calendar.set(Integer.parseInt(birthDate[0]), Integer.parseInt(birthDate[1])-1, Integer.parseInt(birthDate[2]));
+        //        calendar.set(Integer.parseInt(birthDate[0]), Integer.parseInt(birthDate[1])-1, Integer.parseInt(birthDate[2]));
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 calendar.set(year, month, dayOfMonth);
                 birthDateTv.setText(android.text.format.DateFormat.format("yyyy-MM-dd", calendar));
-                birthDateStr = String.valueOf(year)+"-"+String.valueOf(month+1)+"-"+String.valueOf(dayOfMonth);
+                birthDateStr = String.valueOf(year) + "-" + String.valueOf(month + 1) + "-" + String.valueOf(dayOfMonth);
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
@@ -671,7 +680,7 @@ public class UserInfoChangeActivity extends AppCompatActivity implements View.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i("Mine","requestCode"+requestCode+"resultCode"+resultCode);
+        Log.i("Mine", "requestCode" + requestCode + "resultCode" + resultCode);
         switch (requestCode) {
             case CAMERA:
                 // 返回相机拍摄的照片地址
@@ -679,8 +688,8 @@ public class UserInfoChangeActivity extends AppCompatActivity implements View.On
                     Bitmap bitmap1 = null;
 //                    try {
 //                        bitmap1 = BitmapFactory.decodeStream(UserInfoChangeActivity.this.getContentResolver().openInputStream(imageUri));
-//                        imagePath = getPath(UserInfoChangeActivity.this, imageUri);// 获取文件路径
-//                        // 开始压缩
+//                        imagePath = getPath(UserInfoChangeActivity.this, imageUri);     // 获取文件路径
+                        // 开始压缩
 //                        Bitmap compressBitmap = CompressImageUtil.getimage(imagePath);
 //                        file = BitmapToFile.compressImage(compressBitmap);
 //                        try {
@@ -689,20 +698,18 @@ public class UserInfoChangeActivity extends AppCompatActivity implements View.On
 //                        } catch (IOException e) {
 //                            e.printStackTrace();
 //                        }
+
 //                        // 拍照返回，直接在ImageView上显示缩略图
 //                        Bitmap bitmap = ThumbnailUtils.extractThumbnail(bitmap1, 200, 200); // 缩略图
 //                        bitmapdown = bitmap;
 //                        headImgIv.setImageBitmap(bitmapdown); // ImageView加载图片(缩略图)
-//
-////                        FileOutputStream out = new FileOutputStream(imagePath);
-////                        if (bitmap1.compress(Bitmap.CompressFormat.PNG, 100, out)) {
-////                            out.flush();
-////                            out.close();
-////                        }
+
 //                    } catch (FileNotFoundException e) {
 //                        imageFile = null;
 //                        e.printStackTrace();
 //                    }
+                    file = new File(recentPhoto);
+                    Log.i("dongsiyuanfile", "onActivityResult: " + file);
 
                     Glide.with(UserInfoChangeActivity.this)
                             .load(imageUri)
@@ -712,8 +719,8 @@ public class UserInfoChangeActivity extends AppCompatActivity implements View.On
                             .override(200, 200)
                             .into(headImgIv);
 
-                    Log.i("Mine","imagePath"+imagePath);
-                }else {
+                    Log.i("Mine", "imagePath" + imagePath);
+                } else {
 
                 }
                 break;
@@ -728,6 +735,7 @@ public class UserInfoChangeActivity extends AppCompatActivity implements View.On
                     // 开始压缩
                     Bitmap compressBitmap = CompressImageUtil.getimage(imagePath);
                     file = BitmapToFile.compressImage(compressBitmap);
+                    Log.i("dongsiyuanfile", "onActivityResult: " + file);
                     try {
                         long size = new FileInputStream(file).available();
                         Log.i("MineFragment", size + ""); // 单位Byte
@@ -738,7 +746,7 @@ public class UserInfoChangeActivity extends AppCompatActivity implements View.On
                     Bitmap bitmap = ThumbnailUtils.extractThumbnail(getBitmapFromFile(imageFile), 200, 200);
                     bitmapdown = bitmap;
                     headImgIv.setImageBitmap(bitmapdown);
-                    Log.i("Mine","imagePath"+imagePath);
+                    Log.i("Mine", "imagePath" + imagePath);
                 }
                 break;
         }

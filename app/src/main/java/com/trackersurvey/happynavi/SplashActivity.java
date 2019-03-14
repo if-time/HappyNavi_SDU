@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.githang.statusbar.StatusBarCompat;
+import com.trackersurvey.util.Common;
 
 public class SplashActivity extends BaseActivity {
 
@@ -33,6 +34,7 @@ public class SplashActivity extends BaseActivity {
         iv_start = (ImageView) findViewById(R.id.iv_start);
         //iv_version = (ImageView) findViewById(R.id.iv_version);
         tv_version = (TextView) findViewById(R.id.tv_version);
+        tv_version.setText(Common.getAppVersionName(SplashActivity.this));
 //		Handler x = new Handler();
 //		x.postDelayed(new splashhandler(), 2000);
 
