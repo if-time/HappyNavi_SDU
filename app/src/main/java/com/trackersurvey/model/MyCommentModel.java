@@ -992,7 +992,7 @@ public class MyCommentModel {
 
         int PoiID = ((ListItemData) items.get(listPosition).get("listItem")).getPoiID();
 
-        Log.i("dongsiyuandownloadFile", "PoiID: " + PoiID + " fileUrl : " + fileID);
+        Log.i("dongsiyuandownloadFile", "PoiID: " + PoiID + " fileID : " + fileID);
         Log.i("dongsiyuandownloadFile", "downloadFile: " + sp.getString("token", ""));
 
         DownloadMediaFiles downloadMediaFiles = new DownloadMediaFiles(sp.getString("token", ""), fileID);
@@ -1078,43 +1078,13 @@ public class MyCommentModel {
 
                         mDownFile.onFileDownload(0, listPosition, filePosition);
 //
-//                        HttpUtils http = new HttpUtils();
-//
-//                        http.download(fileStr, videoName, true, true,
-//                                new RequestCallBack<File>() {
-//                                    @Override
-//                                    public void onSuccess(ResponseInfo<File> arg0) {
-//
-//
-//                                    }
-//
-//                                    @Override
-//                                    public void onFailure(HttpException arg0,
-//                                                          String arg1) {
-//                                        // TODO Auto-generated method stub
-//                                        mDownFile.onFileDownload(-2, listPosition, filePosition);
-//
-//                                    }
-//
-//                                    @Override
-//                                    public void onLoading(long total, long current,
-//                                                          boolean isUploading) {
-//                                        // TODO Auto-generated method stub
-//                                        super.onLoading(total, current, isUploading);
-//                                    }
-//                                });
+
                     }
                 }
                 mDownFile.onFileDownload(0, listPosition, filePosition);//第二次下载时，这里会因为空指针崩溃
             }
         });
 
-        //        GetCloudPicture gcp = new GetCloudPicture(rf, Common.URL_DOWNFILE,
-        //                Common.getUserId(context), commmentId, "" + filePosition,
-        //                Common.getDeviceId(context));
-        //
-        //        Log.i("Eaa", "downloadFile:" + commmentId);
-        //        gcp.start();
     }
 
     /**
