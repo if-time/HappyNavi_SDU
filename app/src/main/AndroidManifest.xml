@@ -5,45 +5,36 @@
     android:versionCode="203"
     android:versionName="2.0.3">
 
-    <!--Android Mac地址-->
-    <uses-permission android:name="android.permission.INTERNET" />
+    <!--Android服务保活-JobScheduler拉活-->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-    <!--android8.0以上版本的前台服务-->
+    <!-- Android Mac地址 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- android8.0以上版本的前台服务 -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-
-    <!-- 允许程序打开网络套接字 -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- 允许程序设置内置sd卡的写权限 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 允许程序打开网络套接字 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许程序设置内置sd卡的写权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <!-- 允许程序获取网络状态 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- 允许程序访问WiFi网络信息 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <!-- 允许程序读写手机状态和身份,用于读取手机当前的状态 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- 用于访问GPS定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!-- 用于申请调用A-GPS模块 -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 允许程序获取网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 允许程序访问WiFi网络信息 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 允许程序读写手机状态和身份,用于读取手机当前的状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 用于申请调用A-GPS模块 -->
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-    <uses-permission android:name="android.permission.READ_LOGS"
-        tools:ignore="ProtectedPermissions" />
-    <!--用于申请获取蓝牙信息进行室内定位-->
-    <uses-permission android:name="android.permission.BLUETOOTH"></uses-permission>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"></uses-permission>
+    <uses-permission
+        android:name="android.permission.READ_LOGS"
+        tools:ignore="ProtectedPermissions" /> <!-- 用于申请获取蓝牙信息进行室内定位 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
     <application
         android:name="com.trackersurvey.util.MyApplication"
         android:allowBackup="true"
@@ -52,11 +43,34 @@
         android:roundIcon="@mipmap/app_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name="com.trackersurvey.service.JobSchedulerMainService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
+            android:name="com.trackersurvey.service.JobSchedulerService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name="com.trackersurvey.service.OnePxService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":push" />
+
+        <activity
+            android:name=".OnePxActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|navigation|keyboard"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:finishOnTaskLaunch="false"
+            android:launchMode="singleInstance"
+            android:process=":process"
+            android:theme="@style/undeadActivityStyle" />
+
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="12983a5c8027cf000ad2df0e1154df46"
-></meta-data>            <!--android:value="024b0f76892f0d460b85684b844dcd91" />-->
-
+            android:value="12983a5c8027cf000ad2df0e1154df46" /> <!-- android:value="024b0f76892f0d460b85684b844dcd91" /> -->
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait" />
@@ -64,27 +78,20 @@
         <service
             android:name="com.trackersurvey.service.LocationService"
             android:enabled="true"
-            android:exported="true" />
-
-        <!-- 启动页 -->
+            android:exported="true" /> <!-- 启动页 -->
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <!-- 登录 -->
-        <activity android:name=".LoginActivity" />
-        <!-- 注册 -->
-        <activity android:name=".RegisterActivity" />
-
-        <!-- 记录步数Service -->
+        </activity> <!-- 登录 -->
+        <activity android:name=".LoginActivity" /> <!-- 注册 -->
+        <activity android:name=".RegisterActivity" /> <!-- 记录步数Service -->
         <service
             android:name="com.trackersurvey.service.StepCounterService"
             android:enabled="true"
-            android:exported="true" />
-        <!-- 高德定位需要的服务 -->
+            android:exported="true" /> <!-- 高德定位需要的服务 -->
         <service android:name="com.amap.api.location.APSService" />
         <service
             android:name="com.trackersurvey.service.DownloadService"
@@ -101,29 +108,28 @@
 
         <activity
             android:name="com.trackersurvey.wxapi.WXEntryActivity"
-            android:theme="@style/TitleTheme" >
-        </activity>
+            android:theme="@style/TitleTheme" />
         <activity
             android:name="com.tencent.tauth.AuthActivity"
-            android:noHistory="true"
-            android:launchMode="singleTask" >
-            <intent-filter >
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="tencent1105447917"/>
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent1105447917" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/TitleTheme"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            ></activity>
-
-        <activity android:name=".CommentActivity"
-            android:windowSoftInputMode="stateHidden"
-            />
+            android:screenOrientation="portrait"
+            android:theme="@style/TitleTheme" />
+        <activity
+            android:name=".CommentActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".BGRunningGuideActivity" />
         <activity android:name=".PictureBrowserActivity" />
         <activity android:name=".SelectedPictureActivity" />
@@ -143,7 +149,7 @@
         <activity android:name=".SettingActivity" />
         <activity android:name=".SetParameterActivity" />
         <activity android:name=".UserInfoActivity" />
-        <activity android:name=".UserInfoChangeActivity"></activity>
+        <activity android:name=".UserInfoChangeActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -154,9 +160,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
-
-
 
 </manifest>

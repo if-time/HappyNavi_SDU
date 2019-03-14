@@ -26,6 +26,7 @@ import com.trackersurvey.fragment.TraceListFragment;
 import com.trackersurvey.fragment.MineFragment;
 import com.trackersurvey.fragment.QuestionnaireFragment;
 
+import com.trackersurvey.service.JobSchedulerMainService;
 import com.trackersurvey.util.AppManager;
 import com.trackersurvey.util.Common;
 import com.trackersurvey.util.CustomDialog;
@@ -97,6 +98,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initView();
         fragmentManager = getSupportFragmentManager();
         setTabSelection(0);
+        startService(JobSchedulerMainService.getIntentStart(this));
     }
 
     private void initView() {

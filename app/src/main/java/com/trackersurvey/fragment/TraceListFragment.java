@@ -244,7 +244,8 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
             @Override
             public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
                 if (isSuccess) {
-                    trace_Cloud = (ArrayList<TraceData>) responseObject;
+                    if (responseObject != null)
+                        trace_Cloud = (ArrayList<TraceData>) responseObject;
 
                     for (int i = 0; i < trace_Cloud.size(); i++) {
                         StepData stepData = new StepData();

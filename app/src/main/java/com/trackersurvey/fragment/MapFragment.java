@@ -84,6 +84,7 @@ import com.trackersurvey.httpconnection.PostCheckVersion;
 import com.trackersurvey.service.CommentUploadService;
 import com.trackersurvey.service.DownloadService;
 import com.trackersurvey.service.LocationService;
+import com.trackersurvey.service.OnePxService;
 import com.trackersurvey.service.StepCounterService;
 import com.trackersurvey.util.ActivityCollector;
 import com.trackersurvey.util.Common;
@@ -423,6 +424,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 
     // 设置Service参数
     public void setUpService() {
+        // OnePxService
+        Intent OnePxServiceintent = new Intent(getContext(), OnePxService.class);
+        getActivity().startService(OnePxServiceintent);
         //注册监听后台定位情况的广播，用于更新轨迹显示
         myReceiver = new MyBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
