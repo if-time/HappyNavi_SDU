@@ -57,7 +57,7 @@ import java.util.Calendar;
 
 import static com.trackersurvey.happynavi.R.id.user_info_income;
 
-public class UserInfoChangeActivity extends AppCompatActivity implements View.OnClickListener {
+public class UserInfoChangeActivity extends BaseActivity implements View.OnClickListener {
 
     private RoundImageView headImgIv;
     private EditText       nicknameEt;

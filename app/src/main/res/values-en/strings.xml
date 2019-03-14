@@ -228,7 +228,7 @@
         
     <string name="mygroup">My Group</string>
         
-    <string name="nickname">nickname: </string>
+    <string name="nickname">Nickname: </string>
         
     <string name="nickname_div">昵\u3000\u3000called </string>
         
@@ -1060,9 +1060,9 @@
                 
         <item>confidential</item>
                 
-        <item>Male </item>
+        <item>Male</item>
                 
-        <item>女</item>
+        <item>Female</item>
             
     </string-array>
 
@@ -1080,8 +1080,8 @@
         <item> undergraduate </item>
                 
         <item>Master </item>
-                Dr.
-        <item></item>
+                
+        <item>Dr.</item>
             
     </string-array>
         

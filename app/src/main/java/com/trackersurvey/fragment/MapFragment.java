@@ -184,7 +184,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     private final String              MY_ACTION          = "android.intent.action.LOCATION_RECEIVER";
     private final String              PULLREFRESH_ACTION = "android.intent.action.PULLREFRESH_RECEIVER";
     private final String              ACCURACY_ACTION    = "android.intent.action.ACCURACY_RECEIVER";
-    private final String REFRESH_ACTION = "android.intent.action.REFRESH_RECEIVER";
+    private final String              REFRESH_ACTION     = "android.intent.action.REFRESH_RECEIVER";
     //private static final String URL_STARTTRAIL = Common.url+"reqTraceNo.aspx";
     private       String              URL_ENDTRAIL       = null;
     //private static final String URL_GET4TIME = Common.url+"request.aspx";
@@ -213,8 +213,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     private View                               view;
     private AlertDialog                        dialog;
 
-    private PoiChoiceModel poiChoiceModel;
-    public static int poiCount = 0;
+    private       PoiChoiceModel poiChoiceModel;
+    public static int            poiCount = 0;
+
+    private SharedPreferences spl;
+    private int               l;
+
+    private boolean UiRefresh = false;
 
     @Nullable
 
@@ -222,7 +227,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         homepageLayout = inflater.inflate(R.layout.fragment_map, container, false);
         ShareToWeChat.registToWeChat(getContext());
 
-//        EventBus.getDefault().register(this);
+        //        EventBus.getDefault().register(this);
         mapView = (MapView) homepageLayout.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         stepTv = (TextView) homepageLayout.findViewById(R.id.tv_step);
@@ -243,6 +248,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         poiDBHelper = new PointOfInterestDBHelper(getContext());//创建POI数据库
         // sp 初始化
         sp = getActivity().getSharedPreferences("config", MODE_PRIVATE);//私有参数
+        spl = getActivity().getSharedPreferences("languageSet", 0);
+        String language = spl.getString("language", "0");
+        l = Integer.parseInt(language);
         initAMap(); // 初始化地图
         if (Common.url != null && !Common.url.equals("")) {
 
@@ -252,10 +260,16 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         URL_ENDTRAIL = Common.url + "reqTraceNo.aspx";
         URL_CHECKUPDATE = Common.url + "request.aspx";
         URL_GETPOI = Common.url + "requestInfo.aspx";
-        initPOI(); // 获取兴趣点列表选项
+        if (l == 0)
+            initPOI(); // 获取兴趣点列表选项
+        if (l == 1) {
+            initPOIEN();
+        }
+        new TimeThread().start();
         return homepageLayout;
     }
-//unregisterReceive
+
+    //unregisterReceive
     @Override
     public void onDestroyView() {
         getActivity().unregisterReceiver(myReceiver);
@@ -395,6 +409,12 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         //myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
         aMap.setMyLocationStyle(myLocationStyle);
 
+        if (l == 0) {
+            aMap.setMapLanguage(AMap.CHINESE);
+        } else {
+            aMap.setMapLanguage(AMap.ENGLISH);
+        }
+
         aMap.setLocationSource(this);// 设置定位监听
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
         aMap.getUiSettings().setCompassEnabled(true);  //启用罗盘
@@ -416,11 +436,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     }
 
 
-//    @Override
-//    public void onStart() {      //测试
-//        setUpService();
-//        super.onStart();
-//    }
+    //    @Override
+    //    public void onStart() {      //测试
+    //        setUpService();
+    //        super.onStart();
+    //    }
 
     // 设置Service参数
     public void setUpService() {
@@ -452,11 +472,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {
             // 已申请则开启定位服务
-//            getActivity().bindService(locationServiceIntent, connection, Context.BIND_AUTO_CREATE);
-            if(Build.VERSION.SDK_INT>=26){
-                getActivity().startForegroundService (locationServiceIntent);
+            //            getActivity().bindService(locationServiceIntent, connection, Context.BIND_AUTO_CREATE);
+            if (Build.VERSION.SDK_INT >= 26) {
+                getActivity().startForegroundService(locationServiceIntent);
 
-            }else{
+            } else {
                 getActivity().bindService(locationServiceIntent, connection, Context.BIND_AUTO_CREATE);
             }
 
@@ -469,6 +489,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
          * 在TabActivy的TabHost中的Activity如果需要bindService的话
          * ，需要先调用getApplicationContext()获取其所属的Activity的上下文环境才能正常bindService
          */
+
         if (stepThread == null) {
             stepThread = new Thread() {// 子线程用于监听当前步数的变化
                 @Override
@@ -489,6 +510,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 }
             };
         }
+
 
         /**
          判断上次轨迹记录是否意外中断，如果有意外中断，提醒用户是否继续记录
@@ -533,6 +555,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     getActivity().bindService(locationServiceIntent,
                             connection, Context.BIND_AUTO_CREATE);
                 } else {
+                    UiRefresh = false;
                     Toast.makeText(getContext(), "未获取位置权限，无法定位您的位置", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -895,12 +918,12 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     //showDialog("正在请求..","请求中..请稍后....");
                     //PostStartTrail startTrailThread=new PostStartTrail(handler,URL_STARTTRAIL,Common.userId);
                     //startTrailThread.start();
-//                    Intent intent = new Intent();
-//                    intent.setAction(REFRESH_ACTION);
-//                    Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
-//                    getContext().sendBroadcast(intent);
+                    //                    Intent intent = new Intent();
+                    //                    intent.setAction(REFRESH_ACTION);
+                    //                    Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
+                    //                    getContext().sendBroadcast(intent);
                 } else {
-//                    Toast.makeText(getContext(), "取消记录", Toast.LENGTH_SHORT).show();
+                    //                    Toast.makeText(getContext(), "取消记录", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
             }
@@ -931,11 +954,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 
         // 先上传一次轨迹信息，获取轨迹号，在service中更改轨迹号。、
         Log.i("mmmmmmmmmmmmmmm", "请求接口获取轨迹号");
-                StartTraceRequest startTraceRequest = new StartTraceRequest(sp.getString("token", ""),
-                        tracedata.getTraceName(), tracedata.getStartTime(), String.valueOf(tracedata.getSportTypes()));
-                startTraceRequest.requestHttpData(new ResponseData() {
-                    @Override
-                    public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
+        StartTraceRequest startTraceRequest = new StartTraceRequest(sp.getString("token", ""),
+                tracedata.getTraceName(), tracedata.getStartTime(), String.valueOf(tracedata.getSportTypes()));
+        startTraceRequest.requestHttpData(new ResponseData() {
+            @Override
+            public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
                 if (isSuccess) {
                     if (code.equals("0")) {
                         try {
@@ -958,6 +981,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        UiRefresh = true;
                     }
                     if (code.equals("100") || code.equals("101")) {
                         getActivity().runOnUiThread(new Runnable() {
@@ -976,6 +1000,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 }
             }
         });
+
         startTrail.setVisibility(View.INVISIBLE);
         if (sportType == 1) {
             changeSportTypeIb.setBackgroundResource(R.mipmap.ic_walking);
@@ -1008,7 +1033,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             getActivity().startService(stepCountServiceIntent);
             iscountstep = true;
             new Thread(stepThread).start();
-//            stepTv.setVisibility(View.VISIBLE);
+            //            stepTv.setVisibility(View.VISIBLE);
             stepTv.setText(getResources().getString(R.string.step_label) + "：" + total_step);
         }
     }
@@ -1075,7 +1100,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             }
             //Log.i("LogDemo", "endtrail,"+traceInfo+","+stepInfo);
             traceDBHelper.updateStatus(traceID, 2, Common.getUserID(getContext()));
-
+            UiRefresh = false;
             // 结束轨迹
             EndTraceRequest endTraceRequest = new EndTraceRequest(
                     sp.getString("token", ""), traceInfo);
@@ -1121,8 +1146,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     getString(R.string.endicon)).icon(BitmapDescriptorFactory.fromResource(R.mipmap.end)));
             //bdmap.markEnd(finalLatLng);
         } else {
+            UiRefresh = false;
             ToastUtil.show(getContext(), getResources().getString(R.string.tips_recorderror_nogps));
         }
+
         traceID = 0;
         locationService.setTraceID(0);
         locationService.changeStatus(false); // 改为非记录状态
@@ -1181,6 +1208,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             }
             tracedata.setDistance(distance);
             Log.i("dongiyuansetDuration", "duration: " + duration + " distance: " + distance);
+
             if (tracedata.getSportTypes() == 1) {
                 stepdata.setSteps(total_step);
                 traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
@@ -1213,6 +1241,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             Log.i("HomePage", "UpdateTrail:" + GsonHelper.toJson(traceListTemp));
             return true;
         } else {
+            UiRefresh = false;
             ToastUtil.show(getContext(), "未采集到位置信息，轨迹不保存");
             return false;
         }
@@ -1242,6 +1271,29 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     private int calculateCalorie_Ride(double distance, long duration) {
         //时速(km/h)×体重(kg)×1.05×运动时间(h)
         return (int) (60 * 1.05 * distance / 1000);
+    }
+
+    /**
+     * 实时刷新
+     */
+    public class TimeThread extends Thread {
+        @Override
+        public void run() {
+            super.run();
+            do {
+                try {
+                    if (UiRefresh) {
+                        //每隔一秒 发送一次消息
+                        Thread.sleep(1000);
+                        Message message = new Message();
+                        message.what = 8;
+                        handler.sendMessage(message);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } while (true);
+        }
     }
 
     @SuppressLint("HandlerLeak")
@@ -1310,22 +1362,16 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                      Log.i("LogDemo", "获取4个时间失败，开启默认时间");
                      */
                     break;
-                case 9://更新步数
-                    countStep();
-                    stepTv.setText(getResources().getString(R.string.step_label) + "：" + total_step);
-                    if (tracedata.getSportTypes() == 1) {
-                        stepdata.setSteps(total_step);
-                        traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
-                        Log.i("MyTraceDBDupdatesteps", "step:row:"+ traceDBHelper);
-
-                        tracegps = traceDBHelper.queryfromGpsbytraceID(traceID, Common.getUserID(getContext()));
-                        Log.i("LogDemo", "tracegps coontent:" + GsonHelper.toJson(tracedata));
-                        Log.i("LogDemo", "tracegps size:" + tracegps.size());
+                case 8:
+                    tracegps = traceDBHelper.queryfromGpsbytraceID(traceID, Common.getUserID(getContext()));
+                    Log.i("LogDemo", "tracegps coontent:" + GsonHelper.toJson(tracedata));
+                    Log.i("LogDemo", "tracegps size:" + tracegps.size());
+                    if (UiRefresh) {
                         if (tracegps.size() > 0) {
                             tracedata.setEndTime(Common.currentTime());
                             DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             long duration = 0;
-                           //计算时间差
+                            //计算时间差
                             Date d1 = null;
                             try {
                                 d1 = df.parse(tracedata.getStartTime());
@@ -1371,19 +1417,93 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                         getActivity().runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-//                                                Toast.makeText(getContext(), "上传轨迹成功", Toast.LENGTH_SHORT).show();
+                                                //                                                Toast.makeText(getContext(), "上传轨迹成功", Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                     }
-                                }});
+                                }
+                            });
                             traceDBHelper.updateStatus(traceID, 2, Common.getUserID(getContext()));
                             TraceData traceListTemp = traceDBHelper.queryfromTrailbytraceID(traceID, Common.getUserID(getContext()));
                             Log.i("HomePage", "UpdateTrail:" + GsonHelper.toJson(traceListTemp));
                         }
-//                        Intent refreshintent = new Intent();
-//                        refreshintent.setAction(REFRESH_ACTION);
-//                        Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
-//                        getContext().sendBroadcast(refreshintent);
+                    }
+                    break;
+                case 9://更新步数
+                    countStep();
+                    stepTv.setText(getResources().getString(R.string.step_label) + "：" + total_step);
+                    if (tracedata.getSportTypes() == 1) {
+                        stepdata.setSteps(total_step);
+                        traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
+                        Log.i("MyTraceDBDupdatesteps", "step:row:" + traceDBHelper);
+
+//                        tracegps = traceDBHelper.queryfromGpsbytraceID(traceID, Common.getUserID(getContext()));
+//                        Log.i("LogDemo", "tracegps coontent:" + GsonHelper.toJson(tracedata));
+//                        Log.i("LogDemo", "tracegps size:" + tracegps.size());
+//                        if (tracegps.size() > 0) {
+//                            tracedata.setEndTime(Common.currentTime());
+//                            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                            long duration = 0;
+//                            //计算时间差
+//                            Date d1 = null;
+//                            try {
+//                                d1 = df.parse(tracedata.getStartTime());
+//                                Date d2 = df.parse(tracedata.getEndTime());
+//                                duration = d2.getTime() - d1.getTime();
+//                            } catch (ParseException e) {
+//                                e.printStackTrace();
+//                            }
+//                            tracedata.setDuration(duration);
+//                            //计算距离
+//                            double distance = 0.0;
+//                            if (tracegps.size() > 1) {
+//                                for (int i = 0; i < tracegps.size() - 1; i++) {
+//                                    distance += AMapUtils.calculateLineDistance(new LatLng(tracegps.get(i).getLatitude(),
+//                                                    tracegps.get(i).getLongitude()),
+//                                            new LatLng(tracegps.get(i + 1).getLatitude(), tracegps.get(i + 1).getLongitude()));
+//                                }
+//                            }
+//                            tracedata.setDistance(distance);
+//                            Log.i("dongiyuansetDuration1", "duration: " + duration + " distance: " + distance);
+//
+//                            PhotoDBHelper photoHelper = new PhotoDBHelper(getContext(), PhotoDBHelper.DBREAD);
+//                            if (cursor != null && !cursor.isClosed()) {
+//                                cursor.close();
+//                            }
+//
+//                            cursor = photoHelper.selectEvent(null, PhotoDBHelper.COLUMNS_UE[10] + "="
+//                                    + Common.getUserId(getContext()) + " and datetime("
+//                                    + PhotoDBHelper.COLUMNS_UE[0] + ") between '" + tracedata.getStartTime() +
+//                                    "' and '" + tracedata.getEndTime() + "'", null, null, null, null);
+//                            int poiCount = cursor.getCount();
+//                            tracedata.setPoiCount(poiCount);
+//
+//                            traceDBHelper.updatetrail(tracedata, traceID, Common.getUserID(getContext()));
+//
+//                            String traceInfo = GsonHelper.toJson(tracedata);
+//
+//                            EndTraceRequest endTraceRequest = new EndTraceRequest(sp.getString("token", ""), traceInfo);
+//                            endTraceRequest.requestHttpData(new ResponseData() {
+//                                @Override
+//                                public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
+//                                    if (isSuccess) {
+//                                        getActivity().runOnUiThread(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//                                                //                                                Toast.makeText(getContext(), "上传轨迹成功", Toast.LENGTH_SHORT).show();
+//                                            }
+//                                        });
+//                                    }
+//                                }
+//                            });
+//                            traceDBHelper.updateStatus(traceID, 2, Common.getUserID(getContext()));
+//                            TraceData traceListTemp = traceDBHelper.queryfromTrailbytraceID(traceID, Common.getUserID(getContext()));
+//                            Log.i("HomePage", "UpdateTrail:" + GsonHelper.toJson(traceListTemp));
+//                        }
+//                                                Intent refreshintent = new Intent();
+                        //                        refreshintent.setAction(REFRESH_ACTION);
+                        //                        Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
+                        //                        getContext().sendBroadcast(refreshintent);
                     }
                     break;
                 case 10:
@@ -1494,6 +1614,61 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                         for (int i = 0; i < poiChoiceModel.getRelationTypeList().size(); i++) {
                             relationData.setKey(poiChoiceModel.getRelationTypeList().get(i).getRelationType());
                             relationData.setValue(poiChoiceModel.getRelationTypeList().get(i).getRelationTypeName());
+                            poiDBHelper.insertPartnerRelation(relationData);
+                        }
+                    }
+                    if (code.equals("100") || code.equals("101")) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getContext(), "登录信息过期，请重新登录！", Toast.LENGTH_SHORT).show();
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putString("token", ""); // 清空token
+                                editor.apply();
+                                ActivityCollector.finishActivity("MainActivity");
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取兴趣点列表选项
+     */
+    private void initPOIEN() {
+        //从服务器下载停留时长、行为类型、同伴人数、关系等选项的数据
+        DownloadPoiChoices downloadPoiChoices = new DownloadPoiChoices(sp.getString("token", ""));
+        downloadPoiChoices.requestHttpData(new ResponseData() {
+            @Override
+            public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
+                if (isSuccess) {
+                    if (code.equals("0")) {
+                        poiChoiceModel = (PoiChoiceModel) responseObject;
+                        behaviourData = new PointOfInterestData();
+                        durationData = new PointOfInterestData();
+                        partnerNumData = new PointOfInterestData();
+                        relationData = new PointOfInterestData();
+                        poiDBHelper.delete();
+                        for (int i = 0; i < poiChoiceModel.getActivityTypeList().size(); i++) {
+                            behaviourData.setKey(poiChoiceModel.getActivityTypeList().get(i).getActivityType());
+                            behaviourData.setValue(poiChoiceModel.getActivityTypeList().get(i).getActivityName_EN());
+                            poiDBHelper.insertBehaviour(behaviourData);
+                        }
+                        for (int i = 0; i < poiChoiceModel.getRetentionTypeList().size(); i++) {
+                            durationData.setKey(poiChoiceModel.getRetentionTypeList().get(i).getRetentionType());
+                            durationData.setValue(poiChoiceModel.getRetentionTypeList().get(i).getRetentionTypeName_E());
+                            poiDBHelper.insertDuration(durationData);
+                        }
+                        for (int i = 0; i < poiChoiceModel.getCompanionTypeList().size(); i++) {
+                            partnerNumData.setKey(poiChoiceModel.getCompanionTypeList().get(i).getCompanionType());
+                            partnerNumData.setValue(poiChoiceModel.getCompanionTypeList().get(i).getCompanionTypeName_E());
+                            poiDBHelper.insertPartnerNum(partnerNumData);
+                        }
+                        for (int i = 0; i < poiChoiceModel.getRelationTypeList().size(); i++) {
+                            relationData.setKey(poiChoiceModel.getRelationTypeList().get(i).getRelationType());
+                            relationData.setValue(poiChoiceModel.getRelationTypeList().get(i).getRelationTypeName_E());
                             poiDBHelper.insertPartnerRelation(relationData);
                         }
                     }
@@ -1695,7 +1870,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                         arg0.dismiss();
                     }
                 });
-         builder.create().show();
+        builder.create().show();
     }
 
     private void showDlg_badloc() { //无法定位时弹出提示
@@ -1849,7 +2024,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             Log.i("HomePage", "停止记步服务");
         }
         if (null != myReceiver) {
-            getActivity().unregisterReceiver(myReceiver);
+            //            getActivity().unregisterReceiver(myReceiver);
         }
         if (null != accuracyReciver) {
             getActivity().unregisterReceiver(accuracyReciver);

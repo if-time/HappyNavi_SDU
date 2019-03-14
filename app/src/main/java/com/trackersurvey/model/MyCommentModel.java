@@ -1042,7 +1042,7 @@ public class MyCommentModel {
                         // 更新list
                         ((ListItemData) items.get(listPosition).get("listItem")).setOneFile(filePosition, updateFile);
 
-                        writeDBHelper.closeDB();
+//                        writeDBHelper.closeDB();
                         mDownFile.onFileDownload(0, listPosition, filePosition);//修改后，第一次下载这里会因为空指针崩溃
                     }
                     // 如果请求的文件是视频

@@ -222,6 +222,9 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
 
     private long currentTraceID;
 
+    private SharedPreferences    spl;
+    private int l;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -303,6 +306,9 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
         helper = new MyTraceDBHelper(context);
         dbHelper = new PhotoDBHelper(context, PhotoDBHelper.DBWRITE);
         helper2 = new PointOfInterestDBHelper(context);//打开兴趣点数据库
+        spl = getActivity().getSharedPreferences("languageSet", 0);
+        String language = spl.getString("language", "0");
+        l = Integer.parseInt(language);
         initAMap();
         initModel();
         // initBDMap();
@@ -335,6 +341,12 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
             aMap = mapView.getMap();
             aMap.getUiSettings().setZoomControlsEnabled(true);
             aMap.getUiSettings().setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);// 设置缩放按钮在右侧中间位置
+
+            if(l==0) {
+                aMap.setMapLanguage(AMap.CHINESE);
+            } else {
+                aMap.setMapLanguage(AMap.ENGLISH);
+            }
 
             aMap.getUiSettings().setCompassEnabled(true);
             aMap.getUiSettings().setScaleControlsEnabled(true);// 启用比例尺

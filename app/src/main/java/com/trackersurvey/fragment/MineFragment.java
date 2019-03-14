@@ -59,10 +59,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         if (nickname==null||nickname.equals("")){
 
         }else {
-            nickNameTv.setText("昵称：" + sp.getString("nickname", ""));
+            nickNameTv.setText(sp.getString("nickname", ""));
         }
         mobilePhoneTv = (TextView) meLayout.findViewById(R.id.mine_mobilePhone);
-        mobilePhoneTv.setText("账号："+sp.getString("mobilePhone", ""));
+        mobilePhoneTv.setText(sp.getString("mobilePhone", ""));
         RelativeLayout userInfoLayout = (RelativeLayout) meLayout.findViewById(R.id.user_info_layout);
         LinearLayout myAlbumLayout = (LinearLayout) meLayout.findViewById(R.id.my_album_layout); // 我的相册
         LinearLayout myGroupLayout = (LinearLayout) meLayout.findViewById(R.id.my_group_layout); // 我的群组
@@ -153,7 +153,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         Glide.with(this).load("http://211.87.227.204:8089"
                 + sp.getString("headurl", "") + "?token="
                 + sp.getString("token", "")).into(headImg);
-        nickNameTv.setText("昵称："+sp.getString("nickname", ""));
-        mobilePhoneTv.setText("账号："+sp.getString("mobilePhone", ""));
+        nickNameTv.setText(sp.getString("nickname", ""));
+        mobilePhoneTv.setText(sp.getString("mobilePhone", ""));
     }
 }

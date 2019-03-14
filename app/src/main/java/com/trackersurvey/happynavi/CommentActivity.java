@@ -1114,10 +1114,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             bmp = ThumbnailUtils.extractThumbnail(bmp, colWidth, colWidth);
 
             String videoName = Common.currentTime().trim();
-            cacheFileName = Common.CACHEPHOTO_PATH + "cacheVideo" + videoName
-                    + ".jpg";
-            Bitmap videoPlay = BitmapFactory.decodeResource(getResources(),
-                    R.mipmap.video_play);
+            cacheFileName = Common.CACHEPHOTO_PATH + "cacheVideo" + videoName + ".jpg";
+            Bitmap videoPlay = BitmapFactory.decodeResource(getResources(), R.mipmap.video_play);
             Bitmap newBmp = bmp.copy(Bitmap.Config.RGB_565, true);
             Canvas canvas = new Canvas(newBmp);
             canvas.drawBitmap(bmp, 0, 0, null);
