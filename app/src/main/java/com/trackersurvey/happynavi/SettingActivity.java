@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -34,6 +35,7 @@ import android.widget.Toast;
 
 import com.githang.statusbar.StatusBarCompat;
 import com.trackersurvey.bean.FileInfo;
+import com.trackersurvey.broadcastreceiver.InitApkBroadCastReceiver;
 import com.trackersurvey.http.DownloadUpdateApp;
 import com.trackersurvey.http.LogoutRequest;
 import com.trackersurvey.http.ResponseData;
@@ -94,6 +96,17 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         }
     };
 
+    // 监听APK安装
+    private IntentFilter             intentFilter;
+    private InitApkBroadCastReceiver initApkBroadCastReceiver;
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(initApkBroadCastReceiver);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -150,6 +163,14 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         if (proDialog == null){
             proDialog = new ProgressDialog(this);
         }
+
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        intentFilter.addDataScheme("package");
+        initApkBroadCastReceiver = new InitApkBroadCastReceiver();
+        registerReceiver(initApkBroadCastReceiver, intentFilter);
     }
 
     private void initData() {
