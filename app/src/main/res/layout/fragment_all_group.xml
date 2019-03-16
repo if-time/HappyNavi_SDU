@@ -29,12 +29,13 @@
                     android:background="@drawable/bg_edittext">
                     <EditText
                         android:id="@+id/et_search"
-                        android:layout_width="200dp"
+                        android:layout_width="300dp"
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:layout_alignTop="@+id/bt_search"
                         android:layout_alignBottom="@+id/bt_search"
                         android:hint="@string/searchgroups"
+                        android:textSize="15sp"
                         android:singleLine="true"
                         />
                     <ImageButton

@@ -1,17 +1,28 @@
 package com.trackersurvey.happynavi;
 
+import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -19,8 +30,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.githang.statusbar.StatusBarCompat;
+import com.trackersurvey.bean.FileInfo;
+import com.trackersurvey.http.DownloadUpdateApp;
 import com.trackersurvey.http.LogoutRequest;
 import com.trackersurvey.http.ResponseData;
+import com.trackersurvey.httpconnection.PostCheckVersion;
+import com.trackersurvey.service.DownloadService;
+import com.trackersurvey.service.LocationService;
 import com.trackersurvey.util.ActivityCollector;
 import com.trackersurvey.util.Common;
 import com.trackersurvey.util.CustomDialog;
@@ -38,16 +54,20 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private TextView          cacheSizeTv;
     private SharedPreferences sp;
 
-    private int checkedItem = 0;
+    private int               checkedItem = 0;
     private SharedPreferences languageSelected;     // 默认 0 为 zh ； 1 为 en
 
+    private String versionCode = null;
 
+    private ProgressDialog proDialog = null;
+
+    private Intent updateService = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        sp = getSharedPreferences("coffig", MODE_PRIVATE);
+        sp = getSharedPreferences("config", MODE_PRIVATE);
         languageSelected = getSharedPreferences("languageSet", MODE_PRIVATE);
         StatusBarCompat.setStatusBarColor(this, Color.BLACK); // 修改状态栏颜色
         // 隐藏原始标题栏
@@ -67,23 +87,109 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             e.printStackTrace();
         }
 
+        LinearLayout checkupdateLayout = (LinearLayout) findViewById(R.id.ll_checkupdate);
         LinearLayout parameterLayout = (LinearLayout) findViewById(R.id.parameter_setting_layout);
         LinearLayout languageLayout = (LinearLayout) findViewById(R.id.select_language_layout);
         LinearLayout clearCacheLayout = (LinearLayout) findViewById(R.id.clear_cache_layout);
         LinearLayout backgroundRunLayout = (LinearLayout) findViewById(R.id.background_run_layout);
         Button logoutBtn = (Button) findViewById(R.id.logout_btn);
+        checkupdateLayout.setOnClickListener(this);
         parameterLayout.setOnClickListener(this);
         languageLayout.setOnClickListener(this);
         clearCacheLayout.setOnClickListener(this);
         backgroundRunLayout.setOnClickListener(this);
         logoutBtn.setOnClickListener(this);
 
+        versionCode = Common.getAppVersionCode(getApplicationContext());
+
         checkedItem = Integer.parseInt(languageSelected.getString("language", "0"));
+
+        if (ContextCompat.checkSelfPermission(SettingActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(SettingActivity.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
+        if (proDialog == null){
+            proDialog = new ProgressDialog(this);
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.ll_checkupdate:
+                Log.i("downloadUpdateApp2", "onResponseData: " );
+                Common.showDialog(proDialog, getResources().getString(R.string.tip), getResources().getString(R.string.tips_updatedlgmsg));
+                Log.i("downloadUpdateApp3", "onResponseData: " );
+                DownloadUpdateApp downloadUpdateApp = new DownloadUpdateApp(sp.getString("token", ""), versionCode);
+                downloadUpdateApp.requestHttpData(new ResponseData() {
+                    @Override
+                    public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
+                        if (isSuccess) {
+                            final FileInfo fileInfo = (FileInfo) responseObject;
+                            Common.dismissDialog(proDialog);
+                            Common.fileInfo = new FileInfo(fileInfo.getVersionid(), fileInfo.getVersioncode(),
+                                    fileInfo.getVersionname(), fileInfo.getDownloadurl(), fileInfo.getVersiondesc(), 0 ,0);//User/userDownApk.aspx
+                            // 通知Service开始下载
+                            updateService = new Intent(SettingActivity.this, DownloadService.class);
+                            updateService.setAction(DownloadService.ACTION_START);
+                            updateService.putExtra("fileInfo", Common.fileInfo);
+                            updateService.putExtra("token", sp.getString("token", ""));
+                            startService(updateService);
+                            Common.isUpdationg = true;
+                            ToastUtil.show(getApplicationContext(), getResources().getString(R.string.tips_gotodownnewapk));
+
+                            Log.i("downloadUpdateApp", "onResponseData: " + fileInfo.toString());
+                            if (code.equals("0")) {
+                                CustomDialog.Builder builder = new CustomDialog.Builder(SettingActivity.this);
+                                builder.setTitle(getResources().getString(R.string.tips_updatedlg_tle));
+                                builder.setMessage(getResources().getString(R.string.tips_updatedlg_msg1) + "\n"
+                                        + getResources().getString(R.string.tips_updatedlg_msg2) + fileInfo.getVersioncode() + "\n"
+                                        + getResources().getString(R.string.tips_updatedlg_msg5) + fileInfo.getVersiondesc() + "\n"
+                                        + getResources().getString(R.string.tips_updatedlg_msg6));
+                                builder.setNegativeButton(getResources().getString(R.string.cancl), new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // TODO Auto-generated method stub
+                                        dialog.dismiss();
+                                    }
+                                });
+                                builder.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // TODO Auto-generated method stub
+                                        dialog.dismiss();
+                                        Common.fileInfo = new FileInfo(fileInfo.getVersionid(), fileInfo.getVersioncode(),
+                                                fileInfo.getVersionname(), fileInfo.getDownloadurl(), fileInfo.getVersiondesc(), 0, 0);//User/userDownApk.aspx
+                                        // 通知Service开始下载
+                                        updateService = new Intent(SettingActivity.this, DownloadService.class);
+                                        updateService.setAction(DownloadService.ACTION_START);
+//                                        updateService.putExtra("fileInfo", Common.fileInfo);
+//                                        updateService.putExtra("token", sp.getString("token", ""));
+                                        startService(updateService);
+                                        Common.isUpdationg = true;
+                                        ToastUtil.show(getApplicationContext(), getResources().getString(R.string.tips_gotodownnewapk));
+
+                                    }
+                                });
+                                builder.create().show();
+                                Log.i("downloadUpdateApp1", "onResponseData: " + fileInfo.toString());
+                            }
+                            if (code.equals("311")) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Common.dismissDialog(proDialog);
+                                        ToastUtil.show(SettingActivity.this, getResources().getString(R.string.tips_update_alreadynew));
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+                break;
             case R.id.parameter_setting_layout:
                 Intent intent = new Intent(this, SetParameterActivity.class);
                 startActivity(intent);
@@ -116,7 +222,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                                         LaunchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(LaunchIntent);
                                     }
-                                },1);
+                                }, 1);
                                 break;
                             case 1: // 英文
                                 dialog.dismiss();
@@ -138,7 +244,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                                         LaunchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(LaunchIntent);
                                     }
-                                },1);
+                                }, 1);
                                 break;
                             default:
                                 break;
@@ -260,5 +366,19 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         DisplayMetrics dm = resources.getDisplayMetrics();
         configuration.locale = Locale.ENGLISH;
         resources.updateConfiguration(configuration, dm);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "拒绝权限将无法使用程序", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.trackersurvey.happynavi;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +11,7 @@ import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
 
-public class OnePxActivity extends AppCompatActivity {
+public class OnePxActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -26,6 +26,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
+import com.trackersurvey.bean.FileInfo;
 import com.trackersurvey.bean.FileInfoData;
 import com.trackersurvey.bean.TimeValueData;
 import com.trackersurvey.happynavi.LoginActivity;
@@ -74,20 +75,20 @@ public class    Common {
     public static       String       URL_UPEVENT       = url + "upComment.aspx";
     public static       String       URL_UPFILE        = url_file + "upFile.aspx";
     public static       String       URL_DOWNEVENT     = url_file + "downComment.aspx";
-    public static       String       URL_DOWNFILE      = url_file + "downFile.aspx";
-    public static       String       URL_DELETEEVENT   = url_file + "userChgCmt.aspx";
-    public static       String       url_wx            = "http://www.lisoft.com.cn/Share/PoMobile.ashx?";
-    public static       String       WX_APP_ID         = "wxbe3210c55c8d7e64";//"wxbe3210c55c8d7e64";"wx79c37ea773c35a23";"wx3d06ba93fb282593"
-    public static       String       NickName          = "";
-    public static       AMapLocation aLocation         = null;
-    public static       FileInfoData fileInfo          = null;//新版apk文件
-    public static       int          winWidth          = 720;
-    public static       int          winHeight         = 1080;
-    public static       int          decodeImgWidth    = 720;
-    public static       int          decodeImgHeight   = 1280;
-    public static       double       ppiScale          = 1.5;
-    public static final String       APPLICATION_DIR   = Environment.getExternalStorageDirectory().getAbsolutePath() + "/HappyNavi/";
-    public static final String       LOG_PATH          = APPLICATION_DIR + "log/";
+    public static       String       URL_DOWNFILE    = url_file + "downFile.aspx";
+    public static       String       URL_DELETEEVENT = url_file + "userChgCmt.aspx";
+    public static       String       url_wx          = "http://www.lisoft.com.cn/Share/PoMobile.ashx?";
+    public static       String       WX_APP_ID       = "wxbe3210c55c8d7e64";//"wxbe3210c55c8d7e64";"wx79c37ea773c35a23";"wx3d06ba93fb282593"
+    public static       String       NickName        = "";
+    public static       AMapLocation aLocation       = null;
+    public static       FileInfo     fileInfo        = null;//新版apk文件
+    public static       int          winWidth        = 720;
+    public static       int          winHeight       = 1080;
+    public static       int          decodeImgWidth  = 720;
+    public static       int          decodeImgHeight = 1280;
+    public static       double       ppiScale        = 1.5;
+    public static final String       APPLICATION_DIR = Environment.getExternalStorageDirectory().getAbsolutePath() + "/HappyNavi/";
+    public static final String       LOG_PATH        = APPLICATION_DIR + "log/";
     public static final String       PHOTO_PATH        = APPLICATION_DIR + "file/";
     public static final String       GROUPHEAD_PATH    = APPLICATION_DIR + "grouphead/";
     public static final String       CACHEPHOTO_PATH   = APPLICATION_DIR + "fileCache/";
@@ -114,6 +115,22 @@ public class    Common {
             Log.e("VersionInfo", "Exception", e);
         }
         return versionName;
+    }
+
+    public static String getAppVersionCode(Context context) {
+        String versionCode = "";
+        try {
+            // ---get the package info---
+            PackageManager pm = context.getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
+             versionCode = String.valueOf(pi.versionCode);
+            if (versionCode == null || versionCode.length() <= 0) {
+                return "";
+            }
+        } catch (Exception e) {
+            Log.e("VersionInfo", "Exception", e);
+        }
+        return versionCode;
     }
 
     //	/**

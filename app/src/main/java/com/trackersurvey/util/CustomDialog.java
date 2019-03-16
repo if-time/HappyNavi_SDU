@@ -28,16 +28,17 @@ public class CustomDialog extends Dialog {
     }
 
     public static class Builder {
-        private Context context;
-        private String title;
-        private String message;
-        private String positiveButtonText;
-        private String negativeButtonText;
-        private boolean isShowChebox = false;
-        private View contentView;
-        private DialogInterface.OnClickListener positiveButtonClickListener;
-        private DialogInterface.OnClickListener negativeButtonClickListener;
+        private Context                                context;
+        private String                                 title;
+        private String                                 message;
+        private String                                 positiveButtonText;
+        private String                                 negativeButtonText;
+        private boolean                                isShowChebox = false;
+        private View                                   contentView;
+        private DialogInterface.OnClickListener        positiveButtonClickListener;
+        private DialogInterface.OnClickListener        negativeButtonClickListener;
         private CompoundButton.OnCheckedChangeListener noshowCheckChangeListener;
+
         public Builder(Context context) {
             this.context = context;
         }
@@ -49,8 +50,9 @@ public class CustomDialog extends Dialog {
 
         /**
          * Set the Dialog message from resource
-         *
+         * <p>
          * //@param title
+         *
          * @return
          */
         public Builder setMessage(int message) {
@@ -85,10 +87,12 @@ public class CustomDialog extends Dialog {
             this.contentView = v;
             return this;
         }
-        public Builder setIsShowChebox(boolean isShowChebox){
+
+        public Builder setIsShowChebox(boolean isShowChebox) {
             this.isShowChebox = isShowChebox;
             return this;
         }
+
         /**
          * Set the positive button resource and it's listener
          *
@@ -124,10 +128,12 @@ public class CustomDialog extends Dialog {
             this.negativeButtonClickListener = listener;
             return this;
         }
-        public Builder setCheckBox(CompoundButton.OnCheckedChangeListener listener){
+
+        public Builder setCheckBox(CompoundButton.OnCheckedChangeListener listener) {
             this.noshowCheckChangeListener = listener;
             return this;
         }
+
         public CustomDialog create() {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -175,7 +181,7 @@ public class CustomDialog extends Dialog {
                         View.GONE);
             }
             //set checkbox
-            if(isShowChebox){
+            if (isShowChebox) {
                 ((CheckBox) layout.findViewById(R.id.noshow)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
                     @Override
@@ -184,7 +190,7 @@ public class CustomDialog extends Dialog {
                         noshowCheckChangeListener.onCheckedChanged(buttonView, isChecked);
                     }
                 });
-            }else{
+            } else {
                 ((CheckBox) layout.findViewById(R.id.noshow)).setVisibility(View.GONE);
             }
             // set the content message

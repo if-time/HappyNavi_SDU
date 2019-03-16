@@ -6,9 +6,13 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.trackersurvey.bean.FileInfo;
 import com.trackersurvey.bean.FileInfoData;
+import com.trackersurvey.bean.ThreadInfo;
 import com.trackersurvey.bean.ThreadInfoData;
 import com.trackersurvey.db.ThreadDAO;
+import com.trackersurvey.db.ThreadDAOImpl;
+import com.trackersurvey.util.UrlHeader;
 
 import org.apache.http.HttpStatus;
 
@@ -19,43 +23,43 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * 下载任务类
  */
-public class DownloadTaskService extends Service {
-    private Context context = null;
-    private FileInfoData fileInfo = null;
-    private ThreadDAO dao = null;
-    private int finished = 0;
-    public boolean isPause = false;
-    private int threadCount = 1;  // 线程数量
+public class DownloadTaskService {
+    private Context              context            = null;
+    private FileInfo             fileInfo           = null;
+    private ThreadDAO            dao                = null;
+    private int                  finished           = 0;
+    public  boolean              isPause            = false;
+    private int                  threadCount        = 1;  // 线程数量
+    private String               token;
     private List<DownloadThread> downloadThreadList = null; // 线程集合
+
     public DownloadTaskService() {
     }
 
-    public DownloadTaskService(Context context, FileInfoData fileInfo, int threadCount) {
+    public DownloadTaskService(Context context, FileInfo fileInfo, int threadCount, String token) {
         this.context = context;
         this.fileInfo = fileInfo;
         this.threadCount = threadCount;
-
+        this.token = token;
+        dao = new ThreadDAOImpl(context);
     }
 
-    public void downLoad()
-    {
+    public void downLoad() {
         //mDao.deleteAllThread();
         // 读取数据库的线程信息
-        List<ThreadInfoData> threads = dao.getThreads(fileInfo.getUrl());
-        ThreadInfoData threadInfo = null;
+        List<ThreadInfo> threads = dao.getThreads(UrlHeader.BASE_URL_NEW + fileInfo.getDownloadurl() + "?token=" + token);
+        ThreadInfo threadInfo = null;
 
-        if (0 == threads.size())
-        {
+        if (0 == threads.size()) {
             // 计算每个线程下载长度
             int len = fileInfo.getLength() / threadCount;
-            for (int i = 0; i < threadCount; i++)
-            {
+            for (int i = 0; i < threadCount; i++) {
                 // 初始化线程信息对象
-                threadInfo = new ThreadInfoData(i, fileInfo.getUrl(),
-                        len * i, (i + 1) * len - 1, 0);
+                threadInfo = new ThreadInfo(i, UrlHeader.BASE_URL_NEW + fileInfo.getDownloadurl() + "?token=" + token, len * i, (i + 1) * len - 1, 0);
 
                 if (threadCount - 1 == i)  // 处理最后一个线程下载长度不能整除的问题
                 {
@@ -70,8 +74,7 @@ public class DownloadTaskService extends Service {
 
         downloadThreadList = new ArrayList<DownloadThread>();
         // 启动多个线程进行下载
-        for (ThreadInfoData info : threads)
-        {
+        for (ThreadInfo info : threads) {
             DownloadThread thread = new DownloadThread(info);
             thread.start();
             // 添加到线程集合中
@@ -81,19 +84,18 @@ public class DownloadTaskService extends Service {
 
     /**
      * 下载线程
+     *
      * @author Yann
      * @date 2015-8-8 上午11:18:55
      */
-    private class DownloadThread extends Thread
-    {
-        private ThreadInfoData threadInfo = null;
-        public boolean isFinished = false;  // 线程是否执行完毕
+    private class DownloadThread extends Thread {
+        private ThreadInfo threadInfo = null;
+        public  boolean    isFinished = false;  // 线程是否执行完毕
 
         /**
-         *@param info
+         * @param info
          */
-        public DownloadThread(ThreadInfoData info)
-        {
+        public DownloadThread(ThreadInfo info) {
             this.threadInfo = info;
         }
 
@@ -101,14 +103,12 @@ public class DownloadTaskService extends Service {
          * @see java.lang.Thread#run()
          */
         @Override
-        public void run()
-        {
+        public void run() {
             HttpURLConnection connection = null;
             RandomAccessFile raf = null;
             InputStream inputStream = null;
 
-            try
-            {
+            try {
                 URL url = new URL(threadInfo.getUrl());
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setConnectTimeout(5000);
@@ -118,10 +118,9 @@ public class DownloadTaskService extends Service {
                 int start = threadInfo.getStart() + threadInfo.getFinished();//开始位置+已下载的文件长度
                 connection.setRequestProperty("Range",
                         "bytes=" + start + "-" + threadInfo.getEnd());
-                Log.i("phonelog", threadInfo.getId() +",start:"+start+",end:"+threadInfo.getEnd());
+                Log.i("phonelog", threadInfo.getId() + ",start:" + start + ",end:" + threadInfo.getEnd());
                 //connection.setRequestProperty("Connection", "Keep-Alive");
-                File file = new File(DownloadService.DOWNLOAD_PATH,
-                        fileInfo.getFileName());
+                File file = new File(DownloadService.DOWNLOAD_PATH, fileInfo.getDownloadurl().substring(9));
                 raf = new RandomAccessFile(file, "rwd");
                 raf.seek(start);
                 Intent intent = new Intent();
@@ -129,16 +128,15 @@ public class DownloadTaskService extends Service {
                 finished += threadInfo.getFinished();
                 Log.i("phonelog", threadInfo.getId() + "finished = " + threadInfo.getFinished());
                 // 开始下载
-                if(start<threadInfo.getEnd()){
-                    if (connection.getResponseCode() == HttpStatus.SC_PARTIAL_CONTENT )//HttpStatus.SC_PARTIAL_CONTENT
+                if (start < threadInfo.getEnd()) {
+                    if (connection.getResponseCode() == HttpStatus.SC_PARTIAL_CONTENT)//HttpStatus.SC_PARTIAL_CONTENT
                     {
                         // 读取数据
                         inputStream = connection.getInputStream();
                         byte buf[] = new byte[1024 << 2];
                         int len = -1;
                         long time = System.currentTimeMillis();
-                        while ((len = inputStream.read(buf)) != -1)
-                        {
+                        while ((len = inputStream.read(buf)) != -1) {
                             // 写入文件
                             raf.write(buf, 0, len);
                             // 累加整个文件完成进度
@@ -150,25 +148,22 @@ public class DownloadTaskService extends Service {
                             //							+"---total:"+mFinised);
                             //							break;
                             //						}
-                            if (System.currentTimeMillis() - time > 1000)
-                            {
+                            if (System.currentTimeMillis() - time > 1000) {
                                 time = System.currentTimeMillis();
                                 int f = finished * 100 / fileInfo.getLength();
-                                if (f > fileInfo.getFinished())
-                                {
+                                if (f > fileInfo.getFinished()) {
                                     intent.putExtra("finished", f);
-                                    intent.putExtra("id", fileInfo.getId());
+                                    intent.putExtra("id", fileInfo.getVersionid());
                                     context.sendBroadcast(intent);
 
                                 }
                                 Log.i("phonelog", threadInfo.getId() + "下载中，finished = " + threadInfo.getFinished()
-                                        +"---total:"+finished);
+                                        + "---total:" + finished);
 
                             }
 
                             // 在下载暂停时，保存下载进度
-                            if (isPause)
-                            {
+                            if (isPause) {
                                 dao.updateThread(threadInfo.getUrl(),
                                         threadInfo.getId(),
                                         threadInfo.getFinished());
@@ -182,52 +177,40 @@ public class DownloadTaskService extends Service {
                         // 标识线程执行完毕
                         isFinished = true;
                         checkAllThreadFinished();
+                    } else {
+                        Log.i("phonelog", threadInfo.getId() + "下载异常,返回码:" + connection.getResponseCode());
                     }
-                    else{
-                        Log.i("phonelog",threadInfo.getId() +"下载异常,返回码:"+connection.getResponseCode());
-                    }
-                }
-                else{
+                } else {
                     // 标识线程执行完毕
                     isFinished = true;
                     checkAllThreadFinished();
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
                 Intent intent = new Intent(DownloadService.ACTION_ERROR);
                 intent.putExtra("fileInfo", fileInfo);
                 context.sendBroadcast(intent);
-                Log.i("phonelog","下载异常e----"+e.getMessage());
-            }
-            finally
-            {
-                try
-                {
+                Log.i("phonelog", "下载异常e----" + e.getMessage());
+            } finally {
+                try {
                     dao.updateThread(threadInfo.getUrl(),
                             threadInfo.getId(),
                             threadInfo.getFinished());
 
                     Log.i("phonelog", threadInfo.getId() + "保存进度，finished = " + threadInfo.getFinished());
 
-                    if (connection != null)
-                    {
+                    if (connection != null) {
                         connection.disconnect();
                     }
-                    if (raf != null)
-                    {
+                    if (raf != null) {
                         raf.close();
                     }
-                    if (inputStream != null)
-                    {
+                    if (inputStream != null) {
                         inputStream.close();
                     }
-                }
-                catch (Exception e2)
-                {
+                } catch (Exception e2) {
                     e2.printStackTrace();
-                    Log.i("phonelog","下载异常e2----"+e2.getMessage());
+                    Log.i("phonelog", "下载异常e2----" + e2.getMessage());
                 }
             }
         }
@@ -235,39 +218,30 @@ public class DownloadTaskService extends Service {
 
     /**
      * 判断所有的线程是否执行完毕
+     *
      * @return void
      * @author Yann
      * @date 2015-8-9 下午1:19:41
      */
-    private synchronized void checkAllThreadFinished()
-    {
+    private synchronized void checkAllThreadFinished() {
         boolean allFinished = true;
 
         // 遍历线程集合，判断线程是否都执行完毕
-        for (DownloadThread thread : downloadThreadList)
-        {
-            if (!thread.isFinished)
-            {
+        for (DownloadThread thread : downloadThreadList) {
+            if (!thread.isFinished) {
                 allFinished = false;
                 break;
             }
         }
 
-        if (allFinished)
-        {
+        if (allFinished) {
             // 删除下载记录
-            dao.deleteThread(fileInfo.getUrl());
+            dao.deleteThread(UrlHeader.BASE_URL_NEW + fileInfo.getDownloadurl() + "?token=" + token);
             // 发送广播知道UI下载任务结束
             Intent intent = new Intent(DownloadService.ACTION_FINISHED);
             intent.putExtra("fileInfo", fileInfo);
             context.sendBroadcast(intent);
-            Log.i("phonelog","下载完成");
+            Log.i("phonelog", "下载完成");
         }
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
     }
 }

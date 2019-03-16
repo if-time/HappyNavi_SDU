@@ -1,5 +1,6 @@
 package com.trackersurvey.db;
 
+import com.trackersurvey.bean.ThreadInfo;
 import com.trackersurvey.bean.ThreadInfoData;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface ThreadDAO {
     /**
      * 插入线程信息
      */
-    public void insertThread(ThreadInfoData threadInfo);
+    public void insertThread(ThreadInfo threadInfo);
     /**
      * 删除线程信息
      */
@@ -30,7 +31,7 @@ public interface ThreadDAO {
     /**
      * 查询文件的线程信息
      */
-    public List<ThreadInfoData> getThreads(String url);
+    public List<ThreadInfo> getThreads(String url);
     /**
      * 线程信息是否存在
      */

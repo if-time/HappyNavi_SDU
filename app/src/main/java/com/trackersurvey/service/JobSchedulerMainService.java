@@ -87,6 +87,7 @@ public class JobSchedulerMainService extends Service {
     }
 
     private void onEnd() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         startService(getIntentEndStart(getApplicationContext()));
     }
 

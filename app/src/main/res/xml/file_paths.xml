@@ -4,5 +4,8 @@
     <!--name：就是你给这个访问路径起个名字-->
     <!--设置为'.'时代表整个存储卡-->
     <!--/HappyNavi/file/-->
-    <external-path name="my_images" path="." />
+    <!--<external-path name="my_images" path="." />-->
+    <external-path
+        name="storage/emulated/0"
+        path="." />
 </paths>

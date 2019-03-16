@@ -332,9 +332,10 @@
     <string name="tips_updatedlg_msg5">更新内容：</string>
     <string name="tips_updatedlg_msg6">点击确定下载最新版本</string>
     <string name="tips_update_alreadynew">您正在使用最新版本</string>
-    <string name="tips_autodownnewapk">正在下载最新版应用，可在通知栏查看下载进度，您可在设置中关闭自动下载</string>
+    <string name="tips_autodownnewapk">正在下载最新版应用</string>
     <string name="tips_gotodownnewapk">开始下载最新版应用，可在通知栏查看下载进度</string>
     <string name="tips_newapkdown">最新版应用下载完成，请在通知栏点击安装</string>
+    <string name="tips_autoinstall">最新版应用下载完成，即将自动安装</string>
     <string name="tips_install">点击安装</string>
     <string name="sportdata">运动数据</string>
     <string name="tips_synchronous">同步中</string>
@@ -484,6 +485,7 @@
     <string name="auto_update_frequency_summary">设置时间参数更新的时间周期</string>
 
     <string name="language_title">语言选择</string>
+    <string name="checkupdate_title">检查更新</string>
     <string name="language_key">language</string>
     <string name="language_default_value">0</string>
     <string name="language_summary">语言选择</string>

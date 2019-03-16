@@ -10,12 +10,24 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import cn.finalteam.okhttpfinal.OkHttpFinal;
+import cn.finalteam.okhttpfinal.OkHttpFinalConfiguration;
+
 public class MyApplication extends Application {
+
+
+    private static MyApplication mApplication = null;
+
+    public static MyApplication getInstance() {
+        return mApplication;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        mApplication = this;
 
+        initOKHttp();
         /*
         多进程且各个进程都会初始化Bugly，那么每个进程下的Bugly都会进行数据上报，造成不必要的资源浪费。
         只在主进程下上报数据：判断是否是主进程（通过进程名是否为包名来判断），并在初始化Bugly时增加一个上报进程的策略配置。
@@ -65,4 +77,10 @@ public class MyApplication extends Application {
         }
         return null;
     }
+
+    private void initOKHttp() {
+        OkHttpFinalConfiguration.Builder builder = new OkHttpFinalConfiguration.Builder();
+        OkHttpFinal.getInstance().init(builder.build());
+    }
+
 }

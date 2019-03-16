@@ -69,7 +69,7 @@
             <EditText
                 android:id="@+id/editComment"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="110dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="2dp"
@@ -233,28 +233,6 @@
                     android:layout_toRightOf="@id/relationship_label" >
                 </com.trackersurvey.util.DropDownListViewShort>
 
-
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/is_share_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <CheckBox
-                    android:id="@+id/is_share_cb"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/is_share_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="分享兴趣点"
-                    android:layout_toRightOf="@id/is_share_cb"
-                    android:layout_centerVertical="true"
-                    android:layout_marginTop="7dp"/>
-
             </RelativeLayout>
 
             <!-- 网格显示图片 行列间距5dp -->
@@ -263,7 +241,10 @@
                 android:id="@+id/gridPicture"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
                 android:layout_weight="6"
                 android:listSelector="@android:color/transparent"
                 android:background="#FFFFFF"
@@ -304,6 +285,27 @@
 
             </RelativeLayout>
         </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/is_share_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/is_share_cb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/is_share_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="分享兴趣点"
+            android:layout_toRightOf="@id/is_share_cb"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="7dp"/>
 
     </RelativeLayout>
 

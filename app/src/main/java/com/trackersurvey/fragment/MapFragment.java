@@ -63,8 +63,10 @@ import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.maps.model.TileOverlay;
 import com.amap.api.maps.model.TileOverlayOptions;
 import com.amap.api.maps.model.TileProvider;
+import com.trackersurvey.bean.FileInfo;
 import com.trackersurvey.bean.FileInfoData;
 import com.trackersurvey.bean.PointOfInterestData;
+import com.trackersurvey.happynavi.MainActivity;
 import com.trackersurvey.http.DownloadPoiChoices;
 import com.trackersurvey.http.EndTraceRequest;
 import com.trackersurvey.model.PoiChoiceModel;
@@ -260,6 +262,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         URL_ENDTRAIL = Common.url + "reqTraceNo.aspx";
         URL_CHECKUPDATE = Common.url + "request.aspx";
         URL_GETPOI = Common.url + "requestInfo.aspx";
+
         if (l == 0)
             initPOI(); // 获取兴趣点列表选项
         if (l == 1) {
@@ -288,8 +291,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             @Override
             public void onReceive(Context context, Intent intent) {
                 // getActivity()这里不知道改得对不对
-                ConnectivityManager connectMgr = (ConnectivityManager) getActivity().
-                        getSystemService(Context.CONNECTIVITY_SERVICE);
+                ConnectivityManager connectMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo netInfo = connectMgr.getActiveNetworkInfo();
                 if (netInfo != null && netInfo.isConnected()) {
                     //有网络连接
@@ -557,6 +559,12 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 } else {
                     UiRefresh = false;
                     Toast.makeText(getContext(), "未获取位置权限，无法定位您的位置", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case 2:
+                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getContext(), "拒绝权限将无法使用程序", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 break;
         }
@@ -1552,8 +1560,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
-                                        Common.fileInfo = new FileInfoData(0, updatestr[2]
-                                                , "HappyNavi" + updatestr[0] + ".apk", 0, 0);//User/userDownApk.aspx
+//                                        Common.fileInfo = new FileInfo(0, updatestr[2]
+//                                                , "HappyNavi" + updatestr[0] + ".apk", 0, 0);//User/userDownApk.aspx
                                         // 通知Service开始下载
                                         updateServiceIntent = new Intent(getContext(), DownloadService.class);
                                         updateServiceIntent.setAction(DownloadService.ACTION_START);
@@ -2034,5 +2042,4 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         }
         Log.i("LogDemo", "Main-onDestroy");
     }
-
 }

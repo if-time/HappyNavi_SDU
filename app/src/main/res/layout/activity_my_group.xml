@@ -35,7 +35,7 @@
                 android:gravity="center"
                 android:text="@string/minegroup"
                 android:textColor="#0000FF"
-                android:textSize="15sp" />
+                android:textSize="18sp" />
         </LinearLayout>
         <View
             android:layout_width="1dp"
@@ -62,7 +62,7 @@
                 android:gravity="center"
                 android:text="@string/addgroup"
                 android:textColor="#000000"
-                android:textSize="15sp" />
+                android:textSize="18sp" />
         </LinearLayout>
 
 

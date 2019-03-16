@@ -660,12 +660,12 @@
         
     <string name="tips_update_alreadynew">You are using the latest version </string>
         
-    <string name="tips_autodownnewapk">Downloading the latest version of the app, you can check the download progress in the notification bar, you can turn off automatic download in the settings </string>
+    <string name="tips_autodownnewapk">Downloading the latest version of the app</string>
         
     <string name="tips_gotodownnewapk">Start downloading the latest version of the app, you can view the download progress in the notification bar</string>
         
     <string name="tips_newapkdown">The latest version of the application download is complete, please click install in the notification bar </string>
-        
+        <string name="tips_autoinstall">The latest version of the application download is complete, it will be installed automatically</string>
     <string name="tips_install">Click to install</string>
         
     <string name="sportdata">motion data </string>
@@ -953,6 +953,7 @@
     <string name="auto_update_frequency_summary"> set the time period of the time parameter update </string>
 
     <string name="language_title">Language</string>
+    <string name="checkupdate_title">Check for updates</string>
         
     <string name="language_key">language</string>
         

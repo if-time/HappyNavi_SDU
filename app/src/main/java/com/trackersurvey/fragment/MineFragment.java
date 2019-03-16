@@ -1,22 +1,29 @@
 package com.trackersurvey.fragment;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.trackersurvey.db.MyTraceDBHelper;
+import com.trackersurvey.happynavi.MainActivity;
 import com.trackersurvey.happynavi.MyAlbumActivity;
 import com.trackersurvey.happynavi.MyGroupActivity;
 import com.trackersurvey.happynavi.R;
@@ -40,7 +47,7 @@ import java.io.IOException;
 public class MineFragment extends Fragment implements View.OnClickListener {
 
     private SharedPreferences sp;
-    private CircleImageView headImg;
+    private CircleImageView   headImg;
     private TextView          nickNameTv;
     private TextView          mobilePhoneTv;
 
@@ -56,9 +63,9 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         nickNameTv = (TextView) meLayout.findViewById(R.id.mine_nickname);
         String nickname = sp.getString("nickname", "");
 
-        if (nickname==null||nickname.equals("")){
+        if (nickname == null || nickname.equals("")) {
 
-        }else {
+        } else {
             nickNameTv.setText(sp.getString("nickname", ""));
         }
         mobilePhoneTv = (TextView) meLayout.findViewById(R.id.mine_mobilePhone);
@@ -75,7 +82,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         settingLayout.setOnClickListener(this);
         helpLayout.setOnClickListener(this);
         exit_app.setOnClickListener(this);
-//        EventBus.getDefault().register(this);
+        //        EventBus.getDefault().register(this);
+
         return meLayout;
     }
 
@@ -97,6 +105,12 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             case R.id.my_setting_layout:
                 Intent settingIntent = new Intent(getContext(), SettingActivity.class);
                 startActivity(settingIntent);
+//                if (ContextCompat.checkSelfPermission(getContext(),
+//                        Manifest.permission.REQUEST_INSTALL_PACKAGES) != PackageManager.PERMISSION_GRANTED) {
+//                    ActivityCompat.requestPermissions(getActivity(),
+//                            new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, 1);
+//                }
+
                 break;
             case R.id.my_help_layout:
                 TestRequest testRequest = new TestRequest();
@@ -112,23 +126,23 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void exit(){
+    public void exit() {
         //退出提醒对话框
         CustomDialog.Builder builder = new CustomDialog.Builder(getContext());
         builder.setTitle(getResources().getString(R.string.tip));
-        if(Common.isRecording) {
+        if (Common.isRecording) {
             builder.setMessage(getResources().getString(R.string.exitdlg0));
         } else {
             builder.setMessage(getResources().getString(R.string.exitdlg));
         }
-        builder.setNegativeButton(getResources().getString(R.string.cancl),new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getResources().getString(R.string.cancl), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // TODO Auto-generated method stub
                 dialog.dismiss();
             }
         });
-        builder.setPositiveButton(getResources().getString(R.string.exit),new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getResources().getString(R.string.exit), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // TODO Auto-generated method stub
@@ -156,4 +170,19 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         nickNameTv.setText(sp.getString("nickname", ""));
         mobilePhoneTv.setText(sp.getString("mobilePhone", ""));
     }
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        switch (requestCode) {
+//            case 1:
+//                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+//                    Toast.makeText(getContext(), "拒绝权限将无法使用程序", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                break;
+//
+//            default:
+//                break;
+//        }
+//    }
 }
