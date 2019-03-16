@@ -235,7 +235,7 @@ public class DownloadApkService extends Service {
         Intent install = new Intent(Intent.ACTION_VIEW);
         if (Build.VERSION.SDK_INT >= 24) { //判读版本是否在7.0以上
             Log.i(TAG, "getContentIntent: saveFile : " + saveFile);
-            Uri apkUri = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID + ".fileprovider", saveFile);//在AndroidManifest中的android:authorities值
+            Uri apkUri = FileProvider.getUriForFile(getApplicationContext(), "com.trackersurvey.happynavi.fileProvider", saveFile);//在AndroidManifest中的android:authorities值
             Log.i(TAG, "getContentIntent: " + apkUri.getPath());
             install = new Intent(Intent.ACTION_VIEW);
             install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
