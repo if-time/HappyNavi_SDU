@@ -304,10 +304,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                         if (Common.isUpdationg && Common.fileInfo != null) {
                             Log.i("phonelog", "WiFi下继续下载");
                             // 通知Service继续下载
-                            updateServiceIntent = new Intent(getContext(), DownloadService.class);
-                            updateServiceIntent.setAction(DownloadService.ACTION_START);
-                            updateServiceIntent.putExtra("fileInfo", Common.fileInfo);
-                            getActivity().startService(updateServiceIntent);
+//                            updateServiceIntent = new Intent(getContext(), DownloadService.class);
+//                            updateServiceIntent.setAction(DownloadService.ACTION_START);
+//                            updateServiceIntent.putExtra("fileInfo", Common.fileInfo);
+//                            getActivity().startService(updateServiceIntent);
                         } else {
                             // 原参数是getApplicationContext()
                             if (Common.isAutoUpdate(getContext())) {
@@ -320,9 +320,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                 }
                                 // 检查更新app
                                 if (version != null && !version.equals("")) {
-                                    PostCheckVersion checkVersion = new PostCheckVersion(updatehandler, URL_CHECKUPDATE,
-                                            Common.getDeviceId(getContext()), version);
-                                    checkVersion.start();
+//                                    PostCheckVersion checkVersion = new PostCheckVersion(updatehandler, URL_CHECKUPDATE,
+//                                            Common.getDeviceId(getContext()), version);
+//                                    checkVersion.start();
                                 }
                             } else {
                                 Log.i("phonelog", "自动检查更新关闭");
@@ -335,10 +335,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                         Log.i("phonelog", "WiFi连接断开");
                         if (Common.isUpdationg && Common.fileInfo != null) {
                             // 通知Service暂停下载
-                            updateServiceIntent = new Intent(getContext(), DownloadService.class);
-                            updateServiceIntent.setAction(DownloadService.ACTION_STOP);
-                            updateServiceIntent.putExtra("fileInfo", Common.fileInfo);
-                            getActivity().startService(updateServiceIntent);
+//                            updateServiceIntent = new Intent(getContext(), DownloadService.class);
+//                            updateServiceIntent.setAction(DownloadService.ACTION_STOP);
+//                            updateServiceIntent.putExtra("fileInfo", Common.fileInfo);
+//                            getActivity().startService(updateServiceIntent);
                             Log.i("phonelog", "发送暂停命令");
                         }
                     } else {
@@ -351,10 +351,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     Common.isWiFiConnected = false;
                     if (Common.isUpdationg && Common.fileInfo != null) {
                         // 通知Service暂停下载
-                        updateServiceIntent = new Intent(getContext(), DownloadService.class);
-                        updateServiceIntent.setAction(DownloadService.ACTION_STOP);
-                        updateServiceIntent.putExtra("fileInfo", Common.fileInfo);
-                        getActivity().startService(updateServiceIntent);
+//                        updateServiceIntent = new Intent(getContext(), DownloadService.class);
+//                        updateServiceIntent.setAction(DownloadService.ACTION_STOP);
+//                        updateServiceIntent.putExtra("fileInfo", Common.fileInfo);
+//                        getActivity().startService(updateServiceIntent);
                         Log.i("phonelog", "发送暂停命令");
                     }
                     if (!Common.checkGPS(getContext())) {
@@ -1562,11 +1562,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                         dialog.dismiss();
 //                                        Common.fileInfo = new FileInfo(0, updatestr[2]
 //                                                , "HappyNavi" + updatestr[0] + ".apk", 0, 0);//User/userDownApk.aspx
-                                        // 通知Service开始下载
-                                        updateServiceIntent = new Intent(getContext(), DownloadService.class);
-                                        updateServiceIntent.setAction(DownloadService.ACTION_START);
-                                        updateServiceIntent.putExtra("fileInfo", Common.fileInfo);
-                                        getActivity().startService(updateServiceIntent);
+//                                        // 通知Service开始下载
+//                                        updateServiceIntent = new Intent(getContext(), DownloadService.class);
+//                                        updateServiceIntent.setAction(DownloadService.ACTION_START);
+//                                        updateServiceIntent.putExtra("fileInfo", Common.fileInfo);
+//                                        getActivity().startService(updateServiceIntent);
                                         Common.isUpdationg = true;
                                         ToastUtil.show(getContext(), getResources().getString(R.string.tips_gotodownnewapk));
                                     }

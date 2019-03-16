@@ -3,6 +3,7 @@ package com.trackersurvey.happynavi;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.githang.statusbar.StatusBarCompat;
 
+import com.trackersurvey.broadcastreceiver.InitApkBroadCastReceiver;
 import com.trackersurvey.fragment.MapFragment;
 import com.trackersurvey.fragment.TraceListFragment;
 import com.trackersurvey.fragment.MineFragment;
@@ -83,6 +85,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private final String REFRESH_ACTION = "android.intent.action.REFRESH_RECEIVER";
 
+    // 监听APK安装
+    private IntentFilter             intentFilter;
+    private InitApkBroadCastReceiver initApkBroadCastReceiver;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +106,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         fragmentManager = getSupportFragmentManager();
         setTabSelection(0);
         startService(JobSchedulerMainService.getIntentStart(this));
+
+        intentFilter = new IntentFilter(Intent.ACTION_MEDIA_MOUNTED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        intentFilter.addDataScheme("package");
+        initApkBroadCastReceiver = new InitApkBroadCastReceiver();
+        registerReceiver(initApkBroadCastReceiver, intentFilter);
     }
 
     private void initView() {
@@ -300,5 +315,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         Log.i("HomePage", "onDestroy");
+        unregisterReceiver(initApkBroadCastReceiver);
     }
 }

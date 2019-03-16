@@ -48,6 +48,11 @@ public class DownloadTask extends AsyncTask<String, Integer, Integer> {
         RandomAccessFile savedFile = null;
         File file = null;
 
+        String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
+        File downloaded = new File(dir + "/微足迹.apk");
+        if (downloaded.exists()) {
+            downloaded.delete();
+        }
         try {
             long downloadedLength = 0; // 记录已下载的文件长度
             // 首先从参数中获取到下载的URL地址

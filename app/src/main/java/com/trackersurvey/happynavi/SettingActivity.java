@@ -164,7 +164,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             proDialog = new ProgressDialog(this);
         }
 
-        intentFilter = new IntentFilter();
+        intentFilter = new IntentFilter(Intent.ACTION_MEDIA_MOUNTED);
         intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
         intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
         intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
@@ -190,19 +190,17 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
                         if (isSuccess) {
-                            final FileInfo fileInfo = (FileInfo) responseObject;
-
-                            Common.fileInfo = new FileInfo(fileInfo.getVersionid(), fileInfo.getVersioncode(),
-                                    fileInfo.getVersionname(), fileInfo.getDownloadurl(), fileInfo.getVersiondesc(), 0 ,0);
-                            token = sp.getString("token", "");
-                            fileName = fileInfo.getDownloadurl().substring(9);
-                            mSavePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "微足迹.apk";
-                            mDownloadUrl = UrlHeader.BASE_URL_NEW + fileInfo.getDownloadurl() + "?token=" + token;
-
-                            ToastUtil.show(getApplicationContext(), getResources().getString(R.string.tips_gotodownnewapk));
-
-                            Log.i("downloadUpdateApp", "onResponseData: " + fileInfo.toString());
                             if (code.equals("0")) {
+                                final FileInfo fileInfo = (FileInfo) responseObject;
+
+                                Common.fileInfo = new FileInfo(fileInfo.getVersionid(), fileInfo.getVersioncode(),
+                                        fileInfo.getVersionname(), fileInfo.getDownloadurl(), fileInfo.getVersiondesc(), 0 ,0);
+                                token = sp.getString("token", "");
+                                fileName = fileInfo.getDownloadurl().substring(9);
+                                mSavePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "微足迹.apk";
+                                mDownloadUrl = UrlHeader.BASE_URL_NEW + fileInfo.getDownloadurl() + "?token=" + token;
+
+                                Log.i("downloadUpdateApp", "onResponseData: " + fileInfo.toString());
                                runOnUiThread(new Runnable() {
                                    @Override
                                    public void run() {
@@ -238,7 +236,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                                        builder.create().show();
                                    }
                                });
-                                Log.i("downloadUpdateApp1", "onResponseData: " + fileInfo.toString());
                             }
                             if (code.equals("311")) {
                                 runOnUiThread(new Runnable() {
