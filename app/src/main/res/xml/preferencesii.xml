@@ -3,7 +3,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android" 
   android:title="@string/system_settings" >
 	<CheckBoxPreference 
-	    android:defaultValue="true" 
+	    android:defaultValue="false"
 	    android:key="@string/auto_update_switch_key" 
 	    android:summaryOff="@string/auto_update_switch_summary_off" 
 	    android:title="@string/auto_update_switch_title" 
@@ -18,7 +18,7 @@
 	    android:title="@string/auto_upload_switch_title" 
 	    />
 	<CheckBoxPreference 
-	    android:defaultValue="true"
+	    android:defaultValue="false"
 	    android:summaryOn="@string/auto_uploadpic_switch_summary_on" 
 	    android:title="@string/auto_uploadpic_switch_title" 
 	    android:summaryOff="@string/auto_uploadpic_switch_summary_off" 

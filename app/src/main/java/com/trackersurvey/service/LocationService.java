@@ -190,7 +190,8 @@ public class LocationService extends Service implements AMapLocationListener {
             }
         }
     };
-    Runnable runnable     = new Runnable() {
+
+    Runnable runnable = new Runnable() {
         @Override
         public void run() {
             //showmessage("开始上传");
@@ -201,6 +202,7 @@ public class LocationService extends Service implements AMapLocationListener {
             Log.i("LogDemo", "handler执行完了，当前时间是：" + Common.currentTime());
         }
     };
+
     Runnable timeRunnable = new Runnable() {
 
         @Override
@@ -211,6 +213,7 @@ public class LocationService extends Service implements AMapLocationListener {
                     Common.getTimeUpdateFrequency(getApplicationContext()) * atomTime);
         }
     };
+
     @SuppressLint("HandlerLeak")
     Handler timeHandler = new Handler() {
         @Override

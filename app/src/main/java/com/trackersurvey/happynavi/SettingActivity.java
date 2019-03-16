@@ -12,10 +12,13 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -35,6 +38,8 @@ import com.trackersurvey.http.DownloadUpdateApp;
 import com.trackersurvey.http.LogoutRequest;
 import com.trackersurvey.http.ResponseData;
 import com.trackersurvey.httpconnection.PostCheckVersion;
+import com.trackersurvey.service.AppUpdateService;
+import com.trackersurvey.service.DownloadApkService;
 import com.trackersurvey.service.DownloadService;
 import com.trackersurvey.service.LocationService;
 import com.trackersurvey.util.ActivityCollector;
@@ -42,6 +47,7 @@ import com.trackersurvey.util.Common;
 import com.trackersurvey.util.CustomDialog;
 import com.trackersurvey.util.DataCleanManager;
 import com.trackersurvey.util.ToastUtil;
+import com.trackersurvey.util.UrlHeader;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,6 +68,31 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private ProgressDialog proDialog = null;
 
     private Intent updateService = null;
+
+    private Context mContext;
+
+    private static final int REQUEST_CODE_WRITE_STORAGE = 1002;
+    private static final int REQUEST_CODE_UNKNOWN_APP = 2001;
+
+    private String mSavePath = null;
+    private String mDownloadUrl = null;
+
+    private             String                            fileName             = null;
+    private             String                            token                = null;
+
+    private DownloadApkService.DownloadBinder downloadBinder;
+
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+            downloadBinder = (DownloadApkService.DownloadBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,72 +140,83 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             ActivityCompat.requestPermissions(SettingActivity.this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
+
+        initData();
+
+        Intent intent = new Intent(this, DownloadApkService.class);
+        startService(intent); // 启动服务
+        bindService(intent, connection, BIND_AUTO_CREATE); // 绑定服务
+
         if (proDialog == null){
             proDialog = new ProgressDialog(this);
         }
     }
 
+    private void initData() {
+        mContext = this;
+    }
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_checkupdate:
-                Log.i("downloadUpdateApp2", "onResponseData: " );
+
                 Common.showDialog(proDialog, getResources().getString(R.string.tip), getResources().getString(R.string.tips_updatedlgmsg));
-                Log.i("downloadUpdateApp3", "onResponseData: " );
+
                 DownloadUpdateApp downloadUpdateApp = new DownloadUpdateApp(sp.getString("token", ""), versionCode);
                 downloadUpdateApp.requestHttpData(new ResponseData() {
                     @Override
                     public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
                         if (isSuccess) {
                             final FileInfo fileInfo = (FileInfo) responseObject;
-                            Common.dismissDialog(proDialog);
+
                             Common.fileInfo = new FileInfo(fileInfo.getVersionid(), fileInfo.getVersioncode(),
-                                    fileInfo.getVersionname(), fileInfo.getDownloadurl(), fileInfo.getVersiondesc(), 0 ,0);//User/userDownApk.aspx
-                            // 通知Service开始下载
-                            updateService = new Intent(SettingActivity.this, DownloadService.class);
-                            updateService.setAction(DownloadService.ACTION_START);
-                            updateService.putExtra("fileInfo", Common.fileInfo);
-                            updateService.putExtra("token", sp.getString("token", ""));
-                            startService(updateService);
-                            Common.isUpdationg = true;
+                                    fileInfo.getVersionname(), fileInfo.getDownloadurl(), fileInfo.getVersiondesc(), 0 ,0);
+                            token = sp.getString("token", "");
+                            fileName = fileInfo.getDownloadurl().substring(9);
+                            mSavePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "微足迹.apk";
+                            mDownloadUrl = UrlHeader.BASE_URL_NEW + fileInfo.getDownloadurl() + "?token=" + token;
+
                             ToastUtil.show(getApplicationContext(), getResources().getString(R.string.tips_gotodownnewapk));
 
                             Log.i("downloadUpdateApp", "onResponseData: " + fileInfo.toString());
                             if (code.equals("0")) {
-                                CustomDialog.Builder builder = new CustomDialog.Builder(SettingActivity.this);
-                                builder.setTitle(getResources().getString(R.string.tips_updatedlg_tle));
-                                builder.setMessage(getResources().getString(R.string.tips_updatedlg_msg1) + "\n"
-                                        + getResources().getString(R.string.tips_updatedlg_msg2) + fileInfo.getVersioncode() + "\n"
-                                        + getResources().getString(R.string.tips_updatedlg_msg5) + fileInfo.getVersiondesc() + "\n"
-                                        + getResources().getString(R.string.tips_updatedlg_msg6));
-                                builder.setNegativeButton(getResources().getString(R.string.cancl), new DialogInterface.OnClickListener() {
+                               runOnUiThread(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       CustomDialog.Builder builder = new CustomDialog.Builder(SettingActivity.this);
+                                       builder.setTitle(getResources().getString(R.string.tips_updatedlg_tle));
+                                       builder.setMessage(getResources().getString(R.string.tips_updatedlg_msg1) + "\n"
+                                               + getResources().getString(R.string.tips_updatedlg_msg2) + fileInfo.getVersioncode() + "\n"
+                                               + getResources().getString(R.string.tips_updatedlg_msg5) + fileInfo.getVersiondesc() + "\n"
+                                               + getResources().getString(R.string.tips_updatedlg_msg6));
+                                       builder.setNegativeButton(getResources().getString(R.string.cancl), new DialogInterface.OnClickListener() {
 
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // TODO Auto-generated method stub
-                                        dialog.dismiss();
-                                    }
-                                });
-                                builder.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                                           @Override
+                                           public void onClick(DialogInterface dialog, int which) {
+                                               dialog.dismiss();
+                                               proDialog.dismiss();
+                                           }
+                                       });
+                                       builder.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
 
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // TODO Auto-generated method stub
-                                        dialog.dismiss();
-                                        Common.fileInfo = new FileInfo(fileInfo.getVersionid(), fileInfo.getVersioncode(),
-                                                fileInfo.getVersionname(), fileInfo.getDownloadurl(), fileInfo.getVersiondesc(), 0, 0);//User/userDownApk.aspx
-                                        // 通知Service开始下载
-                                        updateService = new Intent(SettingActivity.this, DownloadService.class);
-                                        updateService.setAction(DownloadService.ACTION_START);
-//                                        updateService.putExtra("fileInfo", Common.fileInfo);
-//                                        updateService.putExtra("token", sp.getString("token", ""));
-                                        startService(updateService);
-                                        Common.isUpdationg = true;
-                                        ToastUtil.show(getApplicationContext(), getResources().getString(R.string.tips_gotodownnewapk));
+                                           @Override
+                                           public void onClick(DialogInterface dialog, int which) {
+                                               dialog.dismiss();
+                                               proDialog.dismiss();
+                                               // 通知Service开始下载
+                                               downloadAPK();
+//                                               downloadBinder.startDownload(mDownloadUrl);
 
-                                    }
-                                });
-                                builder.create().show();
+                                               Common.isUpdationg = true;
+                                               ToastUtil.show(getApplicationContext(), getResources().getString(R.string.tips_gotodownnewapk));
+
+                                           }
+                                       });
+                                       builder.create().show();
+                                   }
+                               });
                                 Log.i("downloadUpdateApp1", "onResponseData: " + fileInfo.toString());
                             }
                             if (code.equals("311")) {
@@ -379,6 +421,31 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_UNKNOWN_APP) {
+            Log.e("dongsiyuaninstall",resultCode+"");
+            downloadAPK();
+        }
+    }
+
+    private void downloadAPK() {
+        if (Build.VERSION.SDK_INT >= 26) {
+            boolean b = getPackageManager().canRequestPackageInstalls();
+            if (b) {
+//                AppUpdateService.start(mContext, mSavePath, mDownloadUrl);//安装应用的逻辑(写自己的就可以)
+                downloadBinder.startDownload(mDownloadUrl);
+            } else {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
+                startActivityForResult(intent, REQUEST_CODE_UNKNOWN_APP);
+            }
+        } else {
+//            AppUpdateService.start(mContext, mSavePath, mDownloadUrl);
+            downloadBinder.startDownload(mDownloadUrl);
         }
     }
 }

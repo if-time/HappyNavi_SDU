@@ -13,7 +13,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
@@ -23,12 +26,17 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
+
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.trackersurvey.bean.FileInfo;
 import com.trackersurvey.bean.FileInfoData;
+import com.trackersurvey.happynavi.BuildConfig;
 import com.trackersurvey.happynavi.CommentActivity;
+import com.trackersurvey.happynavi.MainActivity;
 import com.trackersurvey.happynavi.R;
+import com.trackersurvey.interfaces.DownloadListener;
 import com.trackersurvey.util.Common;
 import com.trackersurvey.util.NotificationUtils;
 import com.trackersurvey.util.ToastUtil;
@@ -47,6 +55,8 @@ import java.util.Map;
 /**
  * 类注释
  */
+
+
 public class DownloadService extends Service {
     public static final String                            DOWNLOAD_PATH        = Environment.getExternalStorageDirectory().getAbsolutePath() + "/downloads/";
     public static final String                            ACTION_START         = "ACTION_START";

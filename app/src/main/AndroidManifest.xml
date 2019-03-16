@@ -5,14 +5,10 @@
     android:versionCode="204"
     android:versionName="2.0.4">
 
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
-
-    <!--Android服务保活-JobScheduler拉活-->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-    <!-- Android Mac地址 -->
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- android8.0以上版本的前台服务 -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- Android服务保活-JobScheduler拉活 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- Android Mac地址 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /><!-- android8.0以上版本的前台服务 -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 允许程序打开网络套接字 -->
@@ -46,9 +42,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name="com.trackersurvey.service.JobSchedulerMainService"
+            android:name="com.trackersurvey.service.DownloadApkService"
             android:enabled="true"
             android:exported="true"></service>
+        <service
+            android:name="com.trackersurvey.service.AppUpdateService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name="com.trackersurvey.service.JobSchedulerMainService"
+            android:enabled="true"
+            android:exported="true" />
         <service
             android:name="com.trackersurvey.service.JobSchedulerService"
             android:enabled="true"
@@ -98,11 +102,10 @@
         <service
             android:name="com.trackersurvey.service.DownloadService"
             android:enabled="true"
-            android:exported="true" />
-        <!--<service-->
-            <!--android:name="com.trackersurvey.service.DownloadTaskService"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="true" />-->
+            android:exported="true" /> <!-- <service -->
+        <!-- android:name="com.trackersurvey.service.DownloadTaskService" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true" /> -->
         <service
             android:name="com.trackersurvey.service.CommentUploadService"
             android:enabled="true"

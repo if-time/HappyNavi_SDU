@@ -53,14 +53,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_toRightOf="@id/nickname_label_tv" />
+                    android:layout_toRightOf="@id/nickname_label_tv"
+                    android:background="@null"
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0.1dp"
                     android:layout_below="@id/nickname_label_tv"
                     android:layout_marginTop="10dp"
-                    android:background="@color/black" />
+                    android:background="@color/black"
+                    android:layout_marginLeft="30dp"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -83,14 +86,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_toRightOf="@id/real_name_label_tv" />
+                    android:layout_toRightOf="@id/real_name_label_tv"
+                    android:background="@null"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0.1dp"
                     android:layout_below="@id/real_name_label_tv"
                     android:layout_marginTop="10dp"
-                    android:background="@color/black" />
+                    android:background="@color/black"
+                    android:layout_marginLeft="30dp"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -124,7 +129,8 @@
                     android:layout_height="0.1dp"
                     android:layout_below="@id/user_info_birth_date"
                     android:layout_marginTop="10dp"
-                    android:background="@color/black" />
+                    android:background="@color/black"
+                    android:layout_marginLeft="30dp"/>
             </RelativeLayout>
 
             <!--<RelativeLayout
@@ -186,7 +192,8 @@
                     android:layout_height="0.1dp"
                     android:layout_below="@id/user_info_sex"
                     android:layout_marginTop="10dp"
-                    android:background="@color/black" />
+                    android:background="@color/black"
+                    android:layout_marginLeft="30dp"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -210,14 +217,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_toRightOf="@id/native_place_label_tv"/>
+                    android:layout_toRightOf="@id/native_place_label_tv"
+                    android:background="@null"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0.1dp"
                     android:layout_below="@id/native_place_label_tv"
                     android:layout_marginTop="10dp"
-                    android:background="@color/black" />
+                    android:background="@color/black"
+                    android:layout_marginLeft="30dp"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -240,14 +249,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_toRightOf="@id/address_label_tv" />
+                    android:layout_toRightOf="@id/address_label_tv"
+                    android:background="@null"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0.1dp"
                     android:layout_below="@id/address_label_tv"
                     android:layout_marginTop="10dp"
-                    android:background="@color/black" />
+                    android:background="@color/black"
+                    android:layout_marginLeft="30dp"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -279,40 +290,11 @@
                     android:layout_height="0.1dp"
                     android:layout_below="@id/user_info_occupation"
                     android:layout_marginTop="10dp"
-                    android:background="@color/black" />
+                    android:background="@color/black"
+                    android:layout_marginLeft="30dp"/>
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/education_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:gravity="center">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/user_info_education"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/user_info_education"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:text="硕士"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0.1dp"
-                    android:layout_below="@id/user_info_education"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/black" />
-            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/income_layout"
@@ -343,39 +325,8 @@
                     android:layout_height="0.1dp"
                     android:layout_below="@id/user_info_income"
                     android:layout_marginTop="10dp"
-                    android:background="@color/black" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/marriage_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:gravity="center">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/user_info_marriage"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/user_info_marriage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:text="未婚"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0.1dp"
-                    android:layout_below="@id/user_info_marriage"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/black" />
+                    android:background="@color/black"
+                    android:layout_marginLeft="45dp"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -407,7 +358,74 @@
                     android:layout_height="0.1dp"
                     android:layout_below="@id/user_info_child_num"
                     android:layout_marginTop="10dp"
-                    android:background="@color/black" />
+                    android:background="@color/black"
+                    android:layout_marginLeft="45dp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/marriage_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/user_info_marriage"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/user_info_marriage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="未婚"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:layout_below="@id/user_info_marriage"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/black"
+                    android:layout_marginLeft="60dp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/education_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/user_info_education"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/user_info_education"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="硕士"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:layout_below="@id/user_info_education"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/black"
+                    android:layout_marginLeft="60dp"/>
             </RelativeLayout>
 
             <Button

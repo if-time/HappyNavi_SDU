@@ -41,11 +41,11 @@
                     android:layout_centerVertical="true"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0.1dp"
-                    android:background="@color/black"
-                    android:layout_below="@id/user_info_head_img"/>
+                <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="0.1dp"-->
+                    <!--android:background="@color/black"-->
+                    <!--android:layout_below="@id/user_info_head_img"/>-->
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -72,7 +72,8 @@
                     android:layout_height="0.1dp"
                     android:background="@color/black"
                     android:layout_below="@id/user_info_nickname"
-                    android:layout_marginTop="10dp"/>
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="30dp"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -99,7 +100,8 @@
                     android:layout_height="0.1dp"
                     android:background="@color/black"
                     android:layout_below="@id/user_info_real_name"
-                    android:layout_marginTop="10dp"/>
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="30dp"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -126,7 +128,8 @@
                     android:layout_height="0.1dp"
                     android:background="@color/black"
                     android:layout_below="@id/user_info_id"
-                    android:layout_marginTop="10dp"/>
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="30dp"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -147,13 +150,15 @@
                     android:layout_alignParentRight="true"
                     android:text="96.01.01"
                     android:textColor="@color/black"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp"
+                    />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0.1dp"
                     android:background="@color/black"
                     android:layout_below="@id/user_info_birth_date"
-                    android:layout_marginTop="10dp"/>
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="30dp"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -180,7 +185,8 @@
                     android:layout_height="0.1dp"
                     android:background="@color/black"
                     android:layout_below="@id/user_info_sex"
-                    android:layout_marginTop="10dp"/>
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="30dp"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -211,7 +217,8 @@
                     android:layout_height="0.1dp"
                     android:layout_below="@id/user_info_occupation"
                     android:layout_marginTop="10dp"
-                    android:background="@color/black" />
+                    android:background="@color/black"
+                    android:layout_marginLeft="30dp"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -241,7 +248,8 @@
                     android:layout_height="0.1dp"
                     android:layout_below="@id/user_info_education"
                     android:layout_marginTop="10dp"
-                    android:background="@color/black" />
+                    android:background="@color/black"
+                    android:layout_marginLeft="60dp"/>
             </RelativeLayout>
 
             <Button
