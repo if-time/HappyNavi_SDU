@@ -114,6 +114,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         intentFilter.addDataScheme("package");
         initApkBroadCastReceiver = new InitApkBroadCastReceiver();
         registerReceiver(initApkBroadCastReceiver, intentFilter);
+        setCheckNetWork(true);
     }
 
     private void initView() {

@@ -5,14 +5,22 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 
+import com.trackersurvey.event.NetworkChangeEvent;
 import com.trackersurvey.util.ActivityCollector;
 import com.trackersurvey.util.LanguageUtil;
+import com.trackersurvey.util.NetUtils;
 import com.trackersurvey.util.StoreLanguageSP;
 
 import org.greenrobot.eventbus.EventBus;
@@ -26,12 +34,22 @@ import java.util.Locale;
  */
 
 public class BaseActivity extends AppCompatActivity {
+
+    protected Context mContext;
+    protected boolean mCheckNetWork = true; //默认检查网络状态
+    View                       mTipView;
+    WindowManager              mWindowManager;
+    WindowManager.LayoutParams mLayoutParams;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i("BaseActivity", getClass().getSimpleName());
 
-//        EventBus.getDefault().register(this);
+        mContext = this;
+
+        initTipView();//初始化提示View
+        EventBus.getDefault().register(this);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         ActivityCollector.addActivity(this);
@@ -51,33 +69,74 @@ public class BaseActivity extends AppCompatActivity {
         super.attachBaseContext(LanguageUtil.attachBaseContext(newBase, selectedLanguage));
     }
 
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onEvent(String str) {
-//        switch (str) {
-//            case "EVENT_REFRESH_LANGUAGE":
-////                changeAppLanguage();
-//                recreate();
-//                break;
-//        }
-//    }
-//
-//    private void changeAppLanguage() {
-//        String sta = StoreLanguageSP.getLanguageLocal(this);
-//        if(sta != null && !"".equals(sta)){
-//            // 本地语言设置
-//            Locale myLocale = new Locale(sta);
-//            Resources res = getResources();
-//            DisplayMetrics dm = res.getDisplayMetrics();
-//            Configuration conf = res.getConfiguration();
-//            conf.locale = myLocale;
-//            res.updateConfiguration(conf, dm);
-//        }
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //在无网络情况下打开APP时，系统不会发送网络状况变更的Intent，需要自己手动检查
+        hasNetWork(NetUtils.isConnected(mContext));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        //当提示View被动态添加后直接关闭页面会导致该View内存溢出，所以需要在finish时移除
+        if (mTipView != null && mTipView.getParent() != null) {
+            mWindowManager.removeView(mTipView);
+        }
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
         ActivityCollector.removeActivity(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNetworkChangeEvent(NetworkChangeEvent event) {
+        hasNetWork(event.isConnected);
+    }
+
+    private void hasNetWork(boolean has) {
+        if (isCheckNetWork()) {
+            if (has) {
+                if (mTipView != null && mTipView.getParent() != null) {
+                    mWindowManager.removeView(mTipView);
+                }
+            } else {
+                if (mTipView.getParent() == null) {
+                    mWindowManager.addView(mTipView, mLayoutParams);
+                }
+            }
+        }
+    }
+
+    public void setCheckNetWork(boolean checkNetWork) {
+        mCheckNetWork = checkNetWork;
+    }
+
+    public boolean isCheckNetWork() {
+        return mCheckNetWork;
+    }
+
+    private void initTipView() {
+        LayoutInflater inflater = getLayoutInflater();
+        mTipView = inflater.inflate(R.layout.layout_network_tip, null); //提示View布局
+        mWindowManager = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        mLayoutParams = new WindowManager.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_APPLICATION,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                PixelFormat.TRANSLUCENT);
+        //使用非CENTER时，可以通过设置XY的值来改变View的位置
+        mLayoutParams.gravity = Gravity.TOP;
+        mLayoutParams.x = 0;
+        mLayoutParams.y = 0;
     }
 }
