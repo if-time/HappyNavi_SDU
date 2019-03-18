@@ -431,6 +431,7 @@ public class LocationService extends Service implements AMapLocationListener {
             Log.i("LocationService", "token:" + token);
             UpLoadGpsRequest upLoadGpsRequest = new UpLoadGpsRequest(sp.getString("token", ""), gpsData);
             upLoadGpsRequest.requestHttpData(new ResponseData() {
+
                 @Override
                 public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
                     if (isSuccess) {
@@ -452,6 +453,8 @@ public class LocationService extends Service implements AMapLocationListener {
                             message.what = TOKEN_INVALID;
                             mhandler.sendMessage(message);
                         }
+                    } else {
+//                        gpsDataIsOnline = false;
                     }
                 }
             });
