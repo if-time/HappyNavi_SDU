@@ -998,6 +998,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                             e.printStackTrace();
                         }
                         UiRefresh = true;
+                        startSuccess = true;
                     }
                     if (code.equals("100") || code.equals("101")) {
                         getActivity().runOnUiThread(new Runnable() {
@@ -1008,6 +1009,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                 editor.putString("token", ""); // 清空token
                                 editor.apply();
                                 ActivityCollector.finishActivity("MainActivity");
+                                startSuccess = false;
                             }
                         });
                     }

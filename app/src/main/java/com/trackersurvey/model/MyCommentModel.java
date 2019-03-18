@@ -454,7 +454,7 @@ public class MyCommentModel {
                             ev.setFileNo(j);
                             ev.setFileType(CommentMediaFilesData.TYPE_PIC);
                             ev.setFileID(interestMarkerDataList.get(i).getPoiFiles().get(j).getFileID());
-                            Log.i("dongsiyuansetFileID", "onResponseData: " + interestMarkerDataList.get(index).getPoiFiles().get(j).getFileID());
+//                            Log.i("dongsiyuansetFileID", "onResponseData: " + interestMarkerDataList.get(index).getPoiFiles().get(j).getFileID());
                             writedDbHelper.inserFile(ev);
                             count++;
                         }

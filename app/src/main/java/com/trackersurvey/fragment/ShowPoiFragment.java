@@ -185,6 +185,8 @@ public class ShowPoiFragment extends Fragment {
      * 刷新界面
      */
     public void updateUI() {
+//        listAdapter = new ListBaseAdapter(context, ShowTraceFragment.myComment, items, "mark");
+        
         listAdapter.setItems(ShowTraceFragment.myComment.getItems());
         listAdapter.notifyDataSetChanged();
         Log.i("dongsiyuanUpdateUI", "ShowPoiFragment:" + ShowTraceFragment.myComment.getItems().toString());

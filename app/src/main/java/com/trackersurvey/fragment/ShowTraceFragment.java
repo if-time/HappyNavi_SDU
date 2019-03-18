@@ -843,6 +843,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
         }
 
         drawMarker();
+
         Intent intent = new Intent();
         intent.setAction(UPDATEUI_ACTION);
         Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
@@ -856,15 +857,18 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
             Log.i("trailobj", "trailobj:" + trailobj + "currentTraceID: " + currentTraceID);
 
             myComment.refreshMarkerItemsOnline(currentTraceID);
+            if (isAdded()) {
+                Intent intent = new Intent();
+                intent.setAction(UPDATEUI_ACTION);
+                Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
+                //            context
+                getContext().sendBroadcast(intent);
+            }
 
-            Intent intent = new Intent();
-            intent.setAction(UPDATEUI_ACTION);
-            Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
-            context.sendBroadcast(intent);
             //drawMarker();
             Log.i("itemsss", "ShowTraceFragment:" + myComment.getItems().toString());
         } else {
-            ToastUtil.show(context, getResources().getString(R.string.tips_netdisconnect));
+            ToastUtil.show(getContext(), getResources().getString(R.string.tips_netdisconnect));
         }
     }
 
