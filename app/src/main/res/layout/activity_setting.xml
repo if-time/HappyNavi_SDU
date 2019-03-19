@@ -66,6 +66,7 @@
         android:layout_marginRight="35dp"/>
 
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/parameter_setting_layout"
         android:layout_width="match_parent"
         android:layout_height="43dp"

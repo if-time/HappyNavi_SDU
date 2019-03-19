@@ -384,19 +384,30 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
     private void visitPictureBrowserActivity() {
         if (clickPosition == itemNo) {//点击的是+号 选择照片
-            Toast.makeText(CommentActivity.this, R.string.addpicture,
-                    Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(CommentActivity.this,
-                    PictureBrowserActivity.class);
+            Toast.makeText(CommentActivity.this, R.string.addpicture, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(CommentActivity.this, PictureBrowserActivity.class);
             if (selectPictures != null) {//已经选择的照片，在PictureBrowser默认打钩
-                intent.putExtra(PictureBrowserActivity.RESULT_URIS,
-                        selectPictures);
+                intent.putExtra(PictureBrowserActivity.RESULT_URIS, selectPictures);
             }
             intent.putExtra("hasVideo", hasVideo);
             startActivityForResult(intent, REQUEST_PICTURE);
         } else if (clickPosition == hasVideo) {//点击的是视频 （有且只有一个视频）
-            Uri uri = Uri.fromFile(new File(videoPath));
+//            Uri uri = Uri.fromFile(new File(videoPath));
+//            Intent intent = new Intent(Intent.ACTION_VIEW);
+//            intent.setDataAndType(uri, "video/*");
+//            startActivity(intent);
+            // 调用系统视频播放器
+            Uri uri = null;
             Intent intent = new Intent(Intent.ACTION_VIEW);
+            File videoUri = new File(videoPath);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                uri = FileProvider.getUriForFile(CommentActivity.this,  "com.trackersurvey.happynavi.fileProvider", videoUri);
+            } else {
+                uri = Uri.fromFile(videoUri);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
+
             intent.setDataAndType(uri, "video/*");
             startActivity(intent);
         } else {//点击的是照片
@@ -518,44 +529,53 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             //				Toast.makeText(CommentActivity.this, "选择视频", Toast.LENGTH_SHORT)
             //						.show();
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            // 调用相机摄像
+            Intent intent = new Intent();
+            intent.setAction("android.media.action.VIDEO_CAPTURE");
+            intent.addCategory("android.intent.category.DEFAULT");
+            intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+            intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 200000);
+            intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 20 * 1024 * 1024);
+            startActivityForResult(intent, REQUEST_CAMERA);
 
-            CharSequence[] items = getResources().getStringArray(R.array.way_selectvideo);
-            builder.setTitle(getResources().getString(R.string.tips_dlgtle_selectvideo));
-            builder.setSingleChoiceItems(items, 0,
-                    new DialogInterface.OnClickListener() {
-
-                        public void onClick(DialogInterface dialog,
-                                            int which) {
-                            switch (which) {
-                                case 0:
-                                    // 调用相机摄像
-                                    Intent intent = new Intent();
-                                    intent.setAction("android.media.action.VIDEO_CAPTURE");
-                                    intent.addCategory("android.intent.category.DEFAULT");
-                                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-                                    intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 200000);
-                                    intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 20 * 1024 * 1024);
-                                    startActivityForResult(intent, REQUEST_CAMERA);
-
-                                    break;
-                                case 1: {
-                                    // 文件选择
-                                    Intent intent2 = new Intent(Intent.ACTION_GET_CONTENT);
-                                    intent2.setType("video/*");
-                                    startActivityForResult(intent2, REQUEST_VIDEO);
-                                    break;
-                                }
-                                default:
-                                    break;
-                            }
-                            dialog.dismiss();
-                            ;
-
-                        }
-
-                    });
-            builder.create().show();
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//
+//            CharSequence[] items = getResources().getStringArray(R.array.way_selectvideo);
+//            builder.setTitle(getResources().getString(R.string.tips_dlgtle_selectvideo));
+//            builder.setSingleChoiceItems(items, 0,
+//                    new DialogInterface.OnClickListener() {
+//
+//                        public void onClick(DialogInterface dialog,
+//                                            int which) {
+//                            switch (which) {
+//                                case 0:
+//                                    // 调用相机摄像
+//                                    Intent intent = new Intent();
+//                                    intent.setAction("android.media.action.VIDEO_CAPTURE");
+//                                    intent.addCategory("android.intent.category.DEFAULT");
+//                                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+//                                    intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 200000);
+//                                    intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 20 * 1024 * 1024);
+//                                    startActivityForResult(intent, REQUEST_CAMERA);
+//
+//                                    break;
+//                                case 1: {
+//                                    // 文件选择
+//                                    Intent intent2 = new Intent(Intent.ACTION_GET_CONTENT);
+//                                    intent2.setType("video/*");
+//                                    startActivityForResult(intent2, REQUEST_VIDEO);
+//                                    break;
+//                                }
+//                                default:
+//                                    break;
+//                            }
+//                            dialog.dismiss();
+//                            ;
+//
+//                        }
+//
+//                    });
+//            builder.create().show();
 
         } else {
             Toast.makeText(CommentActivity.this, R.string.nomorethan9,

@@ -2,6 +2,7 @@ package com.trackersurvey.happynavi;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -57,6 +58,8 @@ public class TraceDetailActivity extends BaseActivity implements View.OnClickLis
     private int currentIndex;
     private int screenWidth;
     private PopupWindow mPopupWindow;
+
+    public final   String                             INITADAPTER_ACTION = "android.intent.action.ADAPTER_RECEIVER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -368,6 +371,11 @@ public class TraceDetailActivity extends BaseActivity implements View.OnClickLis
                         mPopupWindow.dismiss();
                         tracePage.refreshMarker();
                         poiPage.updateUI();
+
+//                        Intent intent = new Intent();
+//                        intent.setAction(INITADAPTER_ACTION);
+//                        Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
+//                        sendBroadcast(intent);
                         break;
 
 

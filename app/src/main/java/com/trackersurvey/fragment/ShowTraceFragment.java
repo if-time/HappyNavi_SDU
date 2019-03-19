@@ -385,9 +385,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
 
 
         if (isOnline) {
-            showDialog(getResources().getString(R.string.tips_dlgtle_init),
-                    getResources().getString(R.string.tips_dlgmsg_inittrace));
-            // Log.i("trailadapter", "在线获取");
+//            showDialog(getResources().getString(R.string.tips_dlgtle_init), getResources().getString(R.string.tips_dlgmsg_inittrace));
 
             // 测试下载轨迹详情
             DownloadTraceDetailRequest downloadTraceDetail = new DownloadTraceDetailRequest(

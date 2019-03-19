@@ -7,8 +7,8 @@ android {
         applicationId "com.trackersurvey.happynavi"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 207
-        versionName "2.0.7"
+        versionCode 208
+        versionName "2.0.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
