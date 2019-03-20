@@ -552,7 +552,7 @@ public class    Common {
 
     /**
      * 获取userPhone
-     *
+     * 以弃用
      * @param context
      * @return
      */
@@ -793,9 +793,9 @@ public class    Common {
         if (aLocation != null) {
             location = aLocation.getLongitude() + ";" + aLocation.getLatitude();
         }
-        Log.i("LogDemo", "下线，" + Common.getUserId(ct) + ",位置信息" + location);
+        Log.i("LogDemo", "下线，" + Common.getUserID(ct) + ",位置信息" + location);
         PostOnOffline offline = new PostOnOffline(url + "request.aspx",
-                Common.getUserId(ct), location, "Offline", deviceId);
+                Common.getUserID(ct), location, "Offline", deviceId);
         offline.start();
 
     }

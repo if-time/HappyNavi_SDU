@@ -516,7 +516,7 @@ public class MyCommentModel {
         //                "' and '" + to + "'", null, null, null, null);
 
         cursor = dbHelper.selectEvent(null, PhotoDBHelper.COLUMNS_UE[14] + "="
-                + Common.getUserId(context), null, null, null, "datetime("
+                + Common.getUserID(context), null, null, null, "datetime("
                 + PhotoDBHelper.COLUMNS_UE[0] + ") desc");
 
         Log.i("itemsssinitItemsByTime", "cursor:" + cursor.getCount() + " ");
@@ -668,7 +668,7 @@ public class MyCommentModel {
         cursor = dbHelper.selectEvent(null, PhotoDBHelper.COLUMNS_UE[14] + "="
                 + Common.getUserID(context), null, null, null, "datetime("
                 + PhotoDBHelper.COLUMNS_UE[0] + ") desc");
-        Log.i("dongsiyuanindexCount", "onResponseData: " + cursor.getCount() + " userID : " + Common.getUserId(context));
+        Log.i("dongsiyuanindexCount", "onResponseData: " + cursor.getCount() + " userID : " + Common.getUserID(context));
         if (!isAddingComment) {
             Log.i("dongsiyuan", "addComment:" + items.size() + "numOfUE : " + numOfUE);
             isAddingComment = true;
@@ -792,7 +792,7 @@ public class MyCommentModel {
                                     cursor.close();
                                 }
                                 cursor = dbHelper.selectEvent(null,
-                                        PhotoDBHelper.COLUMNS_UE[14] + "=" + Common.getUserId(context),
+                                        PhotoDBHelper.COLUMNS_UE[14] + "=" + Common.getUserID(context),
                                         null, null, null, "datetime("
                                                 + PhotoDBHelper.COLUMNS_UE[0] + ") desc");
                                 cursor.moveToPosition(numOfUE - 1);
@@ -1232,7 +1232,7 @@ public class MyCommentModel {
     public boolean deleteComment(String dateTime, int listPosition) {
         DeleteCloudComment dcc = new DeleteCloudComment(context,
                 new DeleteCloudEvent(listPosition), Common.URL_DELETEEVENT,
-                Common.getUserId(context), dateTime, Common.getDeviceId(context));
+                Common.getUserID(context), dateTime, Common.getDeviceId(context));
         dcc.start();
         return false;
     }
@@ -1240,7 +1240,7 @@ public class MyCommentModel {
     public boolean deleteComment(String startTime, String endTime) {
         DeleteCloudComment dcc = new DeleteCloudComment(context,
                 new DeleteCloudEvent(), Common.URL_DELETEEVENT,
-                Common.getUserId(context), startTime, endTime, Common.getDeviceId(context));
+                Common.getUserID(context), startTime, endTime, Common.getDeviceId(context));
         dcc.start();
         return false;
     }
@@ -1408,7 +1408,7 @@ public class MyCommentModel {
                         cursor.close();
                     }
                     cursor = dbHelper.selectEvent(null,
-                            PhotoDBHelper.COLUMNS_UE[10] + "=" + Common.getUserId(context),
+                            PhotoDBHelper.COLUMNS_UE[10] + "=" + Common.getUserID(context),
                             null, null, null, "datetime("
                                     + PhotoDBHelper.COLUMNS_UE[0] + ") desc");
                     cursor.moveToPosition(numOfUE - 1);
@@ -1492,7 +1492,7 @@ public class MyCommentModel {
                         cursor.close();
                     }
                     cursor = dbHelper.selectEvent(null,
-                            PhotoDBHelper.COLUMNS_UE[10] + "=" + Common.getUserId(context),
+                            PhotoDBHelper.COLUMNS_UE[10] + "=" + Common.getUserID(context),
                             null, null, null, "datetime("
                                     + PhotoDBHelper.COLUMNS_UE[0] + ") desc");
                     cursor.moveToPosition(numOfUE - 1);

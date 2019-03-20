@@ -257,7 +257,7 @@ public class MyAlbumActivity extends BaseActivity implements View.OnClickListene
         }
         String dateTime = Common.currentTime();
         cursor = phelper.selectEvent(null,
-                PhotoDBHelper.COLUMNS_UE[10] + "=" + Common.getUserId(this),
+                PhotoDBHelper.COLUMNS_UE[10] + "=" + Common.getUserID(this),
                 null, null, null, "datetime(" + PhotoDBHelper.COLUMNS_UE[0] + ") desc");
         if(Common.isNetConnected&&(cursor.getCount()==0)){
             myComment.downloadAlbum(dateTime);

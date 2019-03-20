@@ -13,7 +13,7 @@ import okhttp3.RequestBody;
  * Created by zh931 on 2018/5/28.
  */
 
-public class EndTraceRequest extends HttpUtil {
+public class  EndTraceRequest extends HttpUtil {
 
     private String token = "";
     private String traceinfo = "";

@@ -295,7 +295,7 @@ public class MyGroupFragment extends Fragment implements View.OnClickListener, P
                             }
 
                             PostJoinOrExitGroup exitThread = new PostJoinOrExitGroup(handler, url_ExitGroup,
-                                    Common.getUserId(context), tobeExit,
+                                    Common.getUserID(context), tobeExit,
                                     Common.getDeviceId(context), "QuitGroups");
                             exitThread.start();
                             dialog.dismiss();

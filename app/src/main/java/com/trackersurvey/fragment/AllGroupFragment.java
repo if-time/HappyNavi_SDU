@@ -299,7 +299,7 @@ public class AllGroupFragment extends Fragment implements View.OnClickListener, 
                     String tobeJoined = GsonHelper.toJson(tobeJoinedID);
                     Log.i("trailadapter", "tobeJoined:" + tobeJoined);
                     PostJoinOrExitGroup joinThread = new PostJoinOrExitGroup(handler, url_JoinGroup,
-                            Common.getUserId(context), tobeJoined,
+                            Common.getUserID(context), tobeJoined,
                             Common.getDeviceId(context), "JoinGroups");
                     joinThread.start();
                 } else {

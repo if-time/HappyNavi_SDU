@@ -1410,7 +1410,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             String commentTime = data.getStringExtra("createTime");
-                                            String userId = Common.getUserId(context);
+                                            String userId = Common.getUserID(context);
                                             SharedPreferences.Editor editor = uploadCache.edit();
                                             editor.putString(commentTime, userId);
                                             editor.commit();
@@ -1432,7 +1432,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                         Toast.makeText(context, getResources().getString(R.string.tips_uploadpic_nonet), Toast.LENGTH_SHORT)
                                 .show();
                         String commentTime = data.getStringExtra("createTime");
-                        String userId = Common.getUserId(context);
+                        String userId = Common.getUserID(context);
                         SharedPreferences.Editor editor = uploadCache.edit();
                         editor.putString(commentTime, userId);
                         editor.commit();

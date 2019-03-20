@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -35,13 +36,16 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.trackersurvey.bean.PhoneEventsData;
 import com.trackersurvey.bean.TimeValueData;
 import com.trackersurvey.db.MyTraceDBHelper;
 import com.trackersurvey.happynavi.MainActivity;
 import com.trackersurvey.happynavi.R;
+import com.trackersurvey.http.EndTraceRequest;
 import com.trackersurvey.http.ResponseData;
 import com.trackersurvey.http.UpLoadGpsRequest;
+import com.trackersurvey.http.UploadTraceRequest;
 import com.trackersurvey.httpconnection.PostOnOffline;
 import com.trackersurvey.httpconnection.PostTimeValues;
 import com.trackersurvey.model.GpsData;
@@ -49,6 +53,7 @@ import com.trackersurvey.model.StepData;
 import com.trackersurvey.model.TraceData;
 import com.trackersurvey.util.ActivityCollector;
 import com.trackersurvey.util.Common;
+import com.trackersurvey.util.CustomDialog;
 import com.trackersurvey.util.GsonHelper;
 import com.trackersurvey.util.WakeLockUtil;
 
@@ -159,7 +164,7 @@ public class LocationService extends Service implements AMapLocationListener {
                     //Log.i("LogDemo","未上传过的轨迹上传成功");
 
                     for (int i = 0; i < traceno_up.size(); i++) {
-                        helper.updateStatus(traceno_up.get(i), 0, Common.getUserId(getApplicationContext()));
+                        helper.updateStatus(traceno_up.get(i), 0, Common.getUserID(getApplicationContext()));
                     }
                     helper.deleteStatus();
                     traceno_up = null;
@@ -405,23 +410,27 @@ public class LocationService extends Service implements AMapLocationListener {
 
     // 上传位置数据
     public void uploadGPS() {
-        if (Common.getUserId(getApplicationContext()).length() < 10) {
+        if (Common.getUserID(getApplicationContext()).length() < 10) {
             return;
         }
-        Log.i("LogDemo", "wifi连接：" + Common.isWiFiConnected);
-        if (!Common.isWiFiConnected) {
-            if (Common.isOnlyWifiUploadLoc(getApplicationContext())) {
-                Log.i("LogDemo", "设置仅wifi上传，当前非wifi连接");
-                return;
-            }
-        }
+
+//        Log.i("LogDemo", "wifi连接：" + Common.isWiFiConnected);
+//        if (!Common.isWiFiConnected) {
+//            if (Common.isOnlyWifiUploadLoc(getApplicationContext())) {
+//                Log.i("LogDemo", "设置仅wifi上传，当前非wifi连接");
+//                return;
+//            }
+//        }
+
         Log.i("LogDemo", "周期上传数据,from：" + lastPostTime);
 
         datalist = helper.queryfromGpsbylasttime(lastPostTime, Common.getUserID(getApplicationContext()));
         Log.i("LogDemo", "datalist:" + GsonHelper.toJson(datalist));
         //        dataList = helper.getallGps(Common.getUserId(getApplicationContext()));
-        eventdatalist = helper.queryfromEventsbylasttime(lastPostTime, Common.getUserId(getApplicationContext()));
-        traceno_up = helper.getUnUploadStatusExists(Common.getUserId(getApplicationContext()));
+        eventdatalist = helper.queryfromEventsbylasttime(lastPostTime, Common.getUserID(getApplicationContext()));
+        traceno_up = helper.getUnUploadStatusExists(Common.getUserID(getApplicationContext()));
+
+        Log.i("dongsiyuantraceno_up", "uploadGPS: " + GsonHelper.toJson(traceno_up));
 
         if (datalist.size() > 0) {
             gpsData = GsonHelper.toJson(datalist);
@@ -479,10 +488,10 @@ public class LocationService extends Service implements AMapLocationListener {
 
         if (traceno_up.size() > 0) { // 上传未上传的位置数据
             for (int i = 0; i < traceno_up.size(); i++) {
-                trail_up = helper.queryfromTrailbytraceID(traceno_up.get(i), Common.getUserId(getApplicationContext()));
+                trail_up = helper.queryfromTrailbytraceID(traceno_up.get(i), Common.getUserID(getApplicationContext()));
                 trails_up.add(trail_up);
                 if (trail_up.getSportTypes() == 1) {
-                    step_up = helper.querryformstepsbyTraceNo(traceno_up.get(i), Common.getUserId(getApplicationContext()));
+                    step_up = helper.querryformstepsbyTraceNo(traceno_up.get(i), Common.getUserID(getApplicationContext()));
                     steps_up.add(step_up);
                     step_up = null;
                 }
@@ -529,6 +538,24 @@ public class LocationService extends Service implements AMapLocationListener {
             //            PostEndTrail endTrailThread = new PostEndTrail(mhandler,URL_ENDTRAIL,traceData_up,stepsdata_up,
             //                    Common.getDeviceId(getApplicationContext()));
             //            endTrailThread.start();
+
+            UploadTraceRequest uploadTraceRequest = new UploadTraceRequest(sp.getString("token", ""), traceData_up);
+            uploadTraceRequest.requestHttpData(new ResponseData() {
+                @Override
+                public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
+                    if (isSuccess) {
+                        if (code.equals("0")) {
+                            Message message = new Message();
+                            message.what = 2;
+                            mhandler.sendMessage(message);
+                        }
+                        if (code.equals("100") || code.equals("101")) {
+
+                        }
+                    }
+                }
+            });
+
             trails_up.clear();
             steps_up.clear();
             traceData_up = null;
@@ -544,21 +571,21 @@ public class LocationService extends Service implements AMapLocationListener {
         }
         Log.i("LogDemo", "请求时间参数，位置信息" + location);
         PostTimeValues gettime = new PostTimeValues(timeHandler, URL_GET4TIME,
-                Common.getUserId(getApplicationContext()), location, Common.getDeviceId(getApplicationContext()));
+                Common.getUserID(getApplicationContext()), location, Common.getDeviceId(getApplicationContext()));
         gettime.start();
 
     }
 
     // 用户上线
     public void sendOnline() {
-        if (Common.getUserId(getApplicationContext()).length() < 10) {
+        if (Common.getUserID(getApplicationContext()).length() < 10) {
             return;
         }
         String location = "";
         if (currentLatlng != null) {
             location = currentLatlng.longitude + ";" + currentLatlng.latitude;
         }
-        String userId = Common.getUserId(getApplicationContext());
+        String userId = Common.getUserID(getApplicationContext());
         Log.i("LogDemo", "上线，" + userId + ",位置信息" + location);
         PostOnOffline online = new PostOnOffline(URL_GET4TIME,
                 userId, location, "Online", Common.getDeviceId(getApplicationContext()));
@@ -567,14 +594,14 @@ public class LocationService extends Service implements AMapLocationListener {
 
     // 上传心跳包
     public void sendHeartbeat() {
-        if (Common.getUserId(getApplicationContext()).length() < 10) {
+        if (Common.getUserID(getApplicationContext()).length() < 10) {
             return;
         }
         String location = "";
         if (currentLatlng != null) {
             location = currentLatlng.longitude + ";" + currentLatlng.latitude;
         }
-        String userId = Common.getUserId(getApplicationContext());
+        String userId = Common.getUserID(getApplicationContext());
         Log.i("LogDemo", "心跳包，" + userId + ",位置信息" + location);
         if (Common.url_heart == null || Common.url_heart.equals("")) {
             Common.url_heart = getResources().getString(R.string.url_heart);
@@ -868,15 +895,15 @@ public class LocationService extends Service implements AMapLocationListener {
 
     // ？？？
     public void saveEvents(String createTime, int EventType) {
-        if (Common.getUserId(getApplicationContext()).length() < 10) {
+        if (Common.getUserID(getApplicationContext()).length() < 10) {
             return;
         }
         PhoneEventsData event = null;
         if (Common.aLocation != null) {
-            event = new PhoneEventsData(Common.getUserId(getApplicationContext()), createTime, EventType,
+            event = new PhoneEventsData(Common.getUserID(getApplicationContext()), createTime, EventType,
                     Common.aLocation.getLongitude(), Common.aLocation.getLatitude(), Common.aLocation.getAltitude());
         } else {
-            event = new PhoneEventsData(Common.getUserId(getApplicationContext()), createTime, EventType,
+            event = new PhoneEventsData(Common.getUserID(getApplicationContext()), createTime, EventType,
                     0, 0, 0);
         }
         if (helper.insertintoEvents(event) == 0) {

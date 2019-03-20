@@ -219,7 +219,7 @@ public class GroupInfoActivity extends BaseActivity {
                                 });
 
                                 PostJoinOrExitGroup exitThread = new PostJoinOrExitGroup(handler, url_ExitGroup,
-                                        Common.getUserId(GroupInfoActivity.this), tobeExit,
+                                        Common.getUserID(GroupInfoActivity.this), tobeExit,
                                         Common.getDeviceId(GroupInfoActivity.this), "QuitGroups");
                                 exitThread.start();
                                 dialog.dismiss();

@@ -113,7 +113,7 @@ public class MySportActivity extends BaseActivity {
         String url_getHealthData=Common.url+"request.aspx";
 
         Common.showDialog(proDialog,getResources().getString(R.string.tip),getResources().getString(R.string.tips_synchronous));
-        PostHealthData health=new PostHealthData(mHandler, url_getHealthData,Common.getUserId(getApplicationContext()),Common.getDeviceId(getApplicationContext()));
+        PostHealthData health=new PostHealthData(mHandler, url_getHealthData,Common.getUserID(getApplicationContext()),Common.getDeviceId(getApplicationContext()));
         health.start();
 
     }

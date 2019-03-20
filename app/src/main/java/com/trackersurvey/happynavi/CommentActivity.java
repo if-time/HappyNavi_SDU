@@ -1035,7 +1035,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             edit.putString(
                     createTime + File.separator + i + File.separator + 1
                             + File.separator
-                            + Common.getUserId(getApplicationContext()),
+                            + Common.getUserID(getApplicationContext()),
                     imagePathList.get(i));
         }
         edit.apply();
@@ -1052,7 +1052,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             edit.putString(
                     createTime + File.separator + fileNum + File.separator + 2
                             + File.separator
-                            + Common.getUserId(getApplicationContext()),
+                            + Common.getUserID(getApplicationContext()),
                     videoPath);
         }
         edit.apply();

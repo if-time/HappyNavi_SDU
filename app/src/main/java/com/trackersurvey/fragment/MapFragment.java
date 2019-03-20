@@ -524,7 +524,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         /**
          判断上次轨迹记录是否意外中断，如果有意外中断，提醒用户是否继续记录
          */
-        traceID = traceDBHelper.getUnStopStatusExists(Common.getUserId(getContext()));
+        traceID = traceDBHelper.getUnStopStatusExists(Common.getUserID(getContext()));
         if (traceID != 0) { //存在中断的轨迹,0是轨迹号
 
             CustomDialog.Builder builder = new CustomDialog.Builder(getContext());
@@ -540,7 +540,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             builder.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    tracedata = traceDBHelper.queryfromTrailbytraceID(traceID, Common.getUserId(getContext()));
+                    tracedata = traceDBHelper.queryfromTrailbytraceID(traceID, Common.getUserID(getContext()));
                     initStartInfo();
                     dialog.dismiss();
                 }
@@ -962,8 +962,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         aMap.setMyLocationStyle(myLocationStyle); // 改变定位模式为蓝点始终在屏幕中间
         stepdata.setUserID(Common.getUserID(getContext()));
         stepdata.setTraceID(traceID);
-        Log.i("LogDemo", "starttrail,localTraceNo：" + traceID + ",id:" + Common.getUserId(getContext()));
-        Log.i("LogDemo", "starttrail,traceNo：" + traceID + ",id:" + Common.getUserId(getContext()));
+        Log.i("LogDemo", "starttrail,localTraceNo：" + traceID + ",id:" + Common.getUserID(getContext()));
+        Log.i("LogDemo", "starttrail,traceNo：" + traceID + ",id:" + Common.getUserID(getContext()));
         List<TraceData> traceList = new ArrayList<>();
         traceList.add(tracedata);
         String traceInfo = GsonHelper.toJson(traceList);
@@ -1048,7 +1048,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             if (tracedata.getSportTypes() == 1) {
                 //轨迹类型为步行，记录步数
                 locationService.changeSportType(true);
-                StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserId(getContext())).getSteps();
+                StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserID(getContext())).getSteps();
                 total_step = StepDetector.CURRENT_STEP;
                 getActivity().startService(stepCountServiceIntent);
                 iscountstep = true;
@@ -1148,8 +1148,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             traceDBHelper.updateStatus(traceID, 2, Common.getUserID(getContext()));
             UiRefresh = false;
             // 结束轨迹
-            EndTraceRequest endTraceRequest = new EndTraceRequest(
-                    sp.getString("token", ""), traceInfo);
+            EndTraceRequest endTraceRequest = new EndTraceRequest(sp.getString("token", ""), traceInfo);
             endTraceRequest.requestHttpData(new ResponseData() {
                 @Override
                 public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
@@ -1159,6 +1158,12 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                             public void run() {
                                 Toast.makeText(getContext(), "上传轨迹成功", Toast.LENGTH_SHORT).show();
                                 poiCount = 0;
+                                traceDBHelper.updateStatus(traceID, 0, Common.getUserID(getContext()));
+                                traceDBHelper.deleteStatus();
+                                // 云端新增轨迹提醒，提示用户下拉刷新
+                                Intent intent = new Intent();
+                                intent.setAction(PULLREFRESH_ACTION);
+                                getContext().sendBroadcast(intent);
                                 dismissDialog();
                             }
                         });
@@ -1335,7 +1340,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             }
 
             cursor = photoHelper.selectEvent(null, PhotoDBHelper.COLUMNS_UE[10] + "="
-                    + Common.getUserId(getContext()) + " and datetime("
+                    + Common.getUserID(getContext()) + " and datetime("
                     + PhotoDBHelper.COLUMNS_UE[0] + ") between '" + tracedata.getStartTime() +
                     "' and '" + tracedata.getEndTime() + "'", null, null, null, null);
             int poiCount = cursor.getCount();
@@ -1354,6 +1359,31 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             UiRefresh = false;
             ToastUtil.show(getContext(), "未采集到位置信息，轨迹不保存");
             // 重置到开始界面
+
+            Log.i("LogDemo", "记录结束了!!!!!!!!!!!!!!!!!!!!!我是记录结束分割线！！！！！！！！！！！！");
+            locationService.changeCurrentSportType(0); // 结束记录，运动类型改为0
+            traceID = 0;
+            locationService.setTraceID(0);
+            locationService.changeStatus(false); // 改为非记录状态
+            if (tracedata.getSportTypes() == 1) {
+                //轨迹类型为步行，结束轨迹时iswalk置为false，停止记录步数
+                iscountstep = false;//结束线程
+                locationService.changeSportType(false);//是否步行设置为否
+                getActivity().stopService(stepCountServiceIntent);//结束计步服务
+                //stepThread.stop();
+                //handler.removeCallbacks(stepThread);
+            }
+            //traceService.changeGpsTime(Common.getNoRecLocFrequenct(getApplicationContext()));
+            startTrail.setVisibility(View.VISIBLE);
+            changeSportTypeIb.setVisibility(View.INVISIBLE);
+            //pauseTrail.setVisibility(View.INVISIBLE);
+            endTrail.setVisibility(View.INVISIBLE);
+            stepTv.setVisibility(View.INVISIBLE);
+            isstart = false;
+            ispause = false;
+            isend = true;
+            clearTrace();
+            aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
 
             return false;
         }
@@ -1511,7 +1541,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                             }
 
                             cursor = photoHelper.selectEvent(null, PhotoDBHelper.COLUMNS_UE[10] + "="
-                                    + Common.getUserId(getContext()) + " and datetime("
+                                    + Common.getUserID(getContext()) + " and datetime("
                                     + PhotoDBHelper.COLUMNS_UE[0] + ") between '" + tracedata.getStartTime() +
                                     "' and '" + tracedata.getEndTime() + "'", null, null, null, null);
                             int poiCount = cursor.getCount();
@@ -1851,7 +1881,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             String commentTime = data.getStringExtra("createTime");
-                                            String userId = Common.getUserId(getContext());
+                                            String userId = Common.getUserID(getContext());
                                             SharedPreferences.Editor editor = uploadCache.edit();
                                             editor.putString(commentTime, userId);
                                             editor.commit();
@@ -1873,7 +1903,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                         Toast.makeText(getContext(), getResources().getString(R.string.tips_uploadpic_nonet),
                                 Toast.LENGTH_SHORT).show();
                         String commentTime = data.getStringExtra("createTime");
-                        String userId = Common.getUserId(getContext());
+                        String userId = Common.getUserID(getContext());
                         SharedPreferences.Editor editor = uploadCache.edit();
                         editor.putString(commentTime, userId);
                         editor.commit();
