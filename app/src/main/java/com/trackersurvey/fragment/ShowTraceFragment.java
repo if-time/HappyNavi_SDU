@@ -392,7 +392,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                     sp.getString("token", ""), String.valueOf(trailobj.getTraceID()));
             downloadTraceDetail.requestHttpData(new ResponseData() {
                 @Override
-                public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
+                public void onResponseData(boolean isSuccess, final String code, Object responseObject, String msg) throws IOException {
                     if (isSuccess) {
                         traces = (List<GpsData>) responseObject;
                         getActivity().runOnUiThread(new Runnable() {
@@ -406,8 +406,9 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                                         AMap_drawpath_normal(tracePoints);
                                         // BDMap_drawpath_normal(points);
                                     }
-
+                                    Log.i("isSuccesstraces.size()", "run: " + code);
                                 } else {
+                                    Log.i("isSuccessgetLocalGPS", "run: " + code);
                                     if (!getLocalGPSData()) {
                                         Toast.makeText(context, getResources().getString(R.string.tips_nodata), Toast.LENGTH_SHORT).show();
                                     }
@@ -416,6 +417,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                             }
                         });
                     } else {
+                        Log.i("isfailedgetLocalGPS", "run: ");
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -452,9 +454,9 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
      */
     private boolean getLocalGPSData() {
         // 从本地获取
-        // Log.i("trailadapter", "从本地获取");
+         Log.i("getLocalGPSData", "从本地获取");
         traces = helper.queryfromGpsbytraceID(trailobj.getTraceID(), Common.getUserID(context));
-        // Log.i("trailadapter", GsonHelper.toJson(traces));
+         Log.i("getLocalGPSData", GsonHelper.toJson(traces));
         if (traces.size() > 0) {
             initLocation();
             if (Common.isNetConnected && trailobj.getSportTypes() != 5) {
