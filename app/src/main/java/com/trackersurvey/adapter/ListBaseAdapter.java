@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.trackersurvey.bean.CommentMediaFilesData;
 import com.trackersurvey.bean.ListItemData;
 import com.trackersurvey.db.PointOfInterestDBHelper;
+import com.trackersurvey.happynavi.PhotoPrActivity;
 import com.trackersurvey.happynavi.R;
 import com.trackersurvey.happynavi.SelectedPictureActivity;
 import com.trackersurvey.model.MyCommentModel;
@@ -371,6 +372,7 @@ public class ListBaseAdapter extends BaseAdapter {
                         Log.i("lidddd", "" + lid.length);
                         for (int i = 0; i < lid.length; i++) {
                             int type = lid[i].getFileType();
+                            Log.i("donggetFileType", "onItemClick: " + type);
                             if (type == clickedType) {
                                 String pathName = lid[i].getFileName();
                                 String thumbpathName = lid[i].getThumbnailName();
@@ -405,12 +407,13 @@ public class ListBaseAdapter extends BaseAdapter {
                     }
                     //如果本地有图片
                     if (clickedType == CommentMediaFilesData.TYPE_PIC && isDownloaded) {
-                        Intent intent = new Intent(context,
-                                SelectedPictureActivity.class);
-                        intent.putStringArrayListExtra(
-                                SelectedPictureActivity.PIC_PATH, pathes);
+//                        Intent intent = new Intent(context, SelectedPictureActivity.class);
+                        Log.i("dongposition", "onItemClick: " +position +" truep: " + count + position);
+                        Intent intent = new Intent(context, PhotoPrActivity.class);
+                        intent.putExtra("position", count + position);
+                        intent.putStringArrayListExtra(SelectedPictureActivity.PIC_PATH, pathes);
                         intent.putExtra(SelectedPictureActivity.PIC_POSITION, count + position);
-                        Log.i("bitmap", "pathes=" + pathes);
+                        Log.i("dongbitmap", "pathes=" + pathes);
 
                         //将当前item的评论字符串传递出去
                         ListItemData itemEntity;
@@ -418,8 +421,7 @@ public class ListBaseAdapter extends BaseAdapter {
                         ArrayList<String> time = new ArrayList<String>();
                         ArrayList<Integer> feeling = new ArrayList<Integer>();
                         for (int i = 0; i < items.size(); i++) {
-                            CommentMediaFilesData[] lid2 = ((ListItemData) items.get(i)
-                                    .get("listItem")).getFiles();
+                            CommentMediaFilesData[] lid2 = ((ListItemData) items.get(i).get("listItem")).getFiles();
                             itemEntity = (ListItemData) items.get(i).get("listItem");
                             for (int k = 0; k < lid2.length; k++) {
                                 comment.add(itemEntity.getComment());
@@ -455,13 +457,10 @@ public class ListBaseAdapter extends BaseAdapter {
                         //							pathes.clear();
                         //							pathes.add(clickedpathName);
                         String failed = "failed";
-                        Intent intent = new Intent(context,
-                                SelectedPictureActivity.class);
+                        Intent intent = new Intent(context, SelectedPictureActivity.class);
                         intent.putExtra("failed", failed);
-                        intent.putStringArrayListExtra(
-                                SelectedPictureActivity.PIC_PATH, pathes);
-                        intent.putStringArrayListExtra(
-                                SelectedPictureActivity.THUMB_PATH, thumbpathes);
+                        intent.putStringArrayListExtra(SelectedPictureActivity.PIC_PATH, pathes);
+                        intent.putStringArrayListExtra(SelectedPictureActivity.THUMB_PATH, thumbpathes);
                         intent.putExtra(SelectedPictureActivity.PIC_POSITION, count + position);
 
                         //将当前item的评论字符串传递出去
@@ -509,6 +508,8 @@ public class ListBaseAdapter extends BaseAdapter {
                             uri = Uri.fromFile(videoUri);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         }
+
+                        Log.i("dongbitmap", "onItemClick: " + uri);
 
                         intent.setDataAndType(uri, "video/*");
                         context.startActivity(intent);

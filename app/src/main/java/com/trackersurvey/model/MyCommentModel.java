@@ -289,7 +289,8 @@ public class MyCommentModel {
                                 ev.setDateTime(interestMarkerDataList.get(i).getCreateTime());
                                 ev.setFileNo(j + count);
                                 ev.setFileType(CommentMediaFilesData.TYPE_VIDEO);
-                                ev.setFileID(interestMarkerDataList.get(i).getPoiFiles().get(j).getFileID());
+                                ev.setFileID(interestMarkerDataList.get(i).getPoiFiles().get(j + count).getFileID());
+                                Log.i("dongsiyuansetFileID", "onResponseData: " + interestMarkerDataList.get(i).getPoiFiles().get(j + count).getFileID());
                                 writedDbHelper.inserFile(ev);
                             }
                         }
@@ -417,7 +418,8 @@ public class MyCommentModel {
                                         ev.setDateTime(interestMarkerDataList.get(index).getCreateTime());
                                         ev.setFileNo(j + count);
                                         ev.setFileType(CommentMediaFilesData.TYPE_VIDEO);
-                                        ev.setFileID(interestMarkerDataList.get(index).getPoiFiles().get(j).getFileID());
+                                        ev.setFileID(interestMarkerDataList.get(index).getPoiFiles().get(j + count).getFileID());
+                                        Log.i("dongsiyuansetFileID", "onResponseData: " + interestMarkerDataList.get(index).getPoiFiles().get(j + count).getFileID());
                                         writedDbHelper.inserFile(ev);
                                     }
                                     index++;
@@ -991,9 +993,9 @@ public class MyCommentModel {
         final String createTime = ((ListItemData) (items.get(listPosition).get("listItem"))).getTime();
 
         int PoiID = ((ListItemData) items.get(listPosition).get("listItem")).getPoiID();
+        int fileid = ((ListItemData) items.get(listPosition).get("listItem")).getFiles()[0].getFileID();
 
-        Log.i("dongsiyuandownloadFile", "PoiID: " + PoiID + " fileID : " + fileID);
-        Log.i("dongsiyuandownloadFile", "downloadFile: " + sp.getString("token", ""));
+        Log.i("dongsiyuandownloadFile", "PoiID: " + PoiID + " fileID : " + fileid + " type : " + type);
 
         DownloadMediaFiles downloadMediaFiles = new DownloadMediaFiles(sp.getString("token", ""), fileID);
         downloadMediaFiles.requestHttpData(new ByteHttpUtil.ResponseData() {

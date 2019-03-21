@@ -138,7 +138,7 @@ public class ByteHttpUtil {
                 ByteHttpUtil responseData = new ByteHttpUtil();
                 //Log.i("HttpUtil", "responseString:" + responseString);
                 Log.i("HttpUtil", "这儿打印了");
-                LogUtil.i("HttpUtil", "LogUtil: responseString:" + inputStream);
+                LogUtil.i("ByteHttpUtil", "LogUtil: responseString:" + inputStream);
                 // 将Json字符串转为JSONObject对象
                 responseData = handleData(inputStream);
                 data.onResponseData(true, responseData.responseObject);
