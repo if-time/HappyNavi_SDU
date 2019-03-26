@@ -33,24 +33,25 @@ public class SportTypeDialog extends Dialog {
     private EditText traceName;
     //private TextView justtrail;
     //private CheckBox justtrailchecked;
-    private Button start;
-    private Button cancel;
+    private Button   start;
+    private Button   cancel;
     private GridView gridview;
-    private Context context;
+    private Context  context;
     private Activity activity;
-    private View itemview=null;//gridview单个item的view
-    private String tracename="";
-    private int postion=-1;//记录点击的选项位置
+    private View     itemview  = null;//gridview单个item的view
+    private String   tracename = "";
+    private int      postion   = -1;//记录点击的选项位置
+
     //private int isopen;//0表示公开，1表示不公开
     public SportTypeDialog(Context context) {
 
         this(context, android.R.style.Theme_Dialog);
-        this.context=context;
+        this.context = context;
     }
 
     public SportTypeDialog(Context context, int theme) {
         super(context, theme);
-        this.context=context;
+        this.context = context;
     }
 
     @Override
@@ -58,78 +59,75 @@ public class SportTypeDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sport_type_dialog);
 
-        this.activity=(Activity)context;
-        traceName=(EditText)findViewById(R.id.sport_dialog_type_name);
-        String str=Common.currentDate()+context.getResources().getString(R.string.trace);
+        this.activity = (Activity) context;
+        traceName = (EditText) findViewById(R.id.sport_dialog_type_name);
+        String str = Common.currentDate() + context.getResources().getString(R.string.trace);
         traceName.setText(str);
         traceName.setSelection(str.length());
-        start=(Button)findViewById(R.id.sportdialog_starttrail);
+        start = (Button) findViewById(R.id.sportdialog_starttrail);
 
-        cancel=(Button)findViewById(R.id.sportdialog_canceltrail);
-        gridview=(GridView)findViewById(R.id.grid_sporttype);
+        cancel = (Button) findViewById(R.id.sportdialog_canceltrail);
+        gridview = (GridView) findViewById(R.id.grid_sporttype);
         gridview.setSelector(new ColorDrawable(Color.TRANSPARENT));//将点击出现的背景色设为透明
-        int[] imageId=new int[]{R.mipmap.ic_walking,
+        int[] imageId = new int[]{R.mipmap.ic_walking,
                 R.mipmap.ic_cycling,
                 R.mipmap.ic_rollerblading,
                 R.mipmap.ic_driving,
                 R.mipmap.ic_train,
                 R.mipmap.others,
         };
-        String[] title=context.getResources().getStringArray(R.array.sporttype);
-        List<Map<String,Object>> listItems=new ArrayList<Map<String,Object>>();
-        for(int i=0;i<imageId.length;i++){
-            Map<String,Object> map=new HashMap<String,Object>();
+        String[] title = context.getResources().getStringArray(R.array.sporttype);
+        List<Map<String, Object>> listItems = new ArrayList<Map<String, Object>>();
+        for (int i = 0; i < imageId.length; i++) {
+            Map<String, Object> map = new HashMap<String, Object>();
             map.put("image", imageId[i]);
             map.put("title", title[i]);
             listItems.add(map);
 
         }
-        SimpleAdapter adapter=new SimpleAdapter(context,listItems,R.layout.sport_dialog_items,new String[]{"title","image"},
-                new int[]{R.id.sporttype_title,R.id.sporttype_img});
+        SimpleAdapter adapter = new SimpleAdapter(context, listItems, R.layout.sport_dialog_items, new String[]{"title", "image"},
+                new int[]{R.id.sporttype_title, R.id.sporttype_img});
         gridview.setAdapter(adapter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
                 // TODO Auto-generated method stub
-                postion=pos+1;
-                for(int i=0;i<gridview.getChildCount();i++){
-                    itemview=gridview.getChildAt(i);
+                postion = pos + 1;
+                for (int i = 0; i < gridview.getChildCount(); i++) {
+                    itemview = gridview.getChildAt(i);
                     itemview.setBackgroundColor(Color.parseColor("#ffffff"));
                 }
                 view.setBackgroundColor(Color.parseColor("#99cc33"));
-                itemview=view;
+                itemview = view;
 
 
             }
         });
 
 
-        start.setOnClickListener(new android.view.View.OnClickListener(){
+        start.setOnClickListener(new android.view.View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                if(postion==-1){
+                if (postion == -1) {
                     ToastUtil.show(context, context.getResources().getString(R.string.tips_choosetype));
                     return;
                 }
-                if(traceName.length()==0){
-                    tracename=context.getResources().getString(R.string.trace)+Common.currentDay();
+                if (traceName.length() == 0) {
+                    tracename = context.getResources().getString(R.string.trace) + Common.currentDay();
+                } else {
+                    tracename = traceName.getText().toString().trim();
                 }
-                else{
-                    tracename=traceName.getText().toString().trim();
-                }
-                if(postion==1){//步行
-                    if(!Common.checkGPS(context)){
+                if (postion == 1) {//步行
+                    if (!Common.checkGPS(context)) {
                         setGPS(1);
-                    }
-                    else{
+                    } else {
                         SportTypeDialog.this.dismiss();
                     }
-                }
-                else{
-                    if(!Common.checkGPS(context)){
+                } else {
+                    if (!Common.checkGPS(context)) {
                         setGPS(0);
                     }
                     SportTypeDialog.this.dismiss();
@@ -138,21 +136,23 @@ public class SportTypeDialog extends Dialog {
             }
 
         });
-        cancel.setOnClickListener(new android.view.View.OnClickListener(){
+        cancel.setOnClickListener(new android.view.View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                postion=-1;
+                postion = -1;
                 SportTypeDialog.this.dismiss();
             }
 
         });
     }
-    public String gettraceName(){
+
+    public String gettraceName() {
         return tracename;
     }
-    public int getposition(){
+
+    public int getposition() {
         return postion;
     }
 
@@ -160,13 +160,12 @@ public class SportTypeDialog extends Dialog {
     private void setGPS(int type) {
         CustomDialog.Builder builder = new CustomDialog.Builder(context);
         builder.setTitle(context.getResources().getString(R.string.tips_gpsdlgtle));
-        if(type==0){
+        if (type == 0) {
             builder.setMessage(context.getResources().getString(R.string.tips_gpsdlgmsg10)
-                    +"\n"+context.getResources().getString(R.string.tips_gpsdlgmsg2));
-        }
-        else{
+                    + "\n" + context.getResources().getString(R.string.tips_gpsdlgmsg2));
+        } else {
             builder.setMessage(context.getResources().getString(R.string.tips_gpsdlgmsg11)
-                    +"\n"+context.getResources().getString(R.string.tips_gpsdlgmsg2));
+                    + "\n" + context.getResources().getString(R.string.tips_gpsdlgmsg2));
         }
         builder.setPositiveButton(context.getResources().getString(R.string.confirm),
                 new android.content.DialogInterface.OnClickListener() {
@@ -207,16 +206,17 @@ public class SportTypeDialog extends Dialog {
                 arg0.dismiss();
 
             }
-        } );
+        });
         builder.create().show();
 
     }
-    public void turnGPSOn(){
+
+    public void turnGPSOn() {
         //Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
         //intent.putExtra("enabled", true);
         //this.sendBroadcast(intent);
         String provider = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-        if(!provider.contains("gps")){
+        if (!provider.contains("gps")) {
             final Intent poke = new Intent();
             poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
             poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
