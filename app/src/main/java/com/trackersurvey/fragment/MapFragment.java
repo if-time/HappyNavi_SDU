@@ -63,30 +63,23 @@ import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.maps.model.TileOverlay;
 import com.amap.api.maps.model.TileOverlayOptions;
 import com.amap.api.maps.model.TileProvider;
-import com.trackersurvey.bean.FileInfo;
-import com.trackersurvey.bean.FileInfoData;
 import com.trackersurvey.bean.PointOfInterestData;
-import com.trackersurvey.happynavi.MainActivity;
-import com.trackersurvey.http.DownloadPoiChoices;
-import com.trackersurvey.http.DownloadTraceDetailRequest;
-import com.trackersurvey.http.EndTraceRequest;
-import com.trackersurvey.http.UpLoadGpsRequest;
-import com.trackersurvey.model.PoiChoiceModel;
-import com.trackersurvey.model.StepData;
 import com.trackersurvey.db.MyTraceDBHelper;
-import com.trackersurvey.http.ResponseData;
-import com.trackersurvey.http.StartTraceRequest;
-import com.trackersurvey.model.TraceData;
 import com.trackersurvey.db.PhotoDBHelper;
 import com.trackersurvey.db.PointOfInterestDBHelper;
-import com.trackersurvey.model.GpsData;
 import com.trackersurvey.happynavi.BGRunningGuideActivity;
 import com.trackersurvey.happynavi.CommentActivity;
 import com.trackersurvey.happynavi.LoginActivity;
 import com.trackersurvey.happynavi.R;
-import com.trackersurvey.httpconnection.PostCheckVersion;
+import com.trackersurvey.http.DownloadPoiChoices;
+import com.trackersurvey.http.EndTraceRequest;
+import com.trackersurvey.http.ResponseData;
+import com.trackersurvey.http.StartTraceRequest;
+import com.trackersurvey.model.GpsData;
+import com.trackersurvey.model.PoiChoiceModel;
+import com.trackersurvey.model.StepData;
+import com.trackersurvey.model.TraceData;
 import com.trackersurvey.service.CommentUploadService;
-import com.trackersurvey.service.DownloadService;
 import com.trackersurvey.service.LocationService;
 import com.trackersurvey.service.OnePxService;
 import com.trackersurvey.service.StepCounterService;
@@ -225,18 +218,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 
     private boolean UiRefresh = false;
 
-    private List<GpsData> traces = new ArrayList<GpsData>();
-
-    private boolean startSuccess = true;
-
-
     @Nullable
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         homepageLayout = inflater.inflate(R.layout.fragment_map, container, false);
         ShareToWeChat.registToWeChat(getContext());
-
-        //        EventBus.getDefault().register(this);
         mapView = (MapView) homepageLayout.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         stepTv = (TextView) homepageLayout.findViewById(R.id.tv_step);
@@ -288,7 +274,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 
     private void initAMap() {
         //获取屏幕分辨率
-        //SharedPreferences sp = getSharedPreferences("config", MODE_PRIVATE);
         Common.winWidth = sp.getInt(LoginActivity.winWidth, 720);
         Common.winHeight = sp.getInt(LoginActivity.winHeight, 1280);
         Common.ppiScale = sp.getFloat(LoginActivity.PPISCALE, 1.5f);
@@ -310,11 +295,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                         Common.isWiFiConnected = true;
                         if (Common.isUpdationg && Common.fileInfo != null) {
                             Log.i("phonelog", "WiFi下继续下载");
-                            // 通知Service继续下载
-                            //                            updateServiceIntent = new Intent(getContext(), DownloadService.class);
-                            //                            updateServiceIntent.setAction(DownloadService.ACTION_START);
-                            //                            updateServiceIntent.putExtra("fileInfo", Common.fileInfo);
-                            //                            getActivity().startService(updateServiceIntent);
                         } else {
                             // 原参数是getApplicationContext()
                             if (Common.isAutoUpdate(getContext())) {
@@ -327,9 +307,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                 }
                                 // 检查更新app
                                 if (version != null && !version.equals("")) {
-                                    //                                    PostCheckVersion checkVersion = new PostCheckVersion(updatehandler, URL_CHECKUPDATE,
-                                    //                                            Common.getDeviceId(getContext()), version);
-                                    //                                    checkVersion.start();
                                 }
                             } else {
                                 Log.i("phonelog", "自动检查更新关闭");
@@ -341,11 +318,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                         Common.isWiFiConnected = false;
                         Log.i("phonelog", "WiFi连接断开");
                         if (Common.isUpdationg && Common.fileInfo != null) {
-                            // 通知Service暂停下载
-                            //                            updateServiceIntent = new Intent(getContext(), DownloadService.class);
-                            //                            updateServiceIntent.setAction(DownloadService.ACTION_STOP);
-                            //                            updateServiceIntent.putExtra("fileInfo", Common.fileInfo);
-                            //                            getActivity().startService(updateServiceIntent);
                             Log.i("phonelog", "发送暂停命令");
                         }
                     } else {
@@ -357,11 +329,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     Log.i("phonelog", "Main，当前无网络");
                     Common.isWiFiConnected = false;
                     if (Common.isUpdationg && Common.fileInfo != null) {
-                        // 通知Service暂停下载
-                        //                        updateServiceIntent = new Intent(getContext(), DownloadService.class);
-                        //                        updateServiceIntent.setAction(DownloadService.ACTION_STOP);
-                        //                        updateServiceIntent.putExtra("fileInfo", Common.fileInfo);
-                        //                        getActivity().startService(updateServiceIntent);
                         Log.i("phonelog", "发送暂停命令");
                     }
                     if (!Common.checkGPS(getContext())) {
@@ -400,8 +367,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     private void registerListener() {
         aMap.setOnMapClickListener(this); // 地图点击监听
         aMap.setOnMarkerClickListener(this); // 标记点击监听
-        //aMap.setOnInfoWindowClickListener(MainActivity.this);
-        //aMap.setInfoWindowAdapter(MainActivity.this);
     }
 
     // 设置一些aMap的属性
@@ -443,14 +408,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 .icon(BitmapDescriptorFactory
                         .defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
     }
-
-
-    //    @Override
-    //    public void onStart() {      //测试
-    //        setUpService();
-    //        super.onStart();
-    //    }
-
     // 设置Service参数
     public void setUpService() {
         // OnePxService
@@ -471,24 +428,19 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         locationServiceIntent.putExtra("token", sp.getString("token", ""));
         // 上传兴趣点服务
         commentServiceIntent = new Intent(getContext(), CommentUploadService.class); // 上传兴趣点Service
-        //getActivity().startService(commentServiceIntent);
         getActivity().bindService(commentServiceIntent, commentConnection, Context.BIND_AUTO_CREATE);
-        //commentUploadService.getToComment("");
-
         // 申请定位权限
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {
             // 已申请则开启定位服务
-            //            getActivity().bindService(locationServiceIntent, connection, Context.BIND_AUTO_CREATE);
             if (Build.VERSION.SDK_INT >= 26) {
                 getActivity().startForegroundService(locationServiceIntent);
 
             } else {
                 getActivity().bindService(locationServiceIntent, connection, Context.BIND_AUTO_CREATE);
             }
-
         }
         getActivity().bindService(locationServiceIntent,
                 connection, Context.BIND_AUTO_CREATE);
@@ -519,12 +471,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 }
             };
         }
-
-
         /**
          判断上次轨迹记录是否意外中断，如果有意外中断，提醒用户是否继续记录
          */
-        traceID = traceDBHelper.getUnStopStatusExists(Common.getUserID(getContext()));
+        traceID = traceDBHelper.getUnStopStatusExists(Common.getUserId(getContext()));
         if (traceID != 0) { //存在中断的轨迹,0是轨迹号
 
             CustomDialog.Builder builder = new CustomDialog.Builder(getContext());
@@ -540,7 +490,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             builder.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    tracedata = traceDBHelper.queryfromTrailbytraceID(traceID, Common.getUserID(getContext()));
+                    tracedata = traceDBHelper.queryfromTrailbytraceID(traceID, Common.getUserId(getContext()));
                     initStartInfo();
                     dialog.dismiss();
                 }
@@ -554,7 +504,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             showBGRunGuide();
         }
     }
-
     // 权限获取回调函数
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -590,7 +539,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 Log.i("LogDemo", "定位服务开始工作了！当前时间是" + Common.currentTime());
             }
         }
-
         @Override
         public void onServiceDisconnected(ComponentName name) {
             bound_trace = false;
@@ -612,7 +560,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 
         }
     };
-
     // 精度监听广播
     public class AccuracyBroadcastReceiver extends BroadcastReceiver {
         public AccuracyBroadcastReceiver() {
@@ -624,12 +571,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             ToastUtil.show(getContext(), getResources().getString(R.string.tips_accuracy_msg));
         }
     }
-
     // 监听后台定位情况的广播
     public class MyBroadcastReceiver extends BroadcastReceiver {
         public MyBroadcastReceiver() {
         }
-
         @SuppressLint("SetTextI18n")
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -723,11 +668,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 // 这个条件保证先插入一条带有TraceID的位置数据，再执行refreshTrace()，插入一条轨迹数据
                 if (Common.isRecording) {
                     aMap.moveCamera(CameraUpdateFactory.changeLatLng(currentLatLng));
-                    if (isstart && isend) {//开启新的轨迹记录
-                        //aMap.clear();
-                        //clearTrace();
+                    if (isstart && isend) {
+                        //开启新的轨迹记录
                         isend = false;
-                        //Log.i("LogDemo", "开画");
                     }
                     if (refreshTrace()) {
                         if (!points.isEmpty()) {
@@ -739,7 +682,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                             if (points.size() > 1) {
                                 if (point.equals(points.get(points.size() - 2))) {//新记录的点与上一个点相同，删除
                                     points.remove(points.size() - 1);
-                                    //Log.i("LogDemo", "removepoint");
                                 }
                                 finalLatLng = points.get(points.size() - 1);
                             }
@@ -754,7 +696,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 
     public void drawPoints(List<LatLng> points) {
         int size = points.size();
-        //Toast.makeText(MainActivity.this, "drawPoints,size="+size, 0).show();
         LatLng pt = points.get(size - 1);
         if (size == 1) {
             if (startMarker != null) {
@@ -772,7 +713,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             //初始化轨迹属性Color.argb(255, 100, 100, 100)灰色
             options = new PolylineOptions().width(15).geodesic(true).color(Color.GREEN);
             options.addAll(points);
-            //polyline.setPoints(options.getPoints());
             if (polyline != null) {
                 polyline.remove();
             }
@@ -781,7 +721,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     }
 
     public void clearTrace() {
-        //Log.i("LogDemo", "clear trace");
         if (startMarker != null) {
             startMarker.remove();
         }
@@ -791,7 +730,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         if (polyline != null) {
             polyline.remove();
             polyline = null;
-            //Log.i("LogDemo", "clear polyline!!!");
         }
     }
 
@@ -814,11 +752,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                         //轨迹类型为步行，记录步数
                         locationService.changeSportType(true);
                     }
-                    //traceService.changeGpsTime(Common.getRecLocFrequenct(getApplicationContext()));
                     startTrail.setVisibility(View.INVISIBLE);
                     changeSportTypeIb.setVisibility(View.VISIBLE);
-                    // pauseTrail.setVisibility(View.VISIBLE);
-                    // takephoto.setVisibility(View.VISIBLE);
                     endTrail.setVisibility(View.VISIBLE);
                     isstart = true;
                     ispause = false;
@@ -829,7 +764,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 changeSportType();
                 break;
             case R.id.imgbtn_endtrail:
-                //Toast.makeText(MainActivity.this, "结束记录",Toast.LENGTH_SHORT).show();
                 CustomDialog.Builder builder = new CustomDialog.Builder(getContext());
                 builder.setTitle(getResources().getString(R.string.end));
                 builder.setMessage(getResources().getString(R.string.tips_endtracedlg_msg));
@@ -843,12 +777,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         endTrail();
-                        // takephoto.setVisibility(View.INVISIBLE);
                         dialog.dismiss();
                     }
                 });
                 builder.create().show();
-                //Log.i("LogDemo", "结束记录");
                 break;
             case R.id.imgbtn_takephoto:
                 if (Common.isVisiter()) {
@@ -914,7 +846,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 int pos = dialog.getposition();
                 sportType = pos;
                 if (pos != -1) { // 点击确定
-                    //Toast.makeText(MainActivity.this, title[pos], 0).show();
                     // 设置轨迹信息
                     traceID = System.currentTimeMillis(); // 手机端暂时生成一个轨迹号(就是一个时间戳)
                     // 初始化轨迹信息，设置它的了6个属性
@@ -930,15 +861,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     initStartInfo(); // 初始化轨迹信息
                     ToastUtil.show(getContext(), getResources().getString(R.string.tips_starttrace)); // 开始记录
                     ToastUtil.show(getContext(), getResources().getString(R.string.tips_addmark)); // 点击右侧"相机"按钮可添加标注
-                    //showDialog("正在请求..","请求中..请稍后....");
-                    //PostStartTrail startTrailThread=new PostStartTrail(handler,URL_STARTTRAIL,Common.userId);
-                    //startTrailThread.start();
-                    //                    Intent intent = new Intent();
-                    //                    intent.setAction(REFRESH_ACTION);
-                    //                    Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
-                    //                    getContext().sendBroadcast(intent);
                 } else {
-                    //                    Toast.makeText(getContext(), "取消记录", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
             }
@@ -946,7 +869,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     }
 
     public void initStartInfo() {
-
         if (!locationService.isWorking()) {
             locationService.getToWork();
             Log.i("LogDemo", "开始记录轨迹了，此时服务没在工作，所以服务重新开启了！当前时间是" + Common.currentTime());
@@ -962,12 +884,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         aMap.setMyLocationStyle(myLocationStyle); // 改变定位模式为蓝点始终在屏幕中间
         stepdata.setUserID(Common.getUserID(getContext()));
         stepdata.setTraceID(traceID);
-        Log.i("LogDemo", "starttrail,localTraceNo：" + traceID + ",id:" + Common.getUserID(getContext()));
-        Log.i("LogDemo", "starttrail,traceNo：" + traceID + ",id:" + Common.getUserID(getContext()));
+        Log.i("LogDemo", "starttrail,localTraceNo：" + traceID + ",id:" + Common.getUserId(getContext()));
+        Log.i("LogDemo", "starttrail,traceNo：" + traceID + ",id:" + Common.getUserId(getContext()));
         List<TraceData> traceList = new ArrayList<>();
         traceList.add(tracedata);
         String traceInfo = GsonHelper.toJson(traceList);
-
         // 先上传一次轨迹信息，获取轨迹号，在service中更改轨迹号。、
         Log.i("mmmmmmmmmmmmmmm", "请求接口获取轨迹号");
         StartTraceRequest startTraceRequest = new StartTraceRequest(sp.getString("token", ""),
@@ -988,7 +909,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                             // 获取到traceID后
                             if (traceID != 0) {
                                 traceDBHelper.updatetrail(tracedata, traceID, Common.getUserID(getContext()));
-                                Log.i("mmmmmmmmmmmmmmm", "initStartInfo traceDBHelper.updatetrail(tracedata,traceID,Common.getUserID(getContext()));");
                                 traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
                                 Log.i("LogDemo", "数据的TraceID替换成功");
                             }
@@ -998,7 +918,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                             e.printStackTrace();
                         }
                         UiRefresh = true;
-                        startSuccess = true;
                     }
                     if (code.equals("100") || code.equals("101")) {
                         getActivity().runOnUiThread(new Runnable() {
@@ -1009,78 +928,48 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                 editor.putString("token", ""); // 清空token
                                 editor.apply();
                                 ActivityCollector.finishActivity("MainActivity");
-                                startSuccess = false;
                             }
                         });
                     }
                 } else {
                     ToastUtil.show(getContext(), "上传轨迹失败，轨迹保存在本地");
-                    startSuccess = false;
                 }
             }
         });
 
-        if (startSuccess) {
-            startTrail.setVisibility(View.INVISIBLE);
-            if (sportType == 1) {
-                changeSportTypeIb.setBackgroundResource(R.mipmap.ic_walking);
-            } else if (sportType == 2) {
-                changeSportTypeIb.setBackgroundResource(R.mipmap.ic_cycling);
-            } else if (sportType == 3) {
-                changeSportTypeIb.setBackgroundResource(R.mipmap.ic_rollerblading);
-            } else if (sportType == 4) {
-                changeSportTypeIb.setBackgroundResource(R.mipmap.ic_driving);
-            } else if (sportType == 5) {
-                changeSportTypeIb.setBackgroundResource(R.mipmap.ic_train);
-            } else if (sportType == 6) {
-                changeSportTypeIb.setBackgroundResource(R.mipmap.others);
-            }
-            changeSportTypeIb.setVisibility(View.VISIBLE);
-            //pauseTrail.setVisibility(View.VISIBLE);
-            takePhoto.setVisibility(View.VISIBLE);
-            endTrail.setVisibility(View.VISIBLE);
-            isstart = true;
-            ispause = false;
-            //isend=false;
+        startTrail.setVisibility(View.INVISIBLE);
+        if (sportType == 1) {
+            changeSportTypeIb.setBackgroundResource(R.mipmap.ic_walking);
+        } else if (sportType == 2) {
+            changeSportTypeIb.setBackgroundResource(R.mipmap.ic_cycling);
+        } else if (sportType == 3) {
+            changeSportTypeIb.setBackgroundResource(R.mipmap.ic_rollerblading);
+        } else if (sportType == 4) {
+            changeSportTypeIb.setBackgroundResource(R.mipmap.ic_driving);
+        } else if (sportType == 5) {
+            changeSportTypeIb.setBackgroundResource(R.mipmap.ic_train);
+        } else if (sportType == 6) {
+            changeSportTypeIb.setBackgroundResource(R.mipmap.others);
+        }
+        changeSportTypeIb.setVisibility(View.VISIBLE);
+        //pauseTrail.setVisibility(View.VISIBLE);
+        takePhoto.setVisibility(View.VISIBLE);
+        endTrail.setVisibility(View.VISIBLE);
+        isstart = true;
+        ispause = false;
+        //isend=false;
 
-            Log.i("HomePage", "改变了轨迹号traceID : " + traceID);
-            locationService.changeStatus(true); // 改为记录轨迹状态
-            if (tracedata.getSportTypes() == 1) {
-                //轨迹类型为步行，记录步数
-                locationService.changeSportType(true);
-                StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserID(getContext())).getSteps();
-                total_step = StepDetector.CURRENT_STEP;
-                getActivity().startService(stepCountServiceIntent);
-                iscountstep = true;
-                new Thread(stepThread).start();
-                //            stepTv.setVisibility(View.VISIBLE);
-                stepTv.setText(getResources().getString(R.string.step_label) + "：" + total_step);
-            }
-        } else {
-            Log.i("LogDemo", "记录结束了!!!!!!!!!!!!!!!!!!!!!我是记录结束分割线！！！！！！！！！！！！");
-            locationService.changeCurrentSportType(0); // 结束记录，运动类型改为0
-            traceID = 0;
-            locationService.setTraceID(0);
-            locationService.changeStatus(false); // 改为非记录状态
-            if (tracedata.getSportTypes() == 1) {
-                //轨迹类型为步行，结束轨迹时iswalk置为false，停止记录步数
-                iscountstep = false;//结束线程
-                locationService.changeSportType(false);//是否步行设置为否
-                getActivity().stopService(stepCountServiceIntent);//结束计步服务
-                //stepThread.stop();
-                //handler.removeCallbacks(stepThread);
-            }
-            //traceService.changeGpsTime(Common.getNoRecLocFrequenct(getApplicationContext()));
-            startTrail.setVisibility(View.VISIBLE);
-            changeSportTypeIb.setVisibility(View.INVISIBLE);
-            //pauseTrail.setVisibility(View.INVISIBLE);
-            endTrail.setVisibility(View.INVISIBLE);
-            stepTv.setVisibility(View.INVISIBLE);
-            isstart = false;
-            ispause = false;
-            isend = true;
-            clearTrace();
-            aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+        Log.i("HomePage", "改变了轨迹号traceID : " + traceID);
+        locationService.changeStatus(true); // 改为记录轨迹状态
+        if (tracedata.getSportTypes() == 1) {
+            //轨迹类型为步行，记录步数
+            locationService.changeSportType(true);
+            StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserId(getContext())).getSteps();
+            total_step = StepDetector.CURRENT_STEP;
+            getActivity().startService(stepCountServiceIntent);
+            iscountstep = true;
+            new Thread(stepThread).start();
+            stepTv.setText(getResources().getString(R.string.step_label) + "：" + total_step);
         }
     }
 
@@ -1129,12 +1018,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             showDialog(getResources().getString(R.string.tip), getResources().getString(R.string.tips_dlgmsg_login));
             points.clear();
             locationService.uploadGPS();
-            //            List<TraceData> tracelist = new ArrayList<TraceData>();
             tracedata.setSteps(total_step);
             tracedata.setPoiCount(poiCount);
-            //            tracelist.add(tracedata);
             String traceInfo = GsonHelper.toJson(tracedata);
-            //            Log.i("HomePageFragment", "tracelist size:" + tracelist.size());
             Log.i("HomePageFragment", "traceInfo:" + traceInfo);
             String stepInfo;
             if (tracedata.getSportTypes() == 1) {
@@ -1144,11 +1030,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             } else {
                 stepInfo = "";
             }
-            //Log.i("LogDemo", "endtrail,"+traceInfo+","+stepInfo);
             traceDBHelper.updateStatus(traceID, 2, Common.getUserID(getContext()));
             UiRefresh = false;
             // 结束轨迹
-            EndTraceRequest endTraceRequest = new EndTraceRequest(sp.getString("token", ""), traceInfo);
+            EndTraceRequest endTraceRequest = new EndTraceRequest(
+                    sp.getString("token", ""), traceInfo);
             endTraceRequest.requestHttpData(new ResponseData() {
                 @Override
                 public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
@@ -1158,18 +1044,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                             public void run() {
                                 Toast.makeText(getContext(), "上传轨迹成功", Toast.LENGTH_SHORT).show();
                                 poiCount = 0;
-                                traceDBHelper.updateStatus(traceID, 0, Common.getUserID(getContext()));
-                                traceDBHelper.deleteStatus();
-                                // 云端新增轨迹提醒，提示用户下拉刷新
-                                Intent intent = new Intent();
-                                intent.setAction(PULLREFRESH_ACTION);
-                                getContext().sendBroadcast(intent);
                                 dismissDialog();
                             }
                         });
                     } else {
                         dismissDialog();
-                        //Toast.makeText(MainActivity.this, getResources().getString(R.string.tips_recordsuccess_postfail),Toast.LENGTH_SHORT).show();
                         CustomDialog.Builder builder = new CustomDialog.Builder(getContext());
                         builder.setTitle(getResources().getString(R.string.tip));
                         builder.setMessage(getResources().getString(R.string.tips_uploadtracedlg_msgfail));
@@ -1200,24 +1079,18 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             UiRefresh = false;
             ToastUtil.show(getContext(), getResources().getString(R.string.tips_recorderror_nogps));
         }
-        long termtraceID = traceID;
+
         traceID = 0;
         locationService.setTraceID(0);
         locationService.changeStatus(false); // 改为非记录状态
-        Log.i("dongpsDataIsOnline", "endTrail: " +termtraceID);
-        gpsDataIsOnline(termtraceID);
         if (tracedata.getSportTypes() == 1) {
             //轨迹类型为步行，结束轨迹时iswalk置为false，停止记录步数
             iscountstep = false;//结束线程
             locationService.changeSportType(false);//是否步行设置为否
             getActivity().stopService(stepCountServiceIntent);//结束计步服务
-            //stepThread.stop();
-            //handler.removeCallbacks(stepThread);
         }
-        //traceService.changeGpsTime(Common.getNoRecLocFrequenct(getApplicationContext()));
         startTrail.setVisibility(View.VISIBLE);
         changeSportTypeIb.setVisibility(View.INVISIBLE);
-        //pauseTrail.setVisibility(View.INVISIBLE);
         endTrail.setVisibility(View.INVISIBLE);
         stepTv.setVisibility(View.INVISIBLE);
         isstart = false;
@@ -1225,68 +1098,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         isend = true;
         clearTrace();
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
-        //bdmap.setLocationStyle(0);
-    }
-
-    /**
-     * 判断gpsData是否上传到后台
-     *
-     * @param traceID
-     * @return
-     */
-    public boolean gpsDataIsOnline(final long traceID) {
-        DownloadTraceDetailRequest downloadTraceDetail = new DownloadTraceDetailRequest(
-                sp.getString("token", ""), String.valueOf(traceID));
-        downloadTraceDetail.requestHttpData(new ResponseData() {
-            @Override
-            public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
-                if (isSuccess) {
-                    Log.i("dongpsDataIsOnline", "onResponseData: " + code);
-                    List<GpsData> tracegps = (List<GpsData>) responseObject;
-                    if (tracegps.size() <= 0) {
-                        getLocalGPSData(traceID);
-                        Log.i("dongpsDataIsOnline", "onResponseData:  + racegps.size() <= 0 " + code);
-                    }
-
-                } else {
-                    Log.i("dongpsDataIsOnline", "onResponseData: " + code + " isSuccess : " + isSuccess);
-                    getLocalGPSData(traceID);
-                }
-            }
-        });
-
-        return false;
-    }
-
-    /**
-     * 从本地获取GPSData
-     */
-    private boolean getLocalGPSData(long traceID) {
-        // 从本地获取
-        traces = traceDBHelper.queryfromGpsbytraceID(traceID, Common.getUserID(getContext()));
-        Log.i("trailadapter", GsonHelper.toJson(traces));
-        if (traces.size() > 0) {
-            String gpsData = GsonHelper.toJson(traces);
-            // 上传位置数据
-            UpLoadGpsRequest upLoadGpsRequest = new UpLoadGpsRequest(sp.getString("token", ""), gpsData);
-            upLoadGpsRequest.requestHttpData(new ResponseData() {
-                @Override
-                public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
-                    if (isSuccess) {
-                        if (code.equals("0")) {
-                            Log.i("LocationService", "上传成功");
-                        }
-                        if (code.equals("100")) {
-                            Log.i("LocationService", "登录超时");
-                        }
-                    }
-                }
-            });
-            return true;
-        } else {
-            Toast.makeText(getContext(), getResources().getString(R.string.tips_nodata), Toast.LENGTH_SHORT).show();
-            return false;
-        }
     }
 
     public boolean refreshTrace() {
@@ -1298,7 +1109,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         tracegps = traceDBHelper.queryfromGpsbytraceID(traceID, Common.getUserID(getContext()));
         Log.i("LogDemo", "tracegps coontent:" + GsonHelper.toJson(tracedata));
         Log.i("LogDemo", "tracegps size:" + tracegps.size());
-
         //Gson tracejosn=new Gson();
         if (tracegps.size() > 0) {
             tracedata.setEndTime(Common.currentTime());
@@ -1323,7 +1133,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             }
             tracedata.setDistance(distance);
             Log.i("dongiyuansetDuration", "duration: " + duration + " distance: " + distance);
-
             if (tracedata.getSportTypes() == 1) {
                 stepdata.setSteps(total_step);
                 traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
@@ -1338,9 +1147,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-
             cursor = photoHelper.selectEvent(null, PhotoDBHelper.COLUMNS_UE[10] + "="
-                    + Common.getUserID(getContext()) + " and datetime("
+                    + Common.getUserId(getContext()) + " and datetime("
                     + PhotoDBHelper.COLUMNS_UE[0] + ") between '" + tracedata.getStartTime() +
                     "' and '" + tracedata.getEndTime() + "'", null, null, null, null);
             int poiCount = cursor.getCount();
@@ -1358,39 +1166,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         } else {
             UiRefresh = false;
             ToastUtil.show(getContext(), "未采集到位置信息，轨迹不保存");
-            // 重置到开始界面
-
-            Log.i("LogDemo", "记录结束了!!!!!!!!!!!!!!!!!!!!!我是记录结束分割线！！！！！！！！！！！！");
-            locationService.changeCurrentSportType(0); // 结束记录，运动类型改为0
-            traceID = 0;
-            locationService.setTraceID(0);
-            locationService.changeStatus(false); // 改为非记录状态
-            if (tracedata.getSportTypes() == 1) {
-                //轨迹类型为步行，结束轨迹时iswalk置为false，停止记录步数
-                iscountstep = false;//结束线程
-                locationService.changeSportType(false);//是否步行设置为否
-                getActivity().stopService(stepCountServiceIntent);//结束计步服务
-                //stepThread.stop();
-                //handler.removeCallbacks(stepThread);
-            }
-            //traceService.changeGpsTime(Common.getNoRecLocFrequenct(getApplicationContext()));
-            startTrail.setVisibility(View.VISIBLE);
-            changeSportTypeIb.setVisibility(View.INVISIBLE);
-            //pauseTrail.setVisibility(View.INVISIBLE);
-            endTrail.setVisibility(View.INVISIBLE);
-            stepTv.setVisibility(View.INVISIBLE);
-            isstart = false;
-            ispause = false;
-            isend = true;
-            clearTrace();
-            aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
-
             return false;
         }
-        //        else {
-        //            ToastUtil.showShortToast(getContext(), "未获取到traceID");
-        //            return false;
-        //        }
     }
 
     /**
@@ -1444,10 +1221,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0://获取轨迹号成功
-                    //ToastUtil.show(MainActivity.this, "开始记录");
                     break;
                 case 1://获取轨迹号失败
-                    //Toast.makeText(MainActivity.this, "开始失败，请重试",Toast.LENGTH_SHORT).show();
                     break;
                 case 2://结束记录轨迹成功
                     dismissDialog();
@@ -1461,7 +1236,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     break;
                 case 3://结束记录轨迹失败
                     dismissDialog();
-                    //Toast.makeText(MainActivity.this, getResources().getString(R.string.tips_recordsuccess_postfail),Toast.LENGTH_SHORT).show();
                     CustomDialog.Builder builder = new CustomDialog.Builder(getContext());
                     builder.setTitle(getResources().getString(R.string.tip));
                     builder.setMessage(getResources().getString(R.string.tips_uploadtracedlg_msgfail));
@@ -1483,26 +1257,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     builder.create().show();
                     break;
                 case 4://获取4个时间成功
-                    /**
-                     if(msg.obj.toString().trim()!=null&&msg.obj.toString().trim()!=""){
-                     //Gson gson=new Gson();
-                     //timevalues=GsonHelper.fromJson(msg.obj.toString().trim(),new TypeToken<TimeValue>(){}.getType());
-                     timevalues=GsonHelper.parseJson(msg.obj.toString().trim(), TimeValue.class);
-                     //不得在此处进行如下操作，原因：service连接尚未建立,....也有可能连接已建立
-                     if(bound_trace&&!istimeset){//service已建立，但是由于没获取时间所以未设置时间
-                     initTime();
-                     }
-                     }
-                     */
-                    //Toast.makeText(MainActivity.this, "",Toast.LENGTH_SHORT).show();
+
                     break;
                 case 5://获取4个时间失败
-                    /**
-                     if(!traceService.isworking()){
-                     traceService.getToWork();
-                     }
-                     Log.i("LogDemo", "获取4个时间失败，开启默认时间");
-                     */
+
                     break;
                 case 8:
                     tracegps = traceDBHelper.queryfromGpsbytraceID(traceID, Common.getUserID(getContext()));
@@ -1541,16 +1299,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                             }
 
                             cursor = photoHelper.selectEvent(null, PhotoDBHelper.COLUMNS_UE[10] + "="
-                                    + traceID + " and datetime("
+                                    + Common.getUserId(getContext()) + " and datetime("
                                     + PhotoDBHelper.COLUMNS_UE[0] + ") between '" + tracedata.getStartTime() +
                                     "' and '" + tracedata.getEndTime() + "'", null, null, null, null);
                             int poiCount = cursor.getCount();
                             tracedata.setPoiCount(poiCount);
-
                             traceDBHelper.updatetrail(tracedata, traceID, Common.getUserID(getContext()));
-
                             String traceInfo = GsonHelper.toJson(tracedata);
-
                             EndTraceRequest endTraceRequest = new EndTraceRequest(sp.getString("token", ""), traceInfo);
                             endTraceRequest.requestHttpData(new ResponseData() {
                                 @Override
@@ -1559,7 +1314,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                         getActivity().runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                //                                                Toast.makeText(getContext(), "上传轨迹成功", Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                     }
@@ -1578,6 +1332,50 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                         stepdata.setSteps(total_step);
                         traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
                         Log.i("MyTraceDBDupdatesteps", "step:row:" + traceDBHelper);
+
+//                        tracegps = traceDBHelper.queryfromGpsbytraceID(traceID, Common.getUserID(getContext()));
+//                        Log.i("LogDemo", "tracegps coontent:" + GsonHelper.toJson(tracedata));
+//                        Log.i("LogDemo", "tracegps size:" + tracegps.size());
+//                        if (tracegps.size() > 0) {
+//                            tracedata.setEndTime(Common.currentTime());
+//                            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                            long duration = 0;
+//                            //计算时间差
+//                            Date d1 = null;
+//                            try {
+//                                d1 = df.parse(tracedata.getStartTime());
+//                                Date d2 = df.parse(tracedata.getEndTime());
+//                                duration = d2.getTime() - d1.getTime();
+//                            } catch (ParseException e) {
+//                                e.printStackTrace();
+//                            }
+//                            tracedata.setDuration(duration);
+//                            //计算距离
+//                            double distance = 0.0;
+//                            if (tracegps.size() > 1) {
+//                                for (int i = 0; i < tracegps.size() - 1; i++) {
+//                                    distance += AMapUtils.calculateLineDistance(new LatLng(tracegps.get(i).getLatitude(),
+//                                                    tracegps.get(i).getLongitude()),
+//                                            new LatLng(tracegps.get(i + 1).getLatitude(), tracegps.get(i + 1).getLongitude()));
+//                                }
+//                            }
+//                            tracedata.setDistance(distance);
+//                            Log.i("dongiyuansetDuration1", "duration: " + duration + " distance: " + distance);
+//
+//                            PhotoDBHelper photoHelper = new PhotoDBHelper(getContext(), PhotoDBHelper.DBREAD);
+//                            if (cursor != null && !cursor.isClosed()) {
+//                                cursor.close();
+//                            }
+//
+//                            cursor = photoHelper.selectEvent(null, PhotoDBHelper.COLUMNS_UE[10] + "="
+//                                    + Common.getUserId(getContext()) + " and datetime("
+//                                    + PhotoDBHelper.COLUMNS_UE[0] + ") between '" + tracedata.getStartTime() +
+//                                    "' and '" + tracedata.getEndTime() + "'", null, null, null, null);
+//                            int poiCount = cursor.getCount();
+//                            tracedata.setPoiCount(poiCount);
+//
+//                            traceDBHelper.updatetrail(tracedata, traceID, Common.getUserID(getContext()));
+
                     }
                     break;
                 case 10:
@@ -1626,13 +1424,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
-                                        //                                        Common.fileInfo = new FileInfo(0, updatestr[2]
-                                        //                                                , "HappyNavi" + updatestr[0] + ".apk", 0, 0);//User/userDownApk.aspx
-                                        //                                        // 通知Service开始下载
-                                        //                                        updateServiceIntent = new Intent(getContext(), DownloadService.class);
-                                        //                                        updateServiceIntent.setAction(DownloadService.ACTION_START);
-                                        //                                        updateServiceIntent.putExtra("fileInfo", Common.fileInfo);
-                                        //                                        getActivity().startService(updateServiceIntent);
+//                                        Common.fileInfo = new FileInfo(0, updatestr[2]
+//                                                , "HappyNavi" + updatestr[0] + ".apk", 0, 0);//User/userDownApk.aspx
+//                                        // 通知Service开始下载
+//                                        updateServiceIntent = new Intent(getContext(), DownloadService.class);
+//                                        updateServiceIntent.setAction(DownloadService.ACTION_START);
+//                                        updateServiceIntent.putExtra("fileInfo", Common.fileInfo);
+//                                        getActivity().startService(updateServiceIntent);
                                         Common.isUpdationg = true;
                                         ToastUtil.show(getContext(), getResources().getString(R.string.tips_gotodownnewapk));
                                     }
@@ -1778,9 +1576,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                         String commentTime = data.getStringExtra("createTime");
                         commentServiceIntent.putExtra("createTime", commentTime);
                         commentUploadService.getToComment(data.getStringExtra("createTime"));
-                        //                        getActivity().startService(commentServiceIntent);
-                        //commentUploadService.uploadComment(Common.getUserId(getApplicationContext()),
-                        //		commentTime);
                     }// 如果是数据流量连接，第一次使用询问是否上传
                     else if (Common.checkNetworkState(getContext()) == ConnectivityManager.TYPE_MOBILE
                             && !Common.isOnlyWifiUploadPic(getContext())) {
@@ -1801,10 +1596,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                             String commentTime = data.getStringExtra("createTime");
                                             commentServiceIntent.putExtra("createTime", commentTime);
                                             commentUploadService.getToComment(data.getStringExtra("createTime"));
-                                            //                                            getActivity().startService(commentServiceIntent);
-                                            //commentUploadService.uploadComment(
-                                            //		Common.getUserId(getApplicationContext()),
-                                            //		commentTime);
                                             dialog.dismiss();
                                         }
                                     });
@@ -1813,7 +1604,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             String commentTime = data.getStringExtra("createTime");
-                                            String userId = Common.getUserID(getContext());
+                                            String userId = Common.getUserId(getContext());
                                             SharedPreferences.Editor editor = uploadCache.edit();
                                             editor.putString(commentTime, userId);
                                             editor.commit();
@@ -1825,17 +1616,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                             String commentTime = data.getStringExtra("createTime");
                             commentServiceIntent.putExtra("createTime", commentTime);
                             commentUploadService.getToComment(data.getStringExtra("createTime"));
-                            //                            getActivity().startService(commentServiceIntent);
-                            //commentUploadService.uploadComment(
-                            //		Common.getUserId(getApplicationContext()),
-                            //		commentTime);
                         }
                     } else {
                         // 如果没有网络，将上传相关信息写到cache文件
                         Toast.makeText(getContext(), getResources().getString(R.string.tips_uploadpic_nonet),
                                 Toast.LENGTH_SHORT).show();
                         String commentTime = data.getStringExtra("createTime");
-                        String userId = Common.getUserID(getContext());
+                        String userId = Common.getUserId(getContext());
                         SharedPreferences.Editor editor = uploadCache.edit();
                         editor.putString(commentTime, userId);
                         editor.commit();
@@ -2071,10 +1858,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             bound_trace = false;
             Log.i("HomePage", "解绑定位服务");
         }
-		/*if(bound_upload){
-			this.getApplicationContext().unbindService(conn_comment);
-			bound_upload=false;
-		}*/
         if (bound_comment_upload) {
             getActivity().unbindService(commentConnection);
             bound_comment_upload = false;
@@ -2098,7 +1881,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             Log.i("HomePage", "停止记步服务");
         }
         if (null != myReceiver) {
-            //            getActivity().unregisterReceiver(myReceiver);
         }
         if (null != accuracyReciver) {
             getActivity().unregisterReceiver(accuracyReciver);

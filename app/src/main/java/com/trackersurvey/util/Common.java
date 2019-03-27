@@ -27,7 +27,6 @@ import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 import com.trackersurvey.bean.FileInfo;
-import com.trackersurvey.bean.FileInfoData;
 import com.trackersurvey.bean.TimeValueData;
 import com.trackersurvey.happynavi.LoginActivity;
 import com.trackersurvey.happynavi.R;
@@ -81,7 +80,7 @@ public class    Common {
     public static       String       WX_APP_ID       = "wxbe3210c55c8d7e64";//"wxbe3210c55c8d7e64";"wx79c37ea773c35a23";"wx3d06ba93fb282593"
     public static       String       NickName        = "";
     public static       AMapLocation aLocation       = null;
-    public static       FileInfo     fileInfo        = null;//新版apk文件
+    public static FileInfo fileInfo        = null;//新版apk文件
     public static       int          winWidth        = 720;
     public static       int          winHeight       = 1080;
     public static       int          decodeImgWidth  = 720;

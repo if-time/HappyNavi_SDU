@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -39,11 +38,7 @@ import com.trackersurvey.broadcastreceiver.InitApkBroadCastReceiver;
 import com.trackersurvey.http.DownloadUpdateApp;
 import com.trackersurvey.http.LogoutRequest;
 import com.trackersurvey.http.ResponseData;
-import com.trackersurvey.httpconnection.PostCheckVersion;
-import com.trackersurvey.service.AppUpdateService;
 import com.trackersurvey.service.DownloadApkService;
-import com.trackersurvey.service.DownloadService;
-import com.trackersurvey.service.LocationService;
 import com.trackersurvey.util.ActivityCollector;
 import com.trackersurvey.util.Common;
 import com.trackersurvey.util.CustomDialog;
@@ -201,41 +196,41 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                                 mDownloadUrl = UrlHeader.BASE_URL_NEW + fileInfo.getDownloadurl() + "?token=" + token;
 
                                 Log.i("downloadUpdateApp", "onResponseData: " + fileInfo.toString());
-                               runOnUiThread(new Runnable() {
-                                   @Override
-                                   public void run() {
-                                       CustomDialog.Builder builder = new CustomDialog.Builder(SettingActivity.this);
-                                       builder.setTitle(getResources().getString(R.string.tips_updatedlg_tle));
-                                       builder.setMessage(getResources().getString(R.string.tips_updatedlg_msg1) + "\n"
-                                               + getResources().getString(R.string.tips_updatedlg_msg2) + fileInfo.getVersioncode() + "\n"
-                                               + getResources().getString(R.string.tips_updatedlg_msg5) + fileInfo.getVersiondesc() + "\n"
-                                               + getResources().getString(R.string.tips_updatedlg_msg6));
-                                       builder.setNegativeButton(getResources().getString(R.string.cancl), new DialogInterface.OnClickListener() {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        CustomDialog.Builder builder = new CustomDialog.Builder(SettingActivity.this);
+                                        builder.setTitle(getResources().getString(R.string.tips_updatedlg_tle));
+                                        builder.setMessage(getResources().getString(R.string.tips_updatedlg_msg1) + "\n"
+                                                + getResources().getString(R.string.tips_updatedlg_msg2) + fileInfo.getVersioncode() + "\n"
+                                                + getResources().getString(R.string.tips_updatedlg_msg5) + fileInfo.getVersiondesc() + "\n"
+                                                + getResources().getString(R.string.tips_updatedlg_msg6));
+                                        builder.setNegativeButton(getResources().getString(R.string.cancl), new DialogInterface.OnClickListener() {
 
-                                           @Override
-                                           public void onClick(DialogInterface dialog, int which) {
-                                               dialog.dismiss();
-                                               proDialog.dismiss();
-                                           }
-                                       });
-                                       builder.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                proDialog.dismiss();
+                                            }
+                                        });
+                                        builder.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
 
-                                           @Override
-                                           public void onClick(DialogInterface dialog, int which) {
-                                               dialog.dismiss();
-                                               proDialog.dismiss();
-                                               // 通知Service开始下载
-                                               downloadAPK();
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                proDialog.dismiss();
+                                                // 通知Service开始下载
+                                                downloadAPK();
 //                                               downloadBinder.startDownload(mDownloadUrl);
 
-                                               Common.isUpdationg = true;
-                                               ToastUtil.show(getApplicationContext(), getResources().getString(R.string.tips_gotodownnewapk));
+                                                Common.isUpdationg = true;
+                                                ToastUtil.show(getApplicationContext(), getResources().getString(R.string.tips_gotodownnewapk));
 
-                                           }
-                                       });
-                                       builder.create().show();
-                                   }
-                               });
+                                            }
+                                        });
+                                        builder.create().show();
+                                    }
+                                });
                             }
                             if (code.equals("311")) {
                                 runOnUiThread(new Runnable() {

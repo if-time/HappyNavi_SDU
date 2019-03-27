@@ -1076,7 +1076,7 @@ public class MyCommentModel {
                         updateFile.setFileName(cloudVideo);
                         // 更新list
                         ((ListItemData) items.get(listPosition).get("listItem")).setOneFile(filePosition, updateFile);
-//                        writeDBHelper.closeDB();// // TODO 待定
+                        writeDBHelper.closeDB();// // TODO 待定
 
                         mDownFile.onFileDownload(0, listPosition, filePosition);
 //
@@ -1818,6 +1818,7 @@ public class MyCommentModel {
                         // 插入文件表
                         for (int j = 0; j < fileNum; j++) {
                             CommentMediaFilesData ev = new CommentMediaFilesData();
+
                             ev.setDateTime(events.get(i).getCreateTime());
                             ev.setFileNo(j);
                             ev.setFileType(CommentMediaFilesData.TYPE_PIC);
@@ -2012,6 +2013,7 @@ public class MyCommentModel {
                             bos.close();
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
+
                         } catch (IOException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();

@@ -14,7 +14,7 @@
             android:id="@+id/dialog_title"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:background="#09c7f7">
+            android:background="@color/heads">
 
             <TextView
                 android:layout_width="wrap_content"

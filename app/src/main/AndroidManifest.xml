@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.trackersurvey.happynavi"
-    android:versionCode="208"
-    android:versionName="2.0.8">
+    android:versionCode="205"
+    android:versionName="2.0.5">
 
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- Android服务保活-JobScheduler拉活 -->
@@ -76,7 +76,7 @@
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="12983a5c8027cf000ad2df0e1154df46" /> <!-- android:value="024b0f76892f0d460b85684b844dcd91" /> -->
+            android:value="0c17bdde6c0527ea86e89ace1b6b7244" /> <!-- android:value="024b0f76892f0d460b85684b844dcd91" /> -->
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait" />
@@ -99,10 +99,7 @@
             android:enabled="true"
             android:exported="true" /> <!-- 高德定位需要的服务 -->
         <service android:name="com.amap.api.location.APSService" />
-        <service
-            android:name="com.trackersurvey.service.DownloadService"
-            android:enabled="true"
-            android:exported="true" /> <!-- <service -->
+        <!-- <service -->
         <!-- android:name="com.trackersurvey.service.DownloadTaskService" -->
         <!-- android:enabled="true" -->
         <!-- android:exported="true" /> -->
@@ -155,7 +152,6 @@
         <activity android:name=".SetParameterActivity" />
         <activity android:name=".UserInfoActivity" />
         <activity android:name=".UserInfoChangeActivity" />
-        <activity android:name=".PhotoPrActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -177,14 +173,6 @@
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
 
                 <data android:scheme="package" />
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name="com.trackersurvey.broadcastreceiver.NetworkConnectChangedReceiver">
-            <intent-filter>
-                <action android:name="android.NET.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="android.Net.wifi.WIFI_STATE_CHANGED" />
-                <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
 

@@ -90,14 +90,7 @@
                     android:layout_marginLeft="10dp"
                     android:background="@drawable/bg_mark_left" />
 
-                <ImageView
-                    android:id="@+id/mark_right"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/mark_left"
-                    android:background="@drawable/bg_mark_right" />
+
 
                 <ImageView
                     android:id="@+id/addmark"
@@ -105,7 +98,7 @@
                     android:layout_height="50dp"
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/mark_right"
+                    android:layout_toRightOf="@id/mark_left"
                     android:background="@mipmap/addmarkpic" />
 
                 <ImageView
@@ -126,6 +119,16 @@
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@id/checktraceinfo"
                     android:background="@mipmap/share" />
+                <ImageView
+                    android:id="@+id/mark_right"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/mark_left"
+                    android:background="@drawable/bg_mark_right" />
+
+
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>

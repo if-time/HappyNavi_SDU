@@ -222,8 +222,8 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
 
     private long currentTraceID;
 
-    private SharedPreferences spl;
-    private int               l;
+    private SharedPreferences    spl;
+    private int l;
 
     @Nullable
     @Override
@@ -323,13 +323,6 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
         URL_ENDTRAIL = Common.url + "reqTraceNo.aspx";
         URL_GPSDATA = Common.url + "upLocation.aspx";
         URL_GETPOI = Common.url + "requestInfo.aspx";
-        //        if(l==0){
-        //            initPOI();//下载添加兴趣点下拉列表选项内容
-        //        }
-        //        if(l==1){
-        //            initPOIEN();//英文版
-        //        }
-        //        initPOI();
         return view;
     }
 
@@ -342,7 +335,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
             aMap.getUiSettings().setZoomControlsEnabled(true);
             aMap.getUiSettings().setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);// 设置缩放按钮在右侧中间位置
 
-            if (l == 0) {
+            if(l==0) {//13305073117
                 aMap.setMapLanguage(AMap.CHINESE);
             } else {
                 aMap.setMapLanguage(AMap.ENGLISH);
@@ -374,25 +367,14 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
             stepdata = GsonHelper.parseJson(stepstr, StepData.class);
             stepstr = stepdata.getSteps() + "";
         }
-        // distance.setText(Common.transformDistance(trailobj.getDistance()));
-        // duration.setText(Common.transformTime(trailobj.getDuration()));
-        // time.setText(trailobj.getStartTime());
-        // speed.setText(Common.transformSpeed(trailobj.getDistance()/trailobj.getDuration())+"
-        // "+getResources().getString(R.string.speedunit));
-        // step.setText(stepstr);
-        // calorie.setText(trailobj.getCalorie()+"
-        // "+getResources().getString(R.string.calorieunit));
-
-
         if (isOnline) {
-//            showDialog(getResources().getString(R.string.tips_dlgtle_init), getResources().getString(R.string.tips_dlgmsg_inittrace));
-
-            // 测试下载轨迹详情
+            showDialog(getResources().getString(R.string.tips_dlgtle_init),
+                    getResources().getString(R.string.tips_dlgmsg_inittrace));
             DownloadTraceDetailRequest downloadTraceDetail = new DownloadTraceDetailRequest(
                     sp.getString("token", ""), String.valueOf(trailobj.getTraceID()));
             downloadTraceDetail.requestHttpData(new ResponseData() {
                 @Override
-                public void onResponseData(boolean isSuccess, final String code, Object responseObject, String msg) throws IOException {
+                public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
                     if (isSuccess) {
                         traces = (List<GpsData>) responseObject;
                         getActivity().runOnUiThread(new Runnable() {
@@ -404,26 +386,20 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                                         AMap_drawpath_optimize(tracePoints);
                                     } else {
                                         AMap_drawpath_normal(tracePoints);
-                                        // BDMap_drawpath_normal(points);
                                     }
-                                    Log.i("isSuccesstraces.size()", "run: " + code);
+
                                 } else {
-                                    Log.i("isSuccessgetLocalGPS", "run: " + code);
-                                    if (!getLocalGPSData()) {
-                                        Toast.makeText(context, getResources().getString(R.string.tips_nodata), Toast.LENGTH_SHORT).show();
-                                    }
+                                    Toast.makeText(context, getResources().getString(R.string.tips_nodata), Toast.LENGTH_SHORT)
+                                            .show();
                                 }
                                 dismissDialog();
                             }
                         });
                     } else {
-                        Log.i("isfailedgetLocalGPS", "run: ");
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (!getLocalGPSData()) {
-                                    Toast.makeText(context, getResources().getString(R.string.tips_nodata), Toast.LENGTH_SHORT).show();
-                                }
+                                Toast.makeText(context, getResources().getString(R.string.tips_nodata), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -431,7 +407,6 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
             });
         } else {
             // 从本地获取
-            // Log.i("trailadapter", "从本地获取");
             traces = helper.queryfromGpsbytraceID(trailobj.getTraceID(), Common.getUserID(context));
             // Log.i("trailadapter", GsonHelper.toJson(traces));
             if (traces.size() > 0) {
@@ -446,46 +421,6 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
             } else {
                 Toast.makeText(context, getResources().getString(R.string.tips_nodata), Toast.LENGTH_SHORT).show();
             }
-        }
-    }
-
-    /**
-     * 从本地获取GPSData
-     */
-    private boolean getLocalGPSData() {
-        // 从本地获取
-         Log.i("getLocalGPSData", "从本地获取");
-        traces = helper.queryfromGpsbytraceID(trailobj.getTraceID(), Common.getUserID(context));
-         Log.i("getLocalGPSData", GsonHelper.toJson(traces));
-        if (traces.size() > 0) {
-            initLocation();
-            if (Common.isNetConnected && trailobj.getSportTypes() != 5) {
-                AMap_drawpath_optimize(tracePoints);
-            } else {
-                AMap_drawpath_normal(tracePoints);
-            }
-
-            String gpsData = GsonHelper.toJson(traces);
-            // 上传位置数据
-            UpLoadGpsRequest upLoadGpsRequest = new UpLoadGpsRequest(sp.getString("token", ""), gpsData);
-            upLoadGpsRequest.requestHttpData(new ResponseData() {
-                @Override
-                public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
-                    if (isSuccess) {
-                        if (code.equals("0")) {
-                            Log.i("LocationService", "上传成功");
-                        }
-                        if (code.equals("100")) {
-                            Log.i("LocationService", "登录超时");
-                        }
-                    }
-                }
-            });
-
-            return true;
-        } else {
-            Toast.makeText(context, getResources().getString(R.string.tips_nodata), Toast.LENGTH_SHORT).show();
-            return false;
         }
     }
 
@@ -537,15 +472,11 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
             case R.id.addmark:
 
 
-                if (tracePoints.size() == 0) {
+                if (tracePoints.size()==0){
 
-                } else {
+                }else {
                     markLatLng = new LatLng(tracePoints.get(praseProgressToPosition(currentProgress)).getLatLng().latitude,
                             tracePoints.get(praseProgressToPosition(currentProgress)).getLatLng().longitude);
-                    //                markLatLonPoint = new LatLonPoint(markLatLng.latitude, markLatLng.longitude);
-                    //                RegeocodeQuery regeocodeQuery = new RegeocodeQuery(markLatLonPoint, 500f, GeocodeSearch.AMAP);
-                    //                geocodeSearch = new GeocodeSearch(getContext());
-                    //                geocodeSearch.setOnGeocodeSearchListener(this);
                     //从POI数据库中取数据
                     ArrayList<String> behaviour = helper2.getBehaviour();
                     ArrayList<String> duration = helper2.getDuration();
@@ -555,7 +486,6 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                     Intent intent = new Intent();
                     intent.setClass(context, CommentActivity.class);
                     intent.putExtra("martLatLng", markLatLng);
-                    //                double longitude = markLatLng.longitude;
                     intent.putExtra("longitude", markLatLng.longitude);
                     intent.putExtra("latitude", markLatLng.latitude);
                     intent.putExtra("altitude", traces.get(praseProgressToPosition(currentProgress)).getAltitude());
@@ -563,14 +493,6 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                     intent.putExtra("createTime", traces.get(praseProgressToPosition(currentProgress)).getCreateTime());
                     intent.putExtra("traceID", traces.get(praseProgressToPosition(currentProgress)).getTraceID());
 
-
-			/*Resources r = context.getApplicationContext().getResources();
-			Uri uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE+"://"
-			+r.getResourcePackageName(R.drawable.ic_launcher_wx)+"/"
-			+r.getResourceTypeName(R.drawable.ic_launcher_wx)+"/"
-			+r.getResourceEntryName(R.drawable.ic_launcher_wx));
-			String a = uri.toString();
-			Log.i("1005", a);*/
 
                     //传递POI数据（字符串数组）到添加兴趣点页面
                     try {
@@ -584,7 +506,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                     }
                     startActivityForResult(intent, REQUESTMARK);
                 }
-                ToastUtil.show(context, "暂无轨迹");
+                ToastUtil.show(context,"暂无轨迹");
                 break;
             case R.id.checktraceinfo:
                 if (mPopupWindow == null) {
@@ -733,12 +655,6 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
     };
 
     public void initLocation() {
-        //        float distance12 = AMapUtils.calculateLineDistance(new LatLng(36.64533311631944,117.14827907986111),
-        //                new LatLng(36.64557373046875,117.14955864800348));
-        //        float distance23 = AMapUtils.calculateLineDistance(new LatLng(36.64557373046875,117.14955864800348),
-        //                new LatLng(36.651666,117.153024));
-        //        Log.i("distance Test", "test distance12 = " + distance12);
-        //        Log.i("distance Test", "test distance23 = " + distance23);
         for (int i = 0; i < traces.size(); i++) {
             //LatLng point = new LatLng(traces.get(i).getLatitude(), traces.get(i).getLongitude());
             // LatLng 经纬度保留小数点后6位
@@ -812,9 +728,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
         Log.i("ShowTrace", "initMarker");
         myComment.setTimeRegion(trailobj.getStartTime(), trailobj.getEndTime());
         //        myComment.initMarkerItemsFromDB();
-
         myComment.initItemsByTraceID(trailobj.getTraceID());
-
         //创建或打开数据库，如果数据库中没有数据就从服务器请求兴趣点数据
         PhotoDBHelper phelper = new PhotoDBHelper(context, PhotoDBHelper.DBREAD);
         if (cursor != null && !cursor.isClosed()) {
@@ -825,12 +739,6 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
 
         Log.i("trailobjinitMarker", "startTime:" + trailobj.getStartTime() + "endTime" + trailobj.getEndTime());
         Log.i("trailobjinitMarker", "initMarker: " + from + " " + to);
-
-        //        cursor = phelper.selectEvent(null, PhotoDBHelper.COLUMNS_UE[10] + "="
-        //                + Common.getUserId(context)+" and datetime("
-        //                + PhotoDBHelper.COLUMNS_UE[0] + ") between '"+from+
-        //                "' and '"+to+"'", null, null, null, null);
-
         cursor = phelper.selectEvent(null, PhotoDBHelper.COLUMNS_UE[10] + "="
                 + trailobj.getTraceID(), null, null, null, "datetime("
                 + PhotoDBHelper.COLUMNS_UE[0] + ") desc");
@@ -843,7 +751,6 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
         }
 
         drawMarker();
-
         Intent intent = new Intent();
         intent.setAction(UPDATEUI_ACTION);
         Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
@@ -857,18 +764,15 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
             Log.i("trailobj", "trailobj:" + trailobj + "currentTraceID: " + currentTraceID);
 
             myComment.refreshMarkerItemsOnline(currentTraceID);
-            if (isAdded()) {
-                Intent intent = new Intent();
-                intent.setAction(UPDATEUI_ACTION);
-                Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
-                //            context
-                getContext().sendBroadcast(intent);
-            }
 
+            Intent intent = new Intent();
+            intent.setAction(UPDATEUI_ACTION);
+            Log.i("dongsiyuansendBroadcast", "sendBroadcast: ");
+            context.sendBroadcast(intent);
             //drawMarker();
             Log.i("itemsss", "ShowTraceFragment:" + myComment.getItems().toString());
         } else {
-            ToastUtil.show(getContext(), getResources().getString(R.string.tips_netdisconnect));
+            ToastUtil.show(context, getResources().getString(R.string.tips_netdisconnect));
         }
     }
 
@@ -1172,6 +1076,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                 final RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(
                         AMapUtil.convertToLatLonPoint(tracePoints.get(selectid.get(0)).getLatLng()),
                         AMapUtil.convertToLatLonPoint(tracePoints.get(selectid.get(0) + 1).getLatLng()));
+
                 //// 第一个参数表示路径规划的起点和终点，第二个参数表示驾车模式，第三个参数表示途经点，第四个参数表示避让区域，第五个参数表示避让道路
                 RouteSearch.DriveRouteQuery query = new RouteSearch.DriveRouteQuery(fromAndTo, RouteSearch.DrivingDefault, null, null, "");
                 routeSearch.calculateDriveRouteAsyn(query);// 异步路径规划步行模式查询
@@ -1410,7 +1315,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             String commentTime = data.getStringExtra("createTime");
-                                            String userId = Common.getUserID(context);
+                                            String userId = Common.getUserId(context);
                                             SharedPreferences.Editor editor = uploadCache.edit();
                                             editor.putString(commentTime, userId);
                                             editor.commit();
@@ -1432,7 +1337,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                         Toast.makeText(context, getResources().getString(R.string.tips_uploadpic_nonet), Toast.LENGTH_SHORT)
                                 .show();
                         String commentTime = data.getStringExtra("createTime");
-                        String userId = Common.getUserID(context);
+                        String userId = Common.getUserId(context);
                         SharedPreferences.Editor editor = uploadCache.edit();
                         editor.putString(commentTime, userId);
                         editor.commit();
@@ -1550,7 +1455,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                                 @Override
                                 public void run() {
                                     dismissDialog();
-                                    Toast.makeText(getContext(), "登录信息过期，请重新登录！", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText( getContext(), "登录信息过期，请重新登录！", Toast.LENGTH_SHORT).show();
                                     SharedPreferences.Editor editor = sp.edit();
                                     editor.putString("token", ""); // 清空token
                                     editor.apply();
@@ -1560,7 +1465,8 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                                 }
                             });
                         }
-                        if (!isOnline) {// 只在本地有这条轨迹，那么删完本地就发广播，否则，在删云端的handler中发广播
+                        if (!isOnline) {
+                            // 只在本地有这条轨迹，那么删完本地就发广播，否则，在删云端的handler中发广播
                             Intent intent = new Intent();
                             intent.setAction(REFRESH_ACTION);
                             context.sendBroadcast(intent);

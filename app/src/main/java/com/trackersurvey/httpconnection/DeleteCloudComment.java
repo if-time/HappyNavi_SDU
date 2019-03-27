@@ -113,7 +113,6 @@ public class DeleteCloudComment extends Thread {
             String result = responseInfo.result;
             // 返回值是一个ID
             if ("ok".equals(result)) { // 请求成功
-                //Log.i("result", result + " |*| " + "commentOK");
                 //删除事件成功
                 if(deleteFromDB() == 0){
                     msg.what = 0;

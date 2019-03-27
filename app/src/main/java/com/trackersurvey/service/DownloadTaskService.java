@@ -1,15 +1,12 @@
 package com.trackersurvey.service;
 
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.IBinder;
 import android.util.Log;
 
 import com.trackersurvey.bean.FileInfo;
 import com.trackersurvey.bean.FileInfoData;
 import com.trackersurvey.bean.ThreadInfo;
-import com.trackersurvey.bean.ThreadInfoData;
 import com.trackersurvey.db.ThreadDAO;
 import com.trackersurvey.db.ThreadDAOImpl;
 import com.trackersurvey.util.UrlHeader;
@@ -37,7 +34,7 @@ public class DownloadTaskService {
     private String               token;
     private List<DownloadThread> downloadThreadList = null; // 线程集合
 
-    public DownloadTaskService() {
+    public DownloadTaskService(DownloadService downloadService, FileInfoData fileInfo, int i) {
     }
 
     public DownloadTaskService(Context context, FileInfo fileInfo, int threadCount, String token) {

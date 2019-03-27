@@ -172,31 +172,65 @@
             android:layout_marginRight="35dp"
             android:background="@color/gray_b"
             android:visibility="gone" />
+<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
         <LinearLayout
+            android:padding="1dp"
+            android:layout_marginLeft="10dp"
             android:id="@+id/my_group_layout"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:background="@drawable/bg_mine_layout_press">
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:orientation="vertical"
+            android:background="@mipmap/kuang">
 
             <ImageView
-                android:layout_width="29dp"
-                android:layout_height="29dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="30dp"
-                android:src="@mipmap/ic_mine_group" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:src="@mipmap/qunzu" />
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="20dp"
+               android:layout_marginTop="10dp"
                 android:text="@string/mine_group"
                 android:textColor="#333333"
-                android:textSize="16sp" />
-
+                android:textSize="15sp" />
         </LinearLayout>
+
+    <LinearLayout
+        android:padding="1dp"
+        android:layout_marginLeft="10dp"
+        android:orientation="vertical"
+        android:id="@+id/my_setting_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_marginTop="2dp"
+        android:background="@mipmap/kuang">
+
+        <ImageView
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:src="@mipmap/yingyong" />
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/mine_setting"
+            android:textColor="#333333"
+            android:textSize="15sp" />
+    </LinearLayout>
+</LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -290,29 +324,6 @@
             android:background="@color/gray_b"
             android:visibility="gone" />
 
-        <LinearLayout
-            android:id="@+id/my_setting_layout"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/bg_mine_layout_press">
-
-            <ImageView
-                android:layout_width="29dp"
-                android:layout_height="29dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="30dp"
-                android:src="@mipmap/ic_mine_setting" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="20dp"
-                android:text="@string/mine_setting"
-                android:textColor="#333333"
-                android:textSize="16sp" />
-        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -323,25 +334,26 @@
             android:visibility="gone" />
 
         <LinearLayout
+            android:orientation="vertical"
             android:id="@+id/ll_exit_app"
             android:layout_width="match_parent"
-            android:layout_height="43dp"
+            android:layout_height="match_parent"
             android:layout_marginTop="2dp"
-            android:background="@drawable/bg_mine_layout_press">
+            android:background="@mipmap/kuang">
 
             <ImageView
+                android:layout_marginTop="20dp"
                 android:id="@+id/imageView"
-                android:layout_width="29dp"
-                android:layout_height="29dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="30dp"
-                android:src="@mipmap/ic_exit_app" />
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="20dp"
+                android:src="@mipmap/tuichu" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="@string/exit_app"
                 android:textColor="#333333"
                 android:textSize="16sp" />

@@ -95,10 +95,7 @@ public class ShowPoiFragment extends Fragment {
      */
     private void initAdapter() {
 
-
-        if (items != null) {
-            listAdapter = new ListBaseAdapter(context, ShowTraceFragment.myComment, items, "mark");
-        }
+        listAdapter = new ListBaseAdapter(context, ShowTraceFragment.myComment, items, "mark");
 
         //		myComment = new MyCommentModel(context, "album");
 
@@ -123,14 +120,14 @@ public class ShowPoiFragment extends Fragment {
         lView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                //                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
-                //                        || scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
-                //                    if ((view.getLastVisiblePosition() == view.getCount() - 1)
-                //                            && ShowTraceFragment.myComment.cloudMore()) {
-                //                        Log.i("Eaa", "自动加载评论,size=" + view.getCount());
-                //                        ShowTraceFragment.myComment.autoAddtoList();
-                //                    }
-                //                }
+//                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
+//                        || scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
+//                    if ((view.getLastVisiblePosition() == view.getCount() - 1)
+//                            && ShowTraceFragment.myComment.cloudMore()) {
+//                        Log.i("Eaa", "自动加载评论,size=" + view.getCount());
+//                        ShowTraceFragment.myComment.autoAddtoList();
+//                    }
+//                }
             }
 
             @Override
@@ -189,21 +186,20 @@ public class ShowPoiFragment extends Fragment {
      * 刷新界面
      */
     public void updateUI() {
-        //        listAdapter = new ListBaseAdapter(context, ShowTraceFragment.myComment, items, "mark");
         ArrayList<HashMap<String, Object>> items = ShowTraceFragment.myComment.getItems();
-
-            listAdapter.setItems(ShowTraceFragment.myComment.getItems());
+        if (items==null||items.size()==0)
+        {}else {
+            listAdapter.setItems(items);
             listAdapter.notifyDataSetChanged();
             Log.i("dongsiyuanUpdateUI", "ShowPoiFragment:" + ShowTraceFragment.myComment.getItems().toString());
-
-
+        }
     }
 
     /**
      * 通知模型删除一条评论
      */
     private void deleteComment(String dateTime, int listPosition, long traceID) {
-        //        ShowTraceFragment.myComment.deleteComment(dateTime, listPosition);
+//        ShowTraceFragment.myComment.deleteComment(dateTime, listPosition);
 
         Log.i("dongisyuanDelete", "deleteComment: dateTime: " + dateTime + "traceID: " + traceID + "poiID: " + listPosition);
         //token poiID
@@ -225,8 +221,9 @@ public class ShowPoiFragment extends Fragment {
     }
 
     public int getItemsNum() {
-//        int itemsNum = items.size();
-        return items == null ? 0 : items.size();
+        int itemsNum = items.size();
+        return  items == null ? 0 : items.size();
+
     }
 
     public ArrayList<HashMap<String, Object>> getItems() {
