@@ -53,12 +53,12 @@
         android:layout_height="1dp"
         android:background="#bfbfbf" />
     <GridView
+
+        android:verticalSpacing="20dp"
         android:id="@+id/grid_sporttype"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:stretchMode="columnWidth"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+
         android:numColumns="3" >
     </GridView>
 

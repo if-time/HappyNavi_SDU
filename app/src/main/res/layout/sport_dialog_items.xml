@@ -5,6 +5,8 @@
     android:layout_height="wrap_content">
 
     <ImageView
+        android:layout_marginTop="5dp"
+        android:src="@mipmap/xukuang"
         android:id="@+id/sporttype_img"
         android:layout_gravity="center"
         android:scaleType="fitCenter"
@@ -12,12 +14,11 @@
         android:layout_width="wrap_content"
         />
     <TextView
+        android:layout_marginTop="5dp"
         android:text="s"
         android:id="@+id/sporttype_title"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
         android:layout_gravity="center"
         android:textSize="15dp"
         android:textColor="#000000"
