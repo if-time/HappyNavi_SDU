@@ -531,7 +531,8 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                     intent.putExtra("longitude", markLatLng.longitude);
                     intent.putExtra("latitude", markLatLng.latitude);
                     intent.putExtra("altitude", traces.get(praseProgressToPosition(currentProgress)).getAltitude());
-                    intent.putExtra("placeName", "");
+//                    intent.putExtra("placeName", "");
+                    intent.putExtra("placeName", Common.aLocation.getCity() + Common.aLocation.getStreet());
                     intent.putExtra("createTime", traces.get(praseProgressToPosition(currentProgress)).getCreateTime());
                     intent.putExtra("traceID", traces.get(praseProgressToPosition(currentProgress)).getTraceID());
 
