@@ -555,13 +555,13 @@ public class    Common {
      * @param context
      * @return
      */
-    public static String getUserId(Context context) {
-
-        SharedPreferences sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);//私有参数
-        String lastId = sp.getString("userPhone", "0");
-
-        return lastId;
-    }
+//    public static String getUserId(Context context) {
+//
+//        SharedPreferences sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);//私有参数
+//        String lastId = sp.getString("userPhone", "0");
+//
+//        return lastId;
+//    }
 
     /**
      * 获取userID
