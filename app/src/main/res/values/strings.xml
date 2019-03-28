@@ -571,18 +571,13 @@
         <item>其他</item>
     </string-array>
     <string-array name="income">
-        <item>0-1万元</item>
-        <item>1-2万元</item>
-        <item>2-3万元</item>
-        <item>3-4万元</item>
-        <item>4-5万元</item>
-        <item>5-6万元</item>
-        <item>6-7万元</item>
-        <item>7-8万元</item>
-        <item>8-9万元</item>
-        <item>9-10万元</item>
+        <item>2万元以下</item>
+        <item>2-5万元</item>
+        <item>5-10万元</item>
         <item>10-20万元</item>
-        <item>20-30万元</item>
+        <item>20-50万元</item>
+        <item>50-100万元</item>
+        <item>100万元以上</item>
     </string-array>
     <string-array name="marriage">
         <item>未婚</item>
