@@ -99,7 +99,8 @@ public class SportTypeDialog extends Dialog {
                     itemview.setBackgroundColor(Color.parseColor("#ffffff"));
                 }
 //                view.setBackgroundColor(Color.parseColor("#99cc33"));
-                view.setPadding(2,2,2,2);
+//                view.setPadding(2,2,2,2);
+
                 view.setBackgroundResource(R.mipmap.xukuang);
 
                 itemview = view;

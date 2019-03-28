@@ -54,7 +54,7 @@
         android:layout_alignLeft="@id/trace_name_layout"
         android:layout_alignParentRight="true"
         android:layout_below="@id/trace_name_layout"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="1dp"
         android:orientation="horizontal" >
 
         <TextView
@@ -162,16 +162,17 @@
             android:layout_width="wrap_content"
             android:layout_height="8dp"
             android:layout_below="@id/time_label_tv" />
+        <CheckBox
+            android:id="@+id/select_trace_cb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:visibility="visible"
+            android:clickable="false" />
     </RelativeLayout>
-    <CheckBox
-        android:id="@+id/select_trace_cb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="5dp"
-        android:layout_centerVertical="true"
-        android:gravity="center_vertical"
-        android:visibility="gone"
-        android:clickable="false" />
+
 
 </RelativeLayout>

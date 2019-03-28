@@ -26,7 +26,7 @@
             android:background="#bfbfbf" />
         <EditText
             android:background="@null"
-            android:textColor="@color/black"
+            android:textColor="@color/gray_6"
             android:id="@+id/sport_dialog_type_name"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -53,12 +53,12 @@
         android:layout_height="1dp"
         android:background="#bfbfbf" />
     <GridView
+
+        android:verticalSpacing="20dp"
         android:id="@+id/grid_sporttype"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:stretchMode="columnWidth"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+
         android:numColumns="3" >
     </GridView>
 
