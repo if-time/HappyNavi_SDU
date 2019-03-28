@@ -175,6 +175,10 @@ public class UserInfoChangeActivity extends BaseActivity implements View.OnClick
         nicknameEt.setText(sp.getString("nickname", ""));
         realNameEt.setText(sp.getString("realName", ""));
         birthDateTv.setText(sp.getString("birthDate", ""));
+
+        String birth = sp.getString("birthDate", "");
+        birthDate = birth.split("-");
+
         if (sp.getInt("sex", 0) == 0) {
             sexTv.setText("保密");
         } else if (sp.getInt("sex", 0) == 1) {
@@ -182,6 +186,8 @@ public class UserInfoChangeActivity extends BaseActivity implements View.OnClick
         } else if (sp.getInt("sex", 0) == 2) {
             sexTv.setText("女");
         }
+
+
         nativePlaceEt.setText(sp.getString("nativePlace", ""));
         addressEt.setText(sp.getString("address", ""));
         occupationTv.setText(sp.getString("occupation", ""));
@@ -189,6 +195,77 @@ public class UserInfoChangeActivity extends BaseActivity implements View.OnClick
         incomeTv.setText(sp.getString("income", ""));
         marriageTv.setText(sp.getString("marriage", ""));
         childNumTv.setText(sp.getString("childCount", ""));
+
+        sexChoice = sp.getInt("sex", 0);
+        childNumChoice = Integer.parseInt(sp.getString("childCount", ""));
+
+        String occupation = sp.getString("occupation", "");
+        if (occupation.equals("学生") || occupation.equals("student")) {
+            occupationChoice = 0;
+        } else if (occupation.equals("教师") || occupation.equals("teacher")) {
+            occupationChoice = 1;
+        } else if (occupation.equals("军人") || occupation.equals("Military")) {
+            occupationChoice = 2;
+        } else if (occupation.equals("工人") || occupation.equals("Worker")) {
+            occupationChoice = 3;
+        } else if (occupation.equals("农民") || occupation.equals("farmers")) {
+            occupationChoice = 4;
+        } else if (occupation.equals("公务员") || occupation.equals("civil")) {
+            occupationChoice = 5;
+        } else if (occupation.equals("离退休") || occupation.equals("Retirement")) {
+            occupationChoice = 6;
+        } else if (occupation.equals("个体经营") || occupation.equals("self-employed")) {
+            occupationChoice = 7;
+        } else if (occupation.equals("公司职员") || occupation.equals("company staff")) {
+            occupationChoice = 8;
+        } else if (occupation.equals("下岗待业") || occupation.equals("laid off to work")) {
+            occupationChoice = 9;
+        } else if (occupation.equals("其他") || occupation.equals("Other")) {
+            occupationChoice = 10;
+        }
+
+        String income = sp.getString("income", "");
+        if (income.equals("2万元以下") || income.equals("below 20,000 yuan")) {
+            incomeChoice = 0;
+        } else if (income.equals("2-5万元") || income.equals("2-5 million yuan")) {
+            incomeChoice = 1;
+        } else if (income.equals("5-10万元") || income.equals("5-10 million yuan")) {
+            incomeChoice = 2;
+        } else if (income.equals("10-20万元") || income.equals("10-20 million yuan")) {
+            incomeChoice = 3;
+        } else if (income.equals("20-50万元") || income.equals("20-50 million yuan")) {
+            incomeChoice = 4;
+        } else if (income.equals("50-100万元") || income.equals("50-100 million yuan")) {
+            incomeChoice = 5;
+        } else if (income.equals("100万元以上") || income.equals("more than 1 million yuan")) {
+            incomeChoice = 6;
+        }
+
+        String marriage = sp.getString("marriage", "");
+        if (marriage.equals("未婚") || marriage.equals("unmarried")) {
+            marriageChoice = 0;
+        } else if (marriage.equals("已婚") || marriage.equals("be married")) {
+            marriageChoice = 1;
+        } else if (marriage.equals("离异") || marriage.equals("divorce")) {
+            marriageChoice = 2;
+        }
+
+        String education = sp.getString("education", "");
+        if (education.equals("初中以下") || education.equals("below junior high school")) {
+            educationChoice = 0;
+        } else if (education.equals("初中") || education.equals("Junior")) {
+            educationChoice = 1;
+        } else if (education.equals("高中") || education.equals("high school")) {
+            educationChoice = 2;
+        } else if (education.equals("专科") || education.equals("specialist")) {
+            educationChoice = 3;
+        } else if (education.equals("本科") || education.equals("undergraduate")) {
+            educationChoice = 4;
+        } else if (education.equals("硕士") || education.equals("Master")) {
+            educationChoice = 5;
+        } else if (education.equals("博士") || education.equals("Dr.")) {
+            educationChoice = 6;
+        }
     }
 
     @Override
@@ -392,14 +469,14 @@ public class UserInfoChangeActivity extends BaseActivity implements View.OnClick
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
         imageFile = new File(path, "head.png");
         recentPhoto = imageFile.getAbsolutePath();
-//        try {
-//            if (imageFile.exists()) {
-//                imageFile.delete();
-//            }
-//            imageFile.createNewFile();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        //        try {
+        //            if (imageFile.exists()) {
+        //                imageFile.delete();
+        //            }
+        //            imageFile.createNewFile();
+        //        } catch (IOException e) {
+        //            e.printStackTrace();
+        //        }
         try {
             imageFile.createNewFile();
         } catch (IOException e) {
@@ -545,7 +622,8 @@ public class UserInfoChangeActivity extends BaseActivity implements View.OnClick
                 birthDateTv.setText(android.text.format.DateFormat.format("yyyy-MM-dd", calendar));
                 birthDateStr = String.valueOf(year) + "-" + String.valueOf(month + 1) + "-" + String.valueOf(dayOfMonth);
             }
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        }, Integer.parseInt(birthDate[0]), Integer.parseInt(birthDate[1]), Integer.parseInt(birthDate[2]));
+//        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 
@@ -686,28 +764,28 @@ public class UserInfoChangeActivity extends BaseActivity implements View.OnClick
                 // 返回相机拍摄的照片地址
                 if (data == null) { // 如果指定了目标uri，data就没有数据，如果没有指定uri，则data就返回有数据，所以此处做空判断！
                     Bitmap bitmap1 = null;
-//                    try {
-//                        bitmap1 = BitmapFactory.decodeStream(UserInfoChangeActivity.this.getContentResolver().openInputStream(imageUri));
-//                        imagePath = getPath(UserInfoChangeActivity.this, imageUri);     // 获取文件路径
-                        // 开始压缩
-//                        Bitmap compressBitmap = CompressImageUtil.getimage(imagePath);
-//                        file = BitmapToFile.compressImage(compressBitmap);
-//                        try {
-//                            long size = new FileInputStream(file).available();
-//                            Log.i("MineFragment", size + "");
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
+                    //                    try {
+                    //                        bitmap1 = BitmapFactory.decodeStream(UserInfoChangeActivity.this.getContentResolver().openInputStream(imageUri));
+                    //                        imagePath = getPath(UserInfoChangeActivity.this, imageUri);     // 获取文件路径
+                    // 开始压缩
+                    //                        Bitmap compressBitmap = CompressImageUtil.getimage(imagePath);
+                    //                        file = BitmapToFile.compressImage(compressBitmap);
+                    //                        try {
+                    //                            long size = new FileInputStream(file).available();
+                    //                            Log.i("MineFragment", size + "");
+                    //                        } catch (IOException e) {
+                    //                            e.printStackTrace();
+                    //                        }
 
-//                        // 拍照返回，直接在ImageView上显示缩略图
-//                        Bitmap bitmap = ThumbnailUtils.extractThumbnail(bitmap1, 200, 200); // 缩略图
-//                        bitmapdown = bitmap;
-//                        headImgIv.setImageBitmap(bitmapdown); // ImageView加载图片(缩略图)
+                    //                        // 拍照返回，直接在ImageView上显示缩略图
+                    //                        Bitmap bitmap = ThumbnailUtils.extractThumbnail(bitmap1, 200, 200); // 缩略图
+                    //                        bitmapdown = bitmap;
+                    //                        headImgIv.setImageBitmap(bitmapdown); // ImageView加载图片(缩略图)
 
-//                    } catch (FileNotFoundException e) {
-//                        imageFile = null;
-//                        e.printStackTrace();
-//                    }
+                    //                    } catch (FileNotFoundException e) {
+                    //                        imageFile = null;
+                    //                        e.printStackTrace();
+                    //                    }
                     file = new File(recentPhoto);
                     Log.i("dongsiyuanfile", "onActivityResult: " + file);
 
