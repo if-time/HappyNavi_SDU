@@ -192,7 +192,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
                 marshmallowMacAddress = Common.getAdresseMAC(LoginActivity.this);
                 Log.i("dongiydangetAdresseMAC", "onCreate: " + Common.getAdresseMAC(LoginActivity.this) +
-                        " marshmallowMacAddress: " + marshmallowMacAddress);
+                        " marshmallowMacAddress: " + marshmallowMacAddress.toUpperCase()+ " " +
+                        "d4:61:2e:75:3D:36".toUpperCase());
 
                 login(); // 新接口
                 // submit(); // 旧接口
@@ -229,7 +230,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                 showDialog(getResources().getString(R.string.tips_dlgtle_login),
                         getResources().getString(R.string.tips_dlgmsg_login));
                 // 调用登录接口
-                LoginRequest loginRequest = new LoginRequest(uid, pwd.toUpperCase(), marshmallowMacAddress);
+                LoginRequest loginRequest = new LoginRequest(uid, pwd.toUpperCase(), marshmallowMacAddress.toUpperCase());
                 loginRequest.requestHttpData(new ResponseData() {
                     @Override
                     public void onResponseData(boolean isSuccess, String code, Object responseObject, final String msg) throws IOException {

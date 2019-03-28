@@ -549,7 +549,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                     }
                     startActivityForResult(intent, REQUESTMARK);
                 }
-                ToastUtil.show(context, "暂无轨迹");
+//                ToastUtil.show(context, "暂无轨迹");
                 break;
             case R.id.checktraceinfo:
                 if (mPopupWindow == null) {

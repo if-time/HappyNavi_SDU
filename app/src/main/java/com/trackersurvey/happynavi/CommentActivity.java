@@ -155,10 +155,25 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private TextView isShareTv;
     private boolean  isShare = true;
 
+    private static SharedPreferences sp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_comment);
+
+        sp = getSharedPreferences("languageSet", 0);
+        String language = sp.getString("language", "0");
+        int l = Integer.parseInt(language);
+        if(l==0){
+            Log.i("language", "zzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+            setContentView(R.layout.activity_comment);
+        }
+        if(l==1){
+            Log.i("language", "eeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+            setContentView(R.layout.activity_comment_en);
+        }
+
+//        setContentView(R.layout.activity_comment);
         StatusBarCompat.setStatusBarColor(this, Color.BLACK); // 修改状态栏颜色
         // 隐藏原始标题栏
         ActionBar actionBar = getSupportActionBar();
@@ -1227,14 +1242,14 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                     takeVideo();
                 }
                 break;
-            case R.id.imageView_place:
-                // 点击图标和点击文字效果相同
-            case R.id.textView_place:
-                Intent intent = new Intent(CommentActivity.this, ConfirmPlaceActivity.class);
-                placeName = (String) textOfPlace.getText();
-                intent.putExtra("place", placeName);
-                startActivityForResult(intent, REQUEST_PLACE);
-                break;
+//            case R.id.imageView_place:
+//                // 点击图标和点击文字效果相同
+//            case R.id.textView_place:
+//                Intent intent = new Intent(CommentActivity.this, ConfirmPlaceActivity.class);
+//                placeName = (String) textOfPlace.getText();
+//                intent.putExtra("place", placeName);
+//                startActivityForResult(intent, REQUEST_PLACE);
+//                break;
             default:
                 break;
         }

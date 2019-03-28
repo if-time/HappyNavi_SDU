@@ -565,6 +565,7 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
                                             getActivity().runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
+                                                    dismissDialog();
                                                     ToastUtil.show(getContext(), getResources().getString(R.string.tips_downfail_nodata));
                                                 }
                                             });
@@ -573,6 +574,7 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
                                         getActivity().runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
+                                                dismissDialog();
                                                 ToastUtil.show(getContext(), getResources().getString(R.string.tips_downfail_nodata));
                                             }
                                         });
@@ -630,6 +632,7 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
                         });
                     }
                 } else {
+                    dismissDialog();
                     ToastUtil.show(getContext(), getResources().getString(R.string.tips_notraceselected));
                 }
                 break;
