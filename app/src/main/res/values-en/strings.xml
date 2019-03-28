@@ -665,7 +665,8 @@
     <string name="tips_gotodownnewapk">Start downloading the latest version of the app, you can view the download progress in the notification bar</string>
         
     <string name="tips_newapkdown">The latest version of the application download is complete, please click install in the notification bar </string>
-        <string name="tips_autoinstall">The latest version of the application download is complete, it will be installed automatically</string>
+        
+    <string name="tips_autoinstall">The latest version of the application download is complete, it will be installed automatically</string>
     <string name="tips_install">Click to install</string>
         
     <string name="sportdata">motion data </string>
@@ -1113,31 +1114,20 @@
     </string-array>
         
     <string-array name="income">
+
+        <item> below 20,000 yuan</item>
                 
-        <item>0-1 million yuan</item>
+        <item> 2-5 million yuan</item>
                 
-        <item>1-2 million yuan</item>
-                
-        <item>2-3 million yuan</item>
-                
-        <item>3-4 million yuan</item>
-                
-        <item>4-5 million yuan</item>
-                
-        <item> 5-6 million </item>
-                
-        <item>6-7 million yuan</item>
-                
-        <item> 7-8 million yuan</item>
-                
-        <item>8-9 million yuan</item>
-                
-        <item>9-10 million yuan</item>
+        <item>5-10 million yuan</item>
                 
         <item>10-20 million yuan</item>
                 
-        <item>20-30 million yuan</item>
-            
+        <item>20-50 million yuan</item>
+                
+        <item>50-100 million yuan</item>
+                
+        <item> more than 1 million yuan </item>
     </string-array>
         
     <string-array name="marriage">
