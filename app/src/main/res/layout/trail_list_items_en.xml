@@ -38,7 +38,7 @@
 		android:layout_alignParentRight="true"
 		android:layout_alignBottom="@id/trace_name_layout"
 		android:layout_marginRight="10dp"
-		android:src="@mipmap/shouji" />
+		android:src="@mipmap/ic_cloud" />
 	<ImageView
 		android:id="@+id/is_local_iv"
 		android:layout_width="wrap_content"
@@ -46,7 +46,7 @@
 		android:layout_toLeftOf="@id/is_cloud_iv"
 		android:layout_alignBottom="@id/trace_name_layout"
 		android:layout_marginRight="10dp"
-		android:src="@mipmap/pingban" />
+		android:src="@mipmap/ic_local" />
 
 	<RelativeLayout
 		android:id="@+id/trace_msg_layout"
