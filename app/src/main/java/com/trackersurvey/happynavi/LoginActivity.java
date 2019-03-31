@@ -1,6 +1,7 @@
 package com.trackersurvey.happynavi;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -8,8 +9,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,35 +45,35 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener{
+public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
-    public static final String times ="timeCount";
-    public static final String winWidth = "winWidth";
-    public static final String winHeight = "winHeight";
-    public static final String PPISCALE = "ppiScale";
-    public String login_url = null;
-    public String register_information_url = null;
-    public static final String mobConnectFirst = "mobConnectFirstUse";
-    public String result;
-    private LoginModel loginModel;
-    public String information;
-    public EditText uidEt;
-    public EditText pwdEt;
-    public CheckBox remeber_pwd;
-    public CheckBox agree_protocol;
-    public TextView appVersion;
+    public static final String     times                    = "timeCount";
+    public static final String     winWidth                 = "winWidth";
+    public static final String     winHeight                = "winHeight";
+    public static final String     PPISCALE                 = "ppiScale";
+    public              String     login_url                = null;
+    public              String     register_information_url = null;
+    public static final String     mobConnectFirst          = "mobConnectFirstUse";
+    public              String     result;
+    private             LoginModel loginModel;
+    public              String     information;
+    public              EditText   uidEt;
+    public              EditText   pwdEt;
+    public              CheckBox   remeber_pwd;
+    public              CheckBox   agree_protocol;
+    public              TextView   appVersion;
     //public TextView forgetpassword;
-    public TextView protocal;
-    public Button register;
-    public Button login;
+    public              TextView   protocal;
+    public              Button     register;
+    public              Button     login;
     String show;
-    public String uid; // 用户账号（手机号）
+    public  String            uid; // 用户账号（手机号）
     private SharedPreferences sp; // android系统下用于数据存贮的一个方便的API
     //private SharedPreferences loginSp; // 用于存放登录后返回的用户信息和Token
     long lastClick; //用户上次单击时间
-    private ProgressDialog proDialog = null;
-    public static String token = "";
-    private String marshmallowMacAddress = "02:00:00:00:00:00";
+    private       ProgressDialog proDialog             = null;
+    public static String         token                 = "";
+    private       String         marshmallowMacAddress = "02:00:00:00:00:00";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,49 +87,49 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         StatusBarCompat.setStatusBarColor(this, Color.BLACK); // 修改状态栏颜色
         // 隐藏原始标题栏
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null){
+        if (actionBar != null) {
             actionBar.hide();
         }
         AppManager.getAppManager().addActivity(this);
         // sp 初始化
-        sp = getSharedPreferences("config",MODE_PRIVATE);//私有参数
+        sp = getSharedPreferences("config", MODE_PRIVATE);//私有参数
         //loginSp = getSharedPreferences("login", MODE_PRIVATE);
         //是否第一次使用应用
         int timeCount = sp.getInt(times, 0);
-        if(timeCount == 0) {
+        if (timeCount == 0) {
             firstTimeDone();
         }
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(times, timeCount+1);
+        editor.putInt(times, timeCount + 1);
         editor.apply();
-//        String lastId = sp.getString("userPhone", "0");
-//        String nickname = sp.getString("nickname", "");
-//        String headphoto = sp.getString("headphoto", "");
-//        String deviceid = sp.getString("deviceid", "null");
-//        if(deviceid.equals("null")){//没有设置设备id，需要设置
-//            editor.putString("deviceid", Common.setDeviceId(getApplicationContext(), LoginActivity.this));
-//            editor.commit();
-//        }
+        //        String lastId = sp.getString("userPhone", "0");
+        //        String nickname = sp.getString("nickname", "");
+        //        String headphoto = sp.getString("headphoto", "");
+        //        String deviceid = sp.getString("deviceid", "null");
+        //        if(deviceid.equals("null")){//没有设置设备id，需要设置
+        //            editor.putString("deviceid", Common.setDeviceId(getApplicationContext(), LoginActivity.this));
+        //            editor.commit();
+        //        }
         Log.i("phonelog", "deviceID:" + Common.getDeviceId(getApplicationContext()));
-        Log.i("phonelog","getDeviceName :"+Common.getDeviceName());
+        Log.i("phonelog", "getDeviceName :" + Common.getDeviceName());
         if (!sp.getString("token", "").equals("")) {
             // token不为空字符串则挑过登录界面
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         }
 
-//        if(!lastId.equals("0")){
-//            //Common.userId=lastId;
-//            if(!nickname.equals("")){
-//                Common.NickName = nickname;
-//            }
-//            if(!headphoto.equals("")){
-//                //Common.pic=headphoto;
-//            }
-//            Log.i("LoginActivity", "检测上次登录的id，存在id和密码，跳转");
-//            Intent intent = new Intent(LoginActivity.this, MainActivity.class);//检验上次登录的id，存在id和密码，跳转
-//            startActivity(intent);
-//        }
+        //        if(!lastId.equals("0")){
+        //            //Common.userId=lastId;
+        //            if(!nickname.equals("")){
+        //                Common.NickName = nickname;
+        //            }
+        //            if(!headphoto.equals("")){
+        //                //Common.pic=headphoto;
+        //            }
+        //            Log.i("LoginActivity", "检测上次登录的id，存在id和密码，跳转");
+        //            Intent intent = new Intent(LoginActivity.this, MainActivity.class);//检验上次登录的id，存在id和密码，跳转
+        //            startActivity(intent);
+        //        }
         uidEt = (EditText) findViewById(R.id.et_userid);
         pwdEt = (EditText) findViewById(R.id.et_password);
         //remeber_pwd=(CheckBox) findViewById(R.id.checkBox);
@@ -138,26 +143,26 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         register.setOnClickListener(this);
         login.setOnClickListener(this);
 
-//	    forgetpassword.setOnClickListener(new OnClickListener() {
-//
-//
-//			public void onClick(View v) {
-//				Intent intent=new Intent(LoginActivity.this,ForgetPassword.class);
-//				startActivity(intent);
-//
-//			}
-//		});
+        //	    forgetpassword.setOnClickListener(new OnClickListener() {
+        //
+        //
+        //			public void onClick(View v) {
+        //				Intent intent=new Intent(LoginActivity.this,ForgetPassword.class);
+        //				startActivity(intent);
+        //
+        //			}
+        //		});
         protocal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog alert =new AlertDialog.Builder(LoginActivity.this).create();
+                AlertDialog alert = new AlertDialog.Builder(LoginActivity.this).create();
                 alert.setTitle(getResources().getString(R.string.tips_dlgtle_protocol));
                 alert.setMessage(getResources().getString(R.string.tips_dlgmsg_protocol1)
-                        +"\n"+getResources().getString(R.string.tips_dlgmsg_protocol2)
-                        +"\n"+getResources().getString(R.string.tips_dlgmsg_protocol3)
-                        +"\n"+getResources().getString(R.string.tips_dlgmsg_protocol4)
-                        +"\n"+getResources().getString(R.string.tips_dlgmsg_protocol5));
-                alert.setButton(DialogInterface.BUTTON_NEGATIVE,getResources().getString(R.string.close),  new DialogInterface.OnClickListener() {
+                        + "\n" + getResources().getString(R.string.tips_dlgmsg_protocol2)
+                        + "\n" + getResources().getString(R.string.tips_dlgmsg_protocol3)
+                        + "\n" + getResources().getString(R.string.tips_dlgmsg_protocol4)
+                        + "\n" + getResources().getString(R.string.tips_dlgmsg_protocol5));
+                alert.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(R.string.close), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
@@ -171,7 +176,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         uidEt.setText(saveId);
         //pwdEt.setText(savePsw);
 
-        if(Common.url != null && !Common.url.equals("")) {
+        if (Common.url != null && !Common.url.equals("")) {
 
         } else {
             Common.url = getResources().getString(R.string.url);
@@ -181,18 +186,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
         Common.getAdresseMAC(LoginActivity.this);
         Log.i("dongiydangetAdresseMAC", "onCreate: " + Common.getAdresseMAC(LoginActivity.this));
+
+        ignoreBatteryOptimization(LoginActivity.this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_login:
-//                Intent intentM = new Intent(LoginActivity.this, MainActivity.class);
-//                startActivity(intentM);
+                //                Intent intentM = new Intent(LoginActivity.this, MainActivity.class);
+                //                startActivity(intentM);
 
                 marshmallowMacAddress = Common.getAdresseMAC(LoginActivity.this);
                 Log.i("dongiydangetAdresseMAC", "onCreate: " + Common.getAdresseMAC(LoginActivity.this) +
-                        " marshmallowMacAddress: " + marshmallowMacAddress.toUpperCase()+ " " +
+                        " marshmallowMacAddress: " + marshmallowMacAddress.toUpperCase() + " " +
                         "d4:61:2e:75:3D:36".toUpperCase());
 
                 login(); // 新接口
@@ -204,21 +211,22 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                 break;
         }
     }
-    public void login(){
+
+    public void login() {
         String pwd;
         uid = uidEt.getText().toString();
         pwd = pwdEt.getText().toString();
         String pwdMD5 = MD5Util.string2MD5(pwd);
-//        String pwdSHA1 = HMAC_SHA1_Util.genHMAC(pwd, );
+        //        String pwdSHA1 = HMAC_SHA1_Util.genHMAC(pwd, );
         if (uid.equals("") || pwd.equals("")) {
             Toast.makeText(this, getResources().getString(R.string.idpwdcannotnull), Toast.LENGTH_SHORT).show();
-        } else if (marshmallowMacAddress.equals("02:00:00:00:00:00")){
+        } else if (marshmallowMacAddress.equals("02:00:00:00:00:00")) {
             Toast.makeText(this, getResources().getString(R.string.marshmallowMacAddresserror), Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             //获取到一个参数文件编辑器
             SharedPreferences.Editor editor = sp.edit();
             editor.putString("lastInputID", uid);
-            editor.putString("lastInputPSW",pwd);
+            editor.putString("lastInputPSW", pwd);
             editor.apply();//把数据保存到sp里
             //判断是否进行MD5
             //若版本号小于"1.2.5"则不加密
@@ -279,7 +287,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                                             + "; education:" + sp.getString("education", "")
                                             + "; income:" + sp.getString("income", "")
                                             + "; occupation:" + sp.getString("occupation", "")
-                                            + "; marriage:" +sp.getString("marriage", "")
+                                            + "; marriage:" + sp.getString("marriage", "")
                                             + "; chileCount:" + sp.getString("childCount", "")
                                             + "; sex:" + sp.getInt("sex", 0));
                                     Log.i("LoginActivity", "token:" + token
@@ -330,7 +338,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                                         }
                                     });
                                 }
-                            }else {
+                            } else {
                                 dismissDialog();
                                 runOnUiThread(new Runnable() {
                                     @Override
@@ -351,17 +359,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         uid = uidEt.getText().toString();
         pwd = pwdEt.getText().toString();
         String s_pwd_md5 = MD5Util.string2MD5(pwd);
-        if(uid.equals("") || pwd.equals(""))//判断账号密码不能为空
+        if (uid.equals("") || pwd.equals(""))//判断账号密码不能为空
         {
-            Toast.makeText(this,getResources().getString(R.string.idpwdcannotnull), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.idpwdcannotnull), Toast.LENGTH_SHORT).show();
         } else {
             //勾选 记录用户名和密码
             //获取到一个参数文件编辑器
-            SharedPreferences.Editor editor=sp.edit();
+            SharedPreferences.Editor editor = sp.edit();
             //Log.i("checked", "1");
             editor.putString("id", uid);
             //Log.i("checked", "2");
-            editor.putString("psw",pwd);
+            editor.putString("psw", pwd);
             //Log.i("checked", "3");
             editor.commit();//把数据保存到sp里
             //Log.i("checked", "4");
@@ -370,13 +378,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
             //判断是否进行MD5
             //若版本号小于"1.2.5"则不加密
-            boolean jiami = ( Common.version.compareTo("1.2.5") >= 0);
-            if(jiami) {
+            boolean jiami = (Common.version.compareTo("1.2.5") >= 0);
+            if (jiami) {
                 show = uid + "!" + s_pwd_md5;
             } else {
                 show = uid + "!" + pwd;
             }
-            if(agree_protocol.isChecked()) {
+            if (agree_protocol.isChecked()) {
                 showDialog(getResources().getString(R.string.tips_dlgtle_login),
                         getResources().getString(R.string.tips_dlgmsg_login));
                 //Log.i("phonelog", s_pwd+"--->"+s_pwd_md5);
@@ -385,7 +393,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                 Log.i("LoginMsg", show);
                 //pld.start();
             } else {
-                Toast.makeText(this,getResources().getString(R.string.tips_agreeprotocol), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.tips_agreeprotocol), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -399,7 +407,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
             dismissDialog();
             switch (msg.what) {
                 case 0:// 登陆成功
-                    SharedPreferences.Editor editor=sp.edit();
+                    SharedPreferences.Editor editor = sp.edit();
                     editor.putString("lastid", uid);
                     //Common.userId=s_id;
                     result = (msg.obj.toString().trim());
@@ -409,11 +417,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                         e1.printStackTrace();
                     }
                     // Log.i("LogDemo", "dereadLine:"+result);
-                    String[] get=result.split("!");
-                    if(get.length>=3){
+                    String[] get = result.split("!");
+                    if (get.length >= 3) {
                         try {
                             //Common.pic=get[1];//存图片字符串
-                            Common.NickName=get[2];//昵称
+                            Common.NickName = get[2];//昵称
                             editor.putString("nickname", get[2]);
                             editor.putString("headphoto", get[1]);
                         } catch (Exception e) {
@@ -429,19 +437,19 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                     //finish();
                     break;
                 case 1:
-                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.tips_postfail),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.tips_postfail), Toast.LENGTH_SHORT).show();
                     break;
                 case 4:
                     //result = (msg.obj.toString().trim());
-                    ToastUtil.show(LoginActivity.this,getResources().getString(R.string.tips_loginfail_noid));
+                    ToastUtil.show(LoginActivity.this, getResources().getString(R.string.tips_loginfail_noid));
                     break;
                 case 5:
                     //result = (msg.obj.toString().trim());
-                    ToastUtil.show(LoginActivity.this,getResources().getString(R.string.tips_loginfail_nopwd));
+                    ToastUtil.show(LoginActivity.this, getResources().getString(R.string.tips_loginfail_nopwd));
                     break;
                 case 10:
                     //result = (msg.obj.toString().trim());
-                    ToastUtil.show(LoginActivity.this,getResources().getString(R.string.tips_netdisconnect));
+                    ToastUtil.show(LoginActivity.this, getResources().getString(R.string.tips_netdisconnect));
                     break;
                 case 6:
                     //result = (msg.obj.toString().trim());
@@ -453,7 +461,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     /**
      * 显示进度条对话框
      */
-    public void showDialog(String title,String message) {
+    public void showDialog(String title, String message) {
         if (proDialog == null)
             proDialog = new ProgressDialog(this);
         proDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -463,6 +471,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         proDialog.setMessage(message);
         proDialog.show();
     }
+
     /**
      * 隐藏进度条对话框
      */
@@ -471,10 +480,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
             proDialog.dismiss();
         }
     }
+
     /**
      * 只在安装后第一次使用应用执行
      */
-    void firstTimeDone(){
+    void firstTimeDone() {
         //获取用户手机屏幕分辨率、ppi与dip比率,写入sharedPreference
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -488,5 +498,23 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         editorSp.putFloat(PPISCALE, scale);
         editorSp.putInt(mobConnectFirst, 0);
         editorSp.commit();
+    }
+
+    /**
+     * 忽略电池优化
+     */
+    private void ignoreBatteryOptimization(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+
+            boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(activity.getPackageName());
+            //  判断当前APP是否有加入电池优化的白名单，如果没有，弹出加入电池优化的白名单的设置对话框。
+            if (!hasIgnored) {
+                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + activity.getPackageName()));
+                startActivity(intent);
+            }
+        }
     }
 }
