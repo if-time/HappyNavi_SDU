@@ -410,7 +410,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
         } else {
             // 从本地获取
             traces = helper.queryfromGpsbytraceID(trailobj.getTraceID(), Common.getUserID(context));
-            // Log.i("trailadapter", GsonHelper.toJson(traces));
+             Log.i("trailadapter", GsonHelper.toJson(traces));
             if (traces.size() > 0) {
                 initLocation();
                 if (Common.isNetConnected && trailobj.getSportTypes() != 5) {

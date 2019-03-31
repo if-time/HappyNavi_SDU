@@ -251,15 +251,26 @@ public class MyTraceDBHelper {
     // 获得记录未结束的轨迹号
     public long getUnStopStatusExists(String userID) {
         SQLiteDatabase db = dbhelper.getReadableDatabase();
+//        Cursor cursor = db.query(TABLE5_NAME, null,
+//                " userID='" + userID + "'" + " and  TraceStatus=('" + 1 + "')", null, null, null, "TraceID desc limit 0,1");
+//        Cursor cursor = db.query(TABLE5_NAME, null,
+        ////                " userID='" + userID + "'", null, null, null, "TraceID DESC limit 0,1");
+
         Cursor cursor = db.query(TABLE5_NAME, null,
-                " userID='" + userID + "'" + " and  TraceStatus=('" + 1 + "')", null, null, null, null);
+                " userID='" + userID + "'", null, null, null, null);
         int rows = cursor.getCount();
+
         long traceID = 0;
+
         if (rows > 0) {
             cursor.moveToLast();
-            traceID = cursor.getLong(1);
+            int TraceStatus = cursor.getInt(2);
+            Log.i("dongsiyuanTraceStatus", String.valueOf(TraceStatus) + "  " + rows);
+            if (TraceStatus == 1) {
+                traceID = cursor.getLong(1);
+                Log.i("dongsiyuanTraceStatus", String.valueOf(traceID));
+            }
         }
-
         cursor.close();
         //        db.close();
         return traceID;
