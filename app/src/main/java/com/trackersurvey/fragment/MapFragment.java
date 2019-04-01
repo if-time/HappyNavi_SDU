@@ -215,6 +215,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     private       PoiChoiceModel poiChoiceModel;
     public static int            poiCount = 0;
 
+    private SharedPreferences sp2;
     private SharedPreferences spl;
     private int               l;
 
@@ -249,6 +250,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         // sp 初始化
         sp = getActivity().getSharedPreferences("config", MODE_PRIVATE);//私有参数
         spl = getActivity().getSharedPreferences("languageSet", 0);
+        sp2 = getContext().getSharedPreferences("SportTypePos", Context.MODE_PRIVATE);
         String language = spl.getString("language", "0");
         l = Integer.parseInt(language);
         initAMap(); // 初始化地图
@@ -873,6 +875,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     initStartInfo(); // 初始化轨迹信息
                     ToastUtil.show(getContext(), getResources().getString(R.string.tips_starttrace)); // 开始记录
                     ToastUtil.show(getContext(), getResources().getString(R.string.tips_addmark)); // 点击右侧"相机"按钮可添加标注
+
+                    SharedPreferences.Editor editor = sp2.edit();
+                    editor.putInt("pos", pos);
+                    editor.commit();
+
                 } else {
                     dialog.dismiss();
                 }
@@ -1048,17 +1055,18 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         startSuccess = true;
 
         startTrail.setVisibility(View.INVISIBLE);
-        if (sportType == 1) {
+
+        if (sp2.getInt("pos", 1) == 1) {
             changeSportTypeIb.setBackgroundResource(R.mipmap.ic_walking);
-        } else if (sportType == 2) {
+        } else if (sp2.getInt("pos", 1) == 2) {
             changeSportTypeIb.setBackgroundResource(R.mipmap.ic_cycling);
-        } else if (sportType == 3) {
+        } else if (sp2.getInt("pos", 1) == 3) {
             changeSportTypeIb.setBackgroundResource(R.mipmap.ic_rollerblading);
-        } else if (sportType == 4) {
+        } else if (sp2.getInt("pos", 1) == 4) {
             changeSportTypeIb.setBackgroundResource(R.mipmap.ic_driving);
-        } else if (sportType == 5) {
+        } else if (sp2.getInt("pos", 1) == 5) {
             changeSportTypeIb.setBackgroundResource(R.mipmap.ic_train);
-        } else if (sportType == 6) {
+        } else if (sp2.getInt("pos", 1) == 6) {
             changeSportTypeIb.setBackgroundResource(R.mipmap.others);
         }
         changeSportTypeIb.setVisibility(View.VISIBLE);
@@ -1094,6 +1102,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             @Override
             public void onDismiss(DialogInterface Dialog) {
                 int pos = dialog.getposition();
+
+                Log.i("dongsiyuanpos", "onDismiss: " + pos);
                 sportType = pos;
                 if (pos != -1) { // 点击确定
                     locationService.changeCurrentSportType(pos);
@@ -1877,6 +1887,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean("isShowBGRGuide", !isChecked);
+                Log.i("dongisyuanshowBGR", "onCheckedChanged: " + isChecked);
                 editor.commit();
             }
         });

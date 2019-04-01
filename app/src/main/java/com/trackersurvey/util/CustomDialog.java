@@ -3,6 +3,8 @@ package com.trackersurvey.util;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.trackersurvey.happynavi.R;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by zh931 on 2018/5/7.
@@ -38,6 +42,7 @@ public class CustomDialog extends Dialog {
         private DialogInterface.OnClickListener        positiveButtonClickListener;
         private DialogInterface.OnClickListener        negativeButtonClickListener;
         private CompoundButton.OnCheckedChangeListener noshowCheckChangeListener;
+        private SharedPreferences sp;
 
         public Builder(Context context) {
             this.context = context;
@@ -144,6 +149,15 @@ public class CustomDialog extends Dialog {
                     ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             // set the dialog title
             ((TextView) layout.findViewById(R.id.title)).setText(title);
+            sp = context.getSharedPreferences("config", MODE_PRIVATE);//私有参数
+
+            CheckBox checkBox = layout.findViewById(R.id.noshow);
+            if (checkBox.isChecked()) {
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putBoolean("isShowBGRGuide", false);
+                editor.commit();
+            }
+
             // set the confirm button
             if (positiveButtonText != null) {
                 ((Button) layout.findViewById(R.id.positiveButton))

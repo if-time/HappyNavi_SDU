@@ -638,7 +638,6 @@ public class MyTraceDBHelper {
         TraceData data = new TraceData();
 
         Cursor cursor = db.query(TABLE2_NAME, null,
-
                 " userID='" + userID + "'" + " and  TraceID=('" + traceID + "')", null, null, null, null);
         int rows = cursor.getCount();
         if (rows != 0) {

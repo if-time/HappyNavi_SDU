@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.trackersurvey.happynavi"
-    android:versionCode="211"
-    android:versionName="2.1.1">
+    android:versionCode="212"
+    android:versionName="2.1.2">
 
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/> <!--申请加入优化白名单-->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
@@ -77,7 +77,7 @@
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="12983a5c8027cf000ad2df0e1154df46" /> <!-- android:value="024b0f76892f0d460b85684b844dcd91" /> -->
+            android:value="024b0f76892f0d460b85684b844dcd91" /> <!-- android:value="024b0f76892f0d460b85684b844dcd91" /> -->
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait" />
