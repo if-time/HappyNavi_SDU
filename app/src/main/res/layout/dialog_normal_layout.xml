@@ -52,6 +52,7 @@
             <CheckBox
                 android:id="@+id/noshow"
                 android:text="@string/noshow"
+                android:checked="true"
                 style="@style/text_16_666666"
                 android:layout_width="wrap_content"
                 android:layout_alignParentRight="true"
