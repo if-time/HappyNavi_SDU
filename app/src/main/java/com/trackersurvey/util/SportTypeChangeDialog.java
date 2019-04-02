@@ -112,7 +112,8 @@ public class SportTypeChangeDialog extends Dialog {
                     itemview.setBackgroundColor(Color.parseColor("#ffffff"));
                 }
 
-                view.setBackgroundColor(Color.parseColor("#99cc33"));
+                view.setBackgroundResource(R.mipmap.xukuang);
+//                view.setBackgroundColor(Color.parseColor("#99cc33"));
                 itemview = view;
             }
         });
