@@ -78,7 +78,8 @@ public class SportTypeChangeAdapter extends BaseAdapter implements OnItemClickLi
 
         if (position == pos - 1) {
 //            holder.iv_thumb.setBackgroundColor(Color.parseColor("#99cc33"));
-            convertView.setBackgroundColor(Color.parseColor("#99cc33"));
+//            convertView.setBackgroundColor(Color.parseColor("#99cc33"));
+            convertView.setBackgroundResource(R.mipmap.xukuang);
         }
 
         return convertView;
