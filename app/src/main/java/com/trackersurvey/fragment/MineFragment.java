@@ -83,7 +83,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         helpLayout.setOnClickListener(this);
         exit_app.setOnClickListener(this);
         //        EventBus.getDefault().register(this);
-
         return meLayout;
     }
 
