@@ -484,7 +484,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
          */
         traceID = traceDBHelper.getUnStopStatusExists(Common.getUserID(getContext()));
         if (traceID != 0) { //存在中断的轨迹,0是轨迹号
-
             CustomDialog.Builder builder = new CustomDialog.Builder(getContext());
             builder.setTitle(getResources().getString(R.string.tip));
             builder.setMessage(getResources().getString(R.string.tips_interrupttrace_msg));
