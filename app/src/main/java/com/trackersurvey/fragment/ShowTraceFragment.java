@@ -400,6 +400,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                             @Override
                             public void run() {
                                 if (!getLocalGPSData()) {
+                                    dismissDialog();
                                     Toast.makeText(context, getResources().getString(R.string.tips_nodata), Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -410,7 +411,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
         } else {
             // 从本地获取
             traces = helper.queryfromGpsbytraceID(trailobj.getTraceID(), Common.getUserID(context));
-             Log.i("trailadapter", GsonHelper.toJson(traces));
+            Log.i("trailadapter", GsonHelper.toJson(traces));
             if (traces.size() > 0) {
                 initLocation();
                 if (Common.isNetConnected && trailobj.getSportTypes() != 5) {
@@ -531,7 +532,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                     intent.putExtra("longitude", markLatLng.longitude);
                     intent.putExtra("latitude", markLatLng.latitude);
                     intent.putExtra("altitude", traces.get(praseProgressToPosition(currentProgress)).getAltitude());
-//                    intent.putExtra("placeName", "");
+                    //                    intent.putExtra("placeName", "");
                     intent.putExtra("placeName", Common.aLocation.getCity() + Common.aLocation.getStreet());
                     intent.putExtra("createTime", traces.get(praseProgressToPosition(currentProgress)).getCreateTime());
                     intent.putExtra("traceID", traces.get(praseProgressToPosition(currentProgress)).getTraceID());
@@ -549,7 +550,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                     }
                     startActivityForResult(intent, REQUESTMARK);
                 }
-//                ToastUtil.show(context, "暂无轨迹");
+                //                ToastUtil.show(context, "暂无轨迹");
                 break;
             case R.id.checktraceinfo:
                 if (mPopupWindow == null) {
@@ -940,10 +941,12 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
             }
             Log.i("ShowTrace", "第二次记录异常点：selectid.size() = " + selectid.size());
             // 这一次记录的异常点，在画轨迹时，使用高德的路径规划功能
-        } else { // 位置点数小于等于2
+        } else { // 位置点数小于等于3
             for (int i = 0; i < tracePoints.size(); i++) {
+                Log.i("dongsiyuanlocation", "locationFilter: " + tracePoints.size());
                 linkPoints.add(tracePoints.get(i).getLatLng());
                 linkTraces.add(traces.get(i));
+                Log.i("dongsiyuanlocationl", "locationFilter: " + linkPoints.size());
             }
             for (int i = 0; i < traces.size(); i++) {// 提取出轨迹点的时间 单位 毫秒
                 arrayMillSeconds.add(praseStrToMillsecond(traces.get(i).getCreateTime()));
@@ -955,6 +958,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
     // 高德画路径（优化后）
     public void AMap_drawpath_optimize(List<TraceLatLng> tracePoints) {
 
+        Log.i("AMap_drawpath_optimize", "AMap_drawpath_optimize: " + tracePoints.size() + " selectid.size() :" + selectid.size());
         //Log.i("ShowTrace", "type:"+type+"     points:" + GsonHelper.toJson(points));
         // aMap.clear();
         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(tracePoints.get(0).getLatLng(), 16));
@@ -966,6 +970,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                 // 如果当前点的运动类型与下一点的相同，
                 if (tracePoints.get(i).getSportType() == tracePoints.get(i + 1).getSportType() && i != tracePoints.size() - 2) {
                     points.add(tracePoints.get(i).getLatLng());
+                    Log.i("AMap_drawpath_optimizF", "AMap_drawpath_optimize: i " + i);
                 } else {
                     if (tracePoints.get(i).getSportType() == 1) {
                         options = new PolylineOptions().width(10).geodesic(true).color(Color.BLUE);// 初始化轨迹属性
@@ -980,7 +985,12 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                     } else {
                         options = new PolylineOptions().width(10).geodesic(true).color(Color.GRAY);
                     }
-                    points.add(tracePoints.get(i + 1).getLatLng());
+                    points.add(tracePoints.get(i).getLatLng());
+                    Log.i("AMap_drawpath_optimizE", "AMap_drawpath_optimize: i " + i );
+                    if ((i + 1) == tracePoints.size() - 1) {
+                        Log.i("AMap_drawpath_optimizE", "AMap_drawpath_optimize: i + 1 " + (i + 1));
+                        points.add(tracePoints.get(i + 1).getLatLng());
+                    }
                     options.addAll(points);
                     aMap.addPolyline(options);
                     if (tracePoints.get(i).getSportType() == 1) {
@@ -1016,6 +1026,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                     }
                     points.clear();
                 }
+
             }
             //options.addAll(points);
             //            if (polyline != null) {
