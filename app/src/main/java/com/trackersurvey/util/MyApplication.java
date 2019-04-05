@@ -5,6 +5,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.tencent.bugly.crashreport.CrashReport;
+import com.trackersurvey.com.huawei.android.hms.agent.HMSAgent;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -27,6 +28,8 @@ public class MyApplication extends Application {
         super.onCreate();
         mApplication = this;
 
+        // 华为push服务 初始化HMS Agent
+        HMSAgent.init(this);
         initOKHttp();
         /*
         多进程且各个进程都会初始化Bugly，那么每个进程下的Bugly都会进行数据上报，造成不必要的资源浪费。
