@@ -41,9 +41,9 @@ public class MobileInfoUtils{
             } else if (getMobileType().equals("Letv")) { // 乐视2测试通过
                 intent.setAction("com.letv.android.permissionautoboot");
             } else if (getMobileType().equals("samsung")) { // 三星S10测试未通过
-//                componentName = new ComponentName("com.samsung.android.sm_cn", "com.samsung.android.sm.ui.ram.AutoRunActivity");
+//                componentName = new ComponentName("com.samsung.android.sm_cn", "com.samsung.android.sm.autorun.ui.AutoRunActivity");
                 //componentName = ComponentName.unflattenFromString("com.samsung.android.sm/.ui.ram.RamActivity");// Permission Denial not exported from uid 1000，不允许被其他程序调用
-                componentName = ComponentName.unflattenFromString("com.samsung.android.sm/.app.dashboard.SmartManagerDashBoardActivity");
+//                componentName = ComponentName.unflattenFromString("com.samsung.android.sm/.app.dashboard.SmartManagerDashBoardActivity");
             } else if (getMobileType().equals("HUAWEI")) { // 华为测试通过
                 //componentName = new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity");//锁屏清理
                 componentName = ComponentName.unflattenFromString("com.huawei.systemmanager/.startupmgr.ui.StartupNormalAppListActivity");//跳自启动管理
