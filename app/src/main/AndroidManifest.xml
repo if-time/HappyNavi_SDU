@@ -2,43 +2,29 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.trackersurvey.happynavi"
-    android:versionCode="215"
-    android:versionName="2.1.5">
+    android:versionCode="217"
+    android:versionName="2.1.7">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <!--HMS-SDK引导升级HMS功能，访问OTA服务器需要网络权限-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!--HMS-SDK引导升级HMS功能，保存下载的升级包需要SD卡写权限-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!--检测网络状态-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--检测wifi状态-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--为了获取用户手机的IMEI，用来唯一的标识用户。-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
-    <!--如果是安卓8.0，应用编译配置的targetSdkVersion>=26，请务必添加以下权限 -->
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
-    <!-- 接收PUSH TOKEN的广播以及PUSH消息需要定义该权限 ${PACKAGE_NAME} 要替换上您应用的包名 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- HMS-SDK引导升级HMS功能，访问OTA服务器需要网络权限 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- HMS-SDK引导升级HMS功能，保存下载的升级包需要SD卡写权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 检测网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 检测wifi状态 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 为了获取用户手机的IMEI，用来唯一的标识用户。 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 如果是安卓8.0，应用编译配置的targetSdkVersion>=26，请务必添加以下权限 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- 接收PUSH TOKEN的广播以及PUSH消息需要定义该权限 ${PACKAGE_NAME} 要替换上您应用的包名 -->
     <permission
         android:name="com.trackersurvey.happynavi.permission.PROCESS_PUSH_MSG"
-        android:protectionLevel="signatureOrSystem" />
-
-    <!--接收PUSH TOKEN的广播以及PUSH消息需要定义该权限 ${PACKAGE_NAME} 要替换上您应用的包名 -->
-    <uses-permission android:name="com.trackersurvey.happynavi.permission.PROCESS_PUSH_MSG" />
-
-    <!--小米需要-->
+        android:protectionLevel="signatureOrSystem" /> <!-- 接收PUSH TOKEN的广播以及PUSH消息需要定义该权限 ${PACKAGE_NAME} 要替换上您应用的包名 -->
+    <uses-permission android:name="com.trackersurvey.happynavi.permission.PROCESS_PUSH_MSG" /> <!-- 小米需要 -->
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
-
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" /> <!--申请加入优化白名单-->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" /> <!-- 申请加入优化白名单 -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- Android服务保活-JobScheduler拉活 -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Android Mac地址 -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /><!-- android8.0以上版本的前台服务 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- android8.0以上版本的前台服务 -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 允许程序打开网络套接字 -->
@@ -74,7 +60,7 @@
         <service
             android:name="com.trackersurvey.service.DownloadApkService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
         <service
             android:name="com.trackersurvey.service.AppUpdateService"
             android:enabled="true"
@@ -107,13 +93,11 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="12983a5c8027cf000ad2df0e1154df46" /> <!-- android:value="024b0f76892f0d460b85684b844dcd91" /> -->
-        <!--12983a5c8027cf000ad2df0e1154df46-->
-        <!--华为push-->
+        <!-- 12983a5c8027cf000ad2df0e1154df46 -->
+        <!-- 华为push -->
         <meta-data
             android:name="com.huawei.hms.client.appid"
-            android:value="appid=10582080"></meta-data>
-
-        <!--BridgeActivity定义了HMS SDK中一些跳转所需要的透明页面-->
+            android:value="appid=10582080" /> <!-- BridgeActivity定义了HMS SDK中一些跳转所需要的透明页面 -->
         <activity
             android:name="com.huawei.hms.activity.BridgeActivity"
             android:configChanges="orientation|locale|screenSize|layoutDirection|fontScale"
@@ -124,48 +108,42 @@
             <meta-data
                 android:name="hwc-theme"
                 android:value="androidhwext:style/Theme.Emui.Translucent" />
-        </activity>
-
-        <!--用于HMS SDK引导升级HMS APK，提供给系统安装器读取升级文件-->
+        </activity> <!-- 用于HMS SDK引导升级HMS APK，提供给系统安装器读取升级文件 -->
         <provider
             android:name="com.huawei.hms.update.provider.UpdateProvider"
             android:authorities="com.trackersurvey.happynavi.hms.update.provider"
             android:exported="false"
-            android:grantUriPermissions="true"></provider>
-
-        <!--在application节点下增加UpdateSdkFileProvider，用于应用自升级-->
+            android:grantUriPermissions="true" /> <!-- 在application节点下增加UpdateSdkFileProvider，用于应用自升级 -->
         <provider
             android:name="com.huawei.updatesdk.fileprovider.UpdateSdkFileProvider"
             android:authorities="com.trackersurvey.happynavi.updateSdk.fileProvider"
             android:exported="false"
-            android:grantUriPermissions="true"></provider>
-
-        <!--在application节点下增加Service，用于应用自升级-->
+            android:grantUriPermissions="true" /> <!-- 在application节点下增加Service，用于应用自升级 -->
         <!-- 应用下载服务 -->
         <service
             android:name="com.huawei.updatesdk.service.deamon.download.DownloadService"
-            android:exported="false" />
-
-        <!--用于接收PUSH Token，透传消息和通知栏点击消息-->
-        <!--用来接收PUSH消息的receiver：-->
-        <!-- 接入HMSSDK PUSH模块需要注册，第三方相关 :接收Push消息（注册、透传消息、通知栏点击事件）广播，
+            android:exported="false" /> <!-- 用于接收PUSH Token，透传消息和通知栏点击消息 -->
+        <!-- 用来接收PUSH消息的receiver： -->
+        <!--
+ 接入HMSSDK PUSH模块需要注册，第三方相关 :接收Push消息（注册、透传消息、通知栏点击事件）广播，
         此receiver类需要开发者自己创建并继承com.huawei.hms.support.api.push.PushReceiver类，
-        参考示例代码中的类：com.huawei.hmsagent.HuaweiPushRevicer-->
-        <!--“xxx”用实际的类名替换, ${PACKAGE_NAME} 要替换上您应用的包名-->
-        <receiver android:name="com.trackersurvey.broadcastreceiver.HuaweiPushRevicer"
+        参考示例代码中的类：com.huawei.hmsagent.HuaweiPushRevicer
+        -->
+        <!-- “xxx”用实际的类名替换, ${PACKAGE_NAME} 要替换上您应用的包名 -->
+        <receiver
+            android:name="com.trackersurvey.broadcastreceiver.HuaweiPushRevicer"
             android:permission="com.trackersurvey.happynavi.permission.PROCESS_PUSH_MSG">
             <intent-filter>
+
                 <!-- 必须,用于接收token -->
                 <action android:name="com.huawei.android.push.intent.REGISTRATION" />
                 <!-- 必须, 用于接收透传消息 -->
                 <action android:name="com.huawei.android.push.intent.RECEIVE" />
-                <!-- 必须, 用于接收通知栏消息点击事件 此事件不需要开发者处理，只需注册就可以-->
-                <action android:name="com.huawei.intent.action.PUSH_DELAY_NOTIFY"/>
+                <!-- 必须, 用于接收通知栏消息点击事件 此事件不需要开发者处理，只需注册就可以 -->
+                <action android:name="com.huawei.intent.action.PUSH_DELAY_NOTIFY" />
             </intent-filter>
-        </receiver>
-
-        <!--如果应用需要在非华为设备上使用PUSH，需要声明HmsMsgService-->
-        <!--接入HMSSDK PUSH模块需要注册该service，不需要开发者处理-->
+        </receiver> <!-- 如果应用需要在非华为设备上使用PUSH，需要声明HmsMsgService -->
+        <!-- 接入HMSSDK PUSH模块需要注册该service，不需要开发者处理 -->
         <service
             android:name="com.huawei.hms.support.api.push.service.HmsMsgService"
             android:enabled="true"
@@ -175,27 +153,22 @@
                 <action android:name="com.huawei.push.msg.NOTIFY_MSG" />
                 <action android:name="com.huawei.push.msg.PASSBY_MSG" />
             </intent-filter>
-        </service>
-
-        <!--解决华为移动服务升级问题的透明界面-->
+        </service> <!-- 解决华为移动服务升级问题的透明界面 -->
         <activity
             android:name="com.trackersurvey.com.huawei.android.hms.agent.common.HMSAgentActivity"
             android:configChanges="orientation|locale|screenSize|layoutDirection|fontScale"
             android:excludeFromRecents="true"
             android:exported="false"
             android:hardwareAccelerated="true"
-            android:theme="@android:style/Theme.Translucent" >
+            android:theme="@android:style/Theme.Translucent">
             <meta-data
                 android:name="hwc-theme"
                 android:value="androidhwext:style/Theme.Emui.Translucent" />
-        </activity>
-
-        <!--获取unionId。-->
-        <!--使用getPurchaseInfo接口。-->
+        </activity> <!-- 获取unionId。 -->
+        <!-- 使用getPurchaseInfo接口。 -->
         <meta-data
             android:name="com.huawei.hms.version"
-            android:value="2.6.1">
-        </meta-data>
+            android:value="2.6.1"></meta-data>
 
         <activity
             android:name=".MainActivity"
@@ -218,8 +191,7 @@
             android:name="com.trackersurvey.service.StepCounterService"
             android:enabled="true"
             android:exported="true" /> <!-- 高德定位需要的服务 -->
-        <service android:name="com.amap.api.location.APSService" />
-        <!-- <service -->
+        <service android:name="com.amap.api.location.APSService" /> <!-- <service -->
         <!-- android:name="com.trackersurvey.service.DownloadTaskService" -->
         <!-- android:enabled="true" -->
         <!-- android:exported="true" /> -->
@@ -283,7 +255,6 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-
         <receiver
             android:name="com.trackersurvey.broadcastreceiver.InitApkBroadCastReceiver"
             android:enabled="true">
@@ -291,24 +262,10 @@
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
-
-        <!--接收系统广播接收器-->
-        <!--<receiver android:name="com.trackersurvey.broadcastreceiver.KeepAliveReceiver">-->
-            <!--&lt;!&ndash;设备重启广播&ndash;&gt;-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
-                <!--<action android:name="com.huawei.android.push.intent.REGISTRATION" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-            <!--&lt;!&ndash;解锁广播&ndash;&gt;-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.ACTION_USER_PRESENT"/>-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
-
     </application>
 
 </manifest>
