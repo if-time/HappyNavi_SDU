@@ -53,5 +53,8 @@ public class OnePxService extends Service {
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(myBroadcast);
+        // 重启自己
+        Intent intent = new Intent(getApplicationContext(), OnePxService.class);
+        startService(intent);
     }
 }
