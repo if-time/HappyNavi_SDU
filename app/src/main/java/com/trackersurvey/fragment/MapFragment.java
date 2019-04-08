@@ -932,7 +932,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                             // 获取到traceID后
                             if (traceID != 0) {
                                 traceDBHelper.updatetrail(tracedata, traceID, Common.getUserID(getContext()));
-                                traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
+//                                traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
                                 Log.i("LogDemo", "数据的TraceID替换成功");
                             }
                             Log.i("LogDemo", "获得了轨迹号traceID : " + traceID);
@@ -979,11 +979,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             if (tracedata.getSportTypes() == 1) {
                 //轨迹类型为步行，记录步数
                 locationService.changeSportType(true);
-                StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserID(getContext())).getSteps();
+//                StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserID(getContext())).getSteps();
                 total_step = StepDetector.CURRENT_STEP;
                 getActivity().startService(stepCountServiceIntent);
                 iscountstep = true;
-                new Thread(stepThread).start();
+//                new Thread(stepThread).start();
                 //            stepTv.setVisibility(View.VISIBLE);
                 stepTv.setText(getResources().getString(R.string.step_label) + "：" + total_step);
             }
@@ -1050,7 +1050,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         // 获取到traceID后
         if (traceID != 0) {
             traceDBHelper.updatetrail(tracedata, traceID, Common.getUserID(getContext()));
-            traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
+//            traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
             Log.i("LogDemo", "数据的TraceID替换成功");
         }
 
@@ -1085,11 +1085,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         if (tracedata.getSportTypes() == 1) {
             //轨迹类型为步行，记录步数
             locationService.changeSportType(true);
-            StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserID(getContext())).getSteps();
+//            StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserID(getContext())).getSteps();
             total_step = StepDetector.CURRENT_STEP;
             getActivity().startService(stepCountServiceIntent);
             iscountstep = true;
-            new Thread(stepThread).start();
+//            new Thread(stepThread).start();
             //            stepTv.setVisibility(View.VISIBLE);
             stepTv.setText(getResources().getString(R.string.step_label) + "：" + total_step);
 
@@ -1331,7 +1331,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             Log.i("dongiyuansetDuration", "duration: " + duration + " distance: " + distance);
             if (tracedata.getSportTypes() == 1) {
                 stepdata.setSteps(total_step);
-                traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
+//                traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
                 Log.i("LogDemo", "步数表更新数据了");
                 Log.i("LogDemo", "stepdata:" + GsonHelper.toJson(stepdata));
                 tracedata.setCalorie(calculateCalorie_Walk(distance));
@@ -1426,7 +1426,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 try {
                     if (UiRefresh) {
                         //每隔一秒 发送一次消息
-                        Thread.sleep(1000);
+                        Thread.sleep(5000);
                         Message message = new Message();
                         message.what = 8;
                         handler.sendMessage(message);
@@ -1553,9 +1553,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     stepTv.setText(getResources().getString(R.string.step_label) + "：" + total_step);
                     if (tracedata.getSportTypes() == 1) {
                         stepdata.setSteps(total_step);
-                        traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
+//                        traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
                         Log.i("MyTraceDBDupdatesteps", "step:row:" + traceDBHelper);
-
                     }
                     break;
                 case 10:

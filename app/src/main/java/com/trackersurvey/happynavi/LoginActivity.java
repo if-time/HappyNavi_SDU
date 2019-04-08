@@ -153,7 +153,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         HMSAgent.connect(this, new ConnectHandler() {
             @Override
             public void onConnect(int rst) {
-                ToastUtil.show(LoginActivity.this, "HMS connect end:" + rst);
+//                ToastUtil.show(LoginActivity.this, "HMS connect end:" + rst);
             }
         });
         getToken();

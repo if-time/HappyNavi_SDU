@@ -491,7 +491,7 @@ public class LocationService extends Service implements AMapLocationListener {
                 trail_up = helper.queryfromTrailbytraceID(traceno_up.get(i), Common.getUserID(getApplicationContext()));
                 trails_up.add(trail_up);
                 if (trail_up.getSportTypes() == 1) {
-                    step_up = helper.querryformstepsbyTraceNo(traceno_up.get(i), Common.getUserID(getApplicationContext()));
+//                    step_up = helper.querryformstepsbyTraceNo(traceno_up.get(i), Common.getUserID(getApplicationContext()));
                     steps_up.add(step_up);
                     step_up = null;
                 }

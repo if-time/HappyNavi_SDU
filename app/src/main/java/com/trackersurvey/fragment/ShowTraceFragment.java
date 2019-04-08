@@ -986,7 +986,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                         options = new PolylineOptions().width(10).geodesic(true).color(Color.GRAY);
                     }
                     points.add(tracePoints.get(i).getLatLng());
-                    Log.i("AMap_drawpath_optimizE", "AMap_drawpath_optimize: i " + i );
+                    Log.i("AMap_drawpath_optimizE", "AMap_drawpath_optimize: i " + i);
                     if ((i + 1) == tracePoints.size() - 1) {
                         Log.i("AMap_drawpath_optimizE", "AMap_drawpath_optimize: i + 1 " + (i + 1));
                         points.add(tracePoints.get(i + 1).getLatLng());
@@ -2173,9 +2173,9 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
         params.putString(QQShare.SHARE_TO_QQ_TITLE, title);
         params.putString(QQShare.SHARE_TO_QQ_SUMMARY, detail);
-        //        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, "http://219.218.118.176:8089/Share/PoMobile.ashx?" +
-        //                "uid=" + Common.getUserId(context) + "&tid=" + trailobj.getTraceID());
-        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, "http://www.baidu.com");
+        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, "http://219.218.118.176:8089/Share/PoMobile.ashx?" +
+                "uid=" + Common.getUserID(context) + "&tid=" + trailobj.getTraceID());
+        //        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, "http://www.baidu.com");
         ArrayList<String> imgUrlList = new ArrayList<String>();
         imgUrlList.add("http://footprint.lisoft.com.cn/images/logo.png");
         params.putStringArrayList(QQShare.SHARE_TO_QQ_IMAGE_URL, imgUrlList);//图片地址

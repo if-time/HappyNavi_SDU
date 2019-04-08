@@ -325,26 +325,32 @@ public class MyTraceDBHelper {
         }
     }
 
-    // 更新步数表
-    public void updatesteps(StepData data, long traceID, String userID) {
-        if (isStepExists(traceID, userID)) {
-            SQLiteDatabase db = dbhelper.getWritableDatabase();
-
-            try {
-                ContentValues values = new ContentValues();
-                values.put(COLUMNS4[0], data.getUserID());
-                values.put(COLUMNS4[1], data.getTraceID());
-                values.put(COLUMNS4[2], data.getSteps());
-
-                long row = db.update(TABLE4_NAME, values, " userID='" + userID + "'" + " and TraceID=('" + traceID + "')", null);
-                Log.i("MyTraceDBDupdatesteps", "step:row:" + row);
-            } catch (SQLException e) {
-            }
-            //            db.close();
-        } else {
-            insertintoSteps(data);
-        }
-    }
+    /**
+     * 弃用
+     * 更新步数表
+     * @param traceNo
+     * @param status
+     * @param userID
+     */
+    //    public void updatesteps(StepData data, long traceID, String userID) {
+//        if (isStepExists(traceID, userID)) {
+//            SQLiteDatabase db = dbhelper.getWritableDatabase();
+//
+//            try {
+//                ContentValues values = new ContentValues();
+//                values.put(COLUMNS4[0], data.getUserID());
+//                values.put(COLUMNS4[1], data.getTraceID());
+//                values.put(COLUMNS4[2], data.getSteps());
+//
+//                long row = db.update(TABLE4_NAME, values, " userID='" + userID + "'" + " and TraceID=('" + traceID + "')", null);
+//                Log.i("MyTraceDBDupdatesteps", "step:row:" + row);
+//            } catch (SQLException e) {
+//            }
+//            //            db.close();
+//        } else {
+//            insertintoSteps(data);
+//        }
+//    }
 
     public void updateStatus(long traceNo, int status, String userID) {
         if (isStatusExists(traceNo, userID)) {
@@ -474,22 +480,22 @@ public class MyTraceDBHelper {
         return 0;
     }
 
-    public int insertintoSteps(StepData data) {
-        SQLiteDatabase db = dbhelper.getWritableDatabase();
-        try {
-            ContentValues values = new ContentValues();
-            values.put(COLUMNS4[0], data.getUserID());
-            values.put(COLUMNS4[1], data.getTraceID());
-            values.put(COLUMNS4[2], data.getSteps());
-
-            db.insert(TABLE4_NAME, null, values);
-        } catch (SQLException e) {
-            db.close();
-            return -1;
-        }
-        //        db.close();
-        return 0;
-    }
+//    public int insertintoSteps(StepData data) {
+//        SQLiteDatabase db = dbhelper.getWritableDatabase();
+//        try {
+//            ContentValues values = new ContentValues();
+//            values.put(COLUMNS4[0], data.getUserID());
+//            values.put(COLUMNS4[1], data.getTraceID());
+//            values.put(COLUMNS4[2], data.getSteps());
+//
+//            db.insert(TABLE4_NAME, null, values);
+//        } catch (SQLException e) {
+//            db.close();
+//            return -1;
+//        }
+//        //        db.close();
+//        return 0;
+//    }
 
     public int insertintoStatus(long traceNo, int status, String userID) {
         SQLiteDatabase db = dbhelper.getWritableDatabase();
@@ -662,52 +668,52 @@ public class MyTraceDBHelper {
         return data;
     }
 
-    public ArrayList<StepData> getallSteps(String userID) {
-        SQLiteDatabase db = dbhelper.getReadableDatabase();
-        ArrayList<StepData> datalist = new ArrayList<StepData>();
+//    public ArrayList<StepData> getallSteps(String userID) {
+//        SQLiteDatabase db = dbhelper.getReadableDatabase();
+//        ArrayList<StepData> datalist = new ArrayList<StepData>();
+//
+//        Cursor cursor = db.query(TABLE4_NAME, null,
+//
+//                "  userID='" + userID + "'", null, null, null, null);
+//        int rows = cursor.getCount();
+//        if (rows != 0) {
+//            cursor.moveToFirst();
+//            for (int i = 0; i < rows; i++) {
+//                StepData data = new StepData();
+//                data.setUserID(cursor.getString(0));
+//                data.setTraceID(cursor.getLong(1));
+//                data.setSteps(cursor.getInt(2));
+//                datalist.add(data);
+//                cursor.moveToNext();
+//            }
+//        }
+//
+//        cursor.close();
+//        //        db.close();
+//        return datalist;
+//    }
 
-        Cursor cursor = db.query(TABLE4_NAME, null,
-
-                "  userID='" + userID + "'", null, null, null, null);
-        int rows = cursor.getCount();
-        if (rows != 0) {
-            cursor.moveToFirst();
-            for (int i = 0; i < rows; i++) {
-                StepData data = new StepData();
-                data.setUserID(cursor.getString(0));
-                data.setTraceID(cursor.getLong(1));
-                data.setSteps(cursor.getInt(2));
-                datalist.add(data);
-                cursor.moveToNext();
-            }
-        }
-
-        cursor.close();
-        //        db.close();
-        return datalist;
-    }
-
-    public StepData querryformstepsbyTraceNo(long num, String userID) {
-
-        SQLiteDatabase db = dbhelper.getReadableDatabase();
-        StepData data = new StepData();
-
-        Cursor cursor = db.query(TABLE4_NAME, null,
-
-                "  userID='" + userID + "'" + " and  TraceID=('" + num + "')", null, null, null, null);
-        int rows = cursor.getCount();
-        if (rows != 0) {
-            cursor.moveToFirst();
-            data.setUserID(cursor.getString(0));
-            data.setTraceID(cursor.getLong(1));
-            data.setSteps(cursor.getInt(2));
-
-        }
-
-        cursor.close();
-        //        db.close();
-        return data;
-    }
+//    public StepData querryformstepsbyTraceNo(long num, String userID) {
+//
+//        SQLiteDatabase db = dbhelper.getReadableDatabase();
+//        StepData data = new StepData();
+//
+//        Cursor cursor = db.query(TABLE4_NAME, null,
+//
+//                "  userID='" + userID + "'" + " and  TraceID=('" + num + "')", null, null, null, null);
+//        int rows = cursor.getCount();
+//        if (rows != 0) {
+//            cursor.moveToFirst();
+//            data.setUserID(cursor.getString(0));
+//            data.setTraceID(cursor.getLong(1));
+//            data.setSteps(cursor.getInt(2));
+//
+//        }
+//
+//        cursor.close();
+//        //        db.close();
+//        return data;
+//    }
 
     public ArrayList<PhoneEventsData> queryfromEventsbylasttime(String lasttime, String userID) {
         SQLiteDatabase db = dbhelper.getReadableDatabase();

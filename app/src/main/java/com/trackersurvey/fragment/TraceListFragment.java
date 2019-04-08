@@ -225,13 +225,13 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
                 }
             }
         }
-        steps_Local = helper.getallSteps(userID);
+//        steps_Local = helper.getallSteps(userID);
     }
 
     private void refreshLocalTrace() {
         //        helper = new MyTraceDBHelper(getContext());
         trace_Local = helper.getallTrail(userID);
-        steps_Local = helper.getallSteps(userID);
+//        steps_Local = helper.getallSteps(userID);
 
     }
 
@@ -505,7 +505,7 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
                             long traceNo = item.getTrace().getTraceID();
                             traceData = item.getTrace();
                             if (traceData.getSportTypes() == 1) {
-                                stepData = helper.querryformstepsbyTraceNo(traceNo, userID);
+//                                stepData = helper.querryformstepsbyTraceNo(traceNo, userID);
                                 steps_Upload.add(stepData);
                             }
                             trace_Upload.add(traceData);
@@ -531,7 +531,7 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
                             if (item.getTrace().getSportTypes() == 1) {
                                 for (int j = 0; j < steps_Cloud.size(); j++) {
                                     if (traceNo == steps_Cloud.get(j).getTraceID()) {
-                                        helper.insertintoSteps(steps_Cloud.get(j));
+//                                        helper.insertintoSteps(steps_Cloud.get(j));
                                     }
                                 }
                             }
