@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.trackersurvey.happynavi"
-    android:versionCode="217"
-    android:versionName="2.1.7">
+    android:versionCode="218"
+    android:versionName="2.1.8">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -57,6 +57,11 @@
         android:roundIcon="@mipmap/app_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name="com.trackersurvey.service.PlayerMusicService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":music_service"></service>
         <service
             android:name="com.trackersurvey.service.DownloadApkService"
             android:enabled="true"
@@ -168,7 +173,7 @@
         <!-- 使用getPurchaseInfo接口。 -->
         <meta-data
             android:name="com.huawei.hms.version"
-            android:value="2.6.1"></meta-data>
+            android:value="2.6.1" />
 
         <activity
             android:name=".MainActivity"
