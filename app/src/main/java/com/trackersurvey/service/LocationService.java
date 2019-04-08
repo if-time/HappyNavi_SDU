@@ -273,11 +273,6 @@ public class LocationService extends Service implements AMapLocationListener {
         foregroundReceiver = new BringToFrontReceiver();
         LocationService.this.registerReceiver(foregroundReceiver, intentFile);
         //设置当前服务为前台服务，提高服务存活能力
-		/*Intent notificationIntent = new Intent(this, TabHost_Main.class);
-		notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-		*/
-
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             String CHANNEL_ID = "HappyNavi";
             CharSequence NAME = "HappyNavi";
