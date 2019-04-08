@@ -453,8 +453,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 getActivity().bindService(locationServiceIntent, connection, Context.BIND_AUTO_CREATE);
             }
         }
-        getActivity().bindService(locationServiceIntent,
-                connection, Context.BIND_AUTO_CREATE);
+        getActivity().bindService(locationServiceIntent, connection, Context.BIND_AUTO_CREATE);
         stepCountServiceIntent = new Intent(getContext(), StepCounterService.class);
         /*
          * MainActivity.this.getApplicationContext().
