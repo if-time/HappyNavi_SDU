@@ -153,9 +153,10 @@ public class CustomDialog extends Dialog {
 
             CheckBox checkBox = layout.findViewById(R.id.noshow);
             if (checkBox.isChecked()) {
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putBoolean("isShowBGRGuide", false);
-                editor.commit();
+//                SharedPreferences.Editor editor = sp.edit();
+//                editor.putBoolean("isShowBGRGuide", true);
+//                Log.i("dongisyuanshowBGRcu", "onCheckedChanged: " + true);
+//                editor.commit();
             }
 
             // set the confirm button

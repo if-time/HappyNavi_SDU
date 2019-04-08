@@ -2,9 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.trackersurvey.happynavi"
-    android:versionCode="214"
-    android:versionName="2.1.4">
+    android:versionCode="215"
+    android:versionName="2.1.5">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <!--HMS-SDK引导升级HMS功能，访问OTA服务器需要网络权限-->
     <uses-permission android:name="android.permission.INTERNET" />
     <!--HMS-SDK引导升级HMS功能，保存下载的升级包需要SD卡写权限-->
@@ -149,7 +152,7 @@
         此receiver类需要开发者自己创建并继承com.huawei.hms.support.api.push.PushReceiver类，
         参考示例代码中的类：com.huawei.hmsagent.HuaweiPushRevicer-->
         <!--“xxx”用实际的类名替换, ${PACKAGE_NAME} 要替换上您应用的包名-->
-        <receiver android:name="com.trackersurvey.service.HuaweiPushRevicer"
+        <receiver android:name="com.trackersurvey.broadcastreceiver.HuaweiPushRevicer"
             android:permission="com.trackersurvey.happynavi.permission.PROCESS_PUSH_MSG">
             <intent-filter>
                 <!-- 必须,用于接收token -->
@@ -288,10 +291,23 @@
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
-
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
+
+        <!--接收系统广播接收器-->
+        <!--<receiver android:name="com.trackersurvey.broadcastreceiver.KeepAliveReceiver">-->
+            <!--&lt;!&ndash;设备重启广播&ndash;&gt;-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
+                <!--<action android:name="com.huawei.android.push.intent.REGISTRATION" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+            <!--&lt;!&ndash;解锁广播&ndash;&gt;-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.ACTION_USER_PRESENT"/>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
     </application>
 

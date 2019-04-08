@@ -349,6 +349,7 @@
     <string name="share_title">轨迹分享</string>
     <string name="share_detail">轨迹内容</string>
     <string name="exit">退出</string>
+    <string name="confirmed">确定</string>
     <string name="open">开启</string>
     <string name="tips_clean">确定要清除本应用的缓存数据吗？包括存储在本地的照片、视频、轨迹信息都将会删除</string>
     <string name="exitdlg">确定退出应用吗？</string>
@@ -412,6 +413,7 @@
     <string name="tips_searching">正在搜索</string>
     <string name="tips_search_nogroup">没有相关的群</string>
     <string name="tips_bgrunguide">为了保障应用能够在后台持续运行，请将本应用加入内存清理“白名单”或“保护名单”，如您已完成此操作，请点击【不再提醒】。点击【确定】，将指引您如何操作</string>
+    <string name="tips_autoself">为了保障应用能够在后台持续运行，请将本应用加入“自启动管理”，在列表中找到“微足迹”并且勾选，如您已完成此操作，请点击【关闭】，否则点击【确定】</string>
     <string name="addmarker">添加标注</string>
     <string name="checktraceinfo">轨迹信息</string>
     <string name="poi">兴趣点</string>

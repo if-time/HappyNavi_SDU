@@ -691,7 +691,7 @@
     <string name="share_detail">Track content</string>
         
     <string name="exit">exit </string>
-        
+        <string name="confirmed">Confirm</string>
     <string name="open">open </string>
         
     <string name="tips_clean">Are you sure you want to clear the cached data for this app? Include photos, videos, and track information stored locally will be deleted </string>
@@ -816,6 +816,7 @@
     <string name="tips_search_nogroup">No related groups</string>
     <string name="tips_bgrunguide">In order to ensure that the application can continue to run in the background, please add this application to the memory cleaning "white list" or "protection list". If you have already done this, please click [no longer remind]. Click [OK], it will guide you how to operate </string>
         
+    <string name="tips_autoself">In order to ensure that the application can continue to run in the background, please add this application to "self-starting management", find "micro-footprint" in the list and check it. If you have already done this, please click [ Close], otherwise click [OK]</string>
     <string name="addmarker">Add annotations</string>
         
     <string name="checktraceinfo">track information </string>

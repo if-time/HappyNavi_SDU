@@ -16,13 +16,10 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.webkit.CookieManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -30,22 +27,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.githang.statusbar.StatusBarCompat;
-import com.trackersurvey.http.HttpUtil;
+import com.trackersurvey.com.huawei.android.hms.agent.HMSAgent;
+import com.trackersurvey.com.huawei.android.hms.agent.common.handler.ConnectHandler;
+import com.trackersurvey.com.huawei.android.hms.agent.push.handler.GetTokenHandler;
 import com.trackersurvey.http.LoginRequest;
 import com.trackersurvey.http.ResponseData;
 import com.trackersurvey.model.LoginModel;
+import com.trackersurvey.broadcastreceiver.HuaweiPushRevicer;
 import com.trackersurvey.util.AppManager;
 import com.trackersurvey.util.Common;
+import com.trackersurvey.util.CustomDialog;
 import com.trackersurvey.util.DESUtil;
-import com.trackersurvey.util.HMAC_SHA1_Util;
 import com.trackersurvey.util.MD5Util;
+import com.trackersurvey.util.MobileInfoUtils;
 import com.trackersurvey.util.ToastUtil;
-
-import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener {
+import static com.trackersurvey.broadcastreceiver.HuaweiPushRevicer.ACTION_TOKEN;
+import static com.trackersurvey.broadcastreceiver.HuaweiPushRevicer.ACTION_UPDATEUI;
+
+public class LoginActivity extends BaseActivity implements View.OnClickListener, HuaweiPushRevicer.IPushCallback {
 
     public static final String     times                    = "timeCount";
     public static final String     winWidth                 = "winWidth";
@@ -75,6 +77,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public static String         token                 = "";
     private       String         marshmallowMacAddress = "02:00:00:00:00:00";
 
+    private boolean isAuto = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +97,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         AppManager.getAppManager().addActivity(this);
         // sp 初始化
         sp = getSharedPreferences("config", MODE_PRIVATE);//私有参数
+        isAuto = sp.getBoolean("isAuto", false);
         //loginSp = getSharedPreferences("login", MODE_PRIVATE);
         //是否第一次使用应用
         int timeCount = sp.getInt(times, 0);
@@ -117,7 +122,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         }
-
         //        if(!lastId.equals("0")){
         //            //Common.userId=lastId;
         //            if(!nickname.equals("")){
@@ -142,6 +146,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         login = (Button) findViewById(R.id.btn_login);
         register.setOnClickListener(this);
         login.setOnClickListener(this);
+
+        /**
+         * SDK连接HMS
+         */
+        HMSAgent.connect(this, new ConnectHandler() {
+            @Override
+            public void onConnect(int rst) {
+                ToastUtil.show(LoginActivity.this, "HMS connect end:" + rst);
+            }
+        });
+        getToken();
+        registerBroadcast();
 
         //	    forgetpassword.setOnClickListener(new OnClickListener() {
         //
@@ -188,6 +204,37 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         Log.i("dongiydangetAdresseMAC", "onCreate: " + Common.getAdresseMAC(LoginActivity.this));
 
         ignoreBatteryOptimization(LoginActivity.this);
+
+        if (!isAuto) {
+            CustomDialog.Builder builder = new CustomDialog.Builder(LoginActivity.this);
+            builder.setTitle(getResources().getString(R.string.tip));
+            builder.setMessage(getResources().getString(R.string.tips_autoself));
+            builder.setNegativeButton(getResources().getString(R.string.cancl), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+                    dialog.dismiss();
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putBoolean("isAuto", false);
+                    Log.i("isAuto", "onCheckedChanged: false");
+                    editor.commit();
+                }
+            });
+
+            builder.setPositiveButton(getResources().getString(R.string.confirmed), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+                    dialog.dismiss();
+                    new MobileInfoUtils().jumpStartInterface(LoginActivity.this);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putBoolean("isAuto", true);
+                    Log.i("isAuto", "onCheckedChanged: true");
+                    editor.commit();
+                }
+            });
+            builder.create().show();
+        }
     }
 
     @Override
@@ -514,6 +561,36 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
                 intent.setData(Uri.parse("package:" + activity.getPackageName()));
                 startActivity(intent);
+            }
+        }
+    }
+
+    private void registerBroadcast() {
+        HuaweiPushRevicer.registerPushCallback(this);
+    }
+
+
+    /**
+     * 获取token
+     */
+    private void getToken() {
+        HMSAgent.Push.getToken(new GetTokenHandler() {
+            @Override
+            public void onResult(int rst) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onReceive(Intent intent) {
+        if (intent != null) {
+            String action = intent.getAction();
+            Bundle b = intent.getExtras();
+            if (b != null && ACTION_TOKEN.equals(action)) {
+
+            } else if (b != null && ACTION_UPDATEUI.equals(action)) {
+
             }
         }
     }

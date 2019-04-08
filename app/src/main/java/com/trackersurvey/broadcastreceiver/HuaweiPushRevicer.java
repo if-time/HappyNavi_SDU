@@ -1,4 +1,4 @@
-package com.trackersurvey.service;
+package com.trackersurvey.broadcastreceiver;
 
 import android.app.NotificationManager;
 import android.content.Context;
@@ -7,9 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.huawei.hms.support.api.push.PushReceiver;
-import com.trackersurvey.util.ToastUtil;
-
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 

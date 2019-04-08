@@ -71,6 +71,7 @@ import com.trackersurvey.happynavi.BGRunningGuideActivity;
 import com.trackersurvey.happynavi.CommentActivity;
 import com.trackersurvey.happynavi.LoginActivity;
 import com.trackersurvey.happynavi.R;
+import com.trackersurvey.happynavi.SplashActivity;
 import com.trackersurvey.http.DownloadPoiChoices;
 import com.trackersurvey.http.DownloadTraceDetailRequest;
 import com.trackersurvey.http.EndTraceRequest;
@@ -89,6 +90,7 @@ import com.trackersurvey.util.ActivityCollector;
 import com.trackersurvey.util.Common;
 import com.trackersurvey.util.CustomDialog;
 import com.trackersurvey.util.GsonHelper;
+import com.trackersurvey.util.MobileInfoUtils;
 import com.trackersurvey.util.ShareToWeChat;
 import com.trackersurvey.util.SportTypeChangeDialog;
 import com.trackersurvey.util.SportTypeDialog;
@@ -153,6 +155,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     private boolean istimeset            = false;
     private boolean iscountstep          = false;
     private boolean isShowNonLocDlg      = false; //无法定位对话框是否正在显示
+    private boolean isShowBGRGuideChecked = true;
 
     private boolean isTraceIDchanged = false;
 
@@ -506,8 +509,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             builder.create().show();
         }
 
-        boolean isShowBGRGuide = sp.getBoolean("isShowBGRGuide", true);
-        if (isShowBGRGuide) {
+        boolean isShowBGRGuide = sp.getBoolean("isShowBGRGuide", false);
+        Log.i("dongisyuanshowBGR", "onCheckedChanged: " + isShowBGRGuide);
+        if (!isShowBGRGuide) {
             //指引用户如何添加白名单
             showBGRunGuide();
         }
@@ -1884,10 +1888,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         builder.setCheckBox(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putBoolean("isShowBGRGuide", !isChecked);
-                Log.i("dongisyuanshowBGR", "onCheckedChanged: " + isChecked);
-                editor.commit();
+//                SharedPreferences.Editor editor = sp.edit();
+//                editor.putBoolean("isShowBGRGuide", isChecked);
+                Log.i("dongisyuanshowBGRon", "onCheckedChanged: " + isChecked);
+//                editor.commit();
+                isShowBGRGuideChecked = isChecked;
             }
         });
         builder.setPositiveButton(getResources().getString(R.string.confirm),
@@ -1906,6 +1911,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
                         arg0.dismiss();
+
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putBoolean("isShowBGRGuide", isShowBGRGuideChecked);
+                        Log.i("dongisyuanshowBGRon", "onCheckedChanged: " + isShowBGRGuideChecked);
+                        editor.commit();
                     }
                 });
         builder.create().show();
