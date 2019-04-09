@@ -41,6 +41,7 @@ public class OnePxService extends Service {
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        // 动态启动广播接收器
         IntentFilter screenStatus = new IntentFilter();
         screenStatus.addAction(Intent.ACTION_SCREEN_OFF);
         screenStatus.addAction(Intent.ACTION_SCREEN_ON);
