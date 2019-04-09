@@ -168,36 +168,6 @@ public class MyTraceDBHelper {
         //db=dbhelper.getWritableDatabase();  //获得可写的数据库
     }
 
-
-    public boolean isGpsExist(String creatTime) {
-        SQLiteDatabase db = dbhelper.getReadableDatabase();
-        Cursor cursor = db.query(TABLE1_NAME, null,
-                "  datetime(createTime)=datetime('" + creatTime + "')", null, null, null, null);
-        if (cursor.getCount() > 0) {
-            cursor.close();
-            db.close();
-            return true;
-        } else {
-            cursor.close();
-            //            db.close();
-            return false;
-        }
-    }
-
-    public boolean isGpsExists(long TraceID) {
-        SQLiteDatabase db = dbhelper.getReadableDatabase();
-        Cursor cursor = db.query(TABLE1_NAME, null, " TraceID = " + TraceID, null, null, null, null);
-        if (cursor.getCount() > 0) {
-            cursor.close();
-            db.close();
-            return true;
-        } else {
-            cursor.close();
-            //            db.close();
-            return false;
-        }
-    }
-
     public boolean isTraceExists(long traceID, String userID) {
         SQLiteDatabase db = dbhelper.getReadableDatabase();
         Log.i("MyTraceDB isTraceExists", "traceID:" + traceID + "; userID:" + userID);
@@ -251,10 +221,6 @@ public class MyTraceDBHelper {
     // 获得记录未结束的轨迹号
     public long getUnStopStatusExists(String userID) {
         SQLiteDatabase db = dbhelper.getReadableDatabase();
-//        Cursor cursor = db.query(TABLE5_NAME, null,
-//                " userID='" + userID + "'" + " and  TraceStatus=('" + 1 + "')", null, null, null, "TraceID desc limit 0,1");
-//        Cursor cursor = db.query(TABLE5_NAME, null,
-        ////                " userID='" + userID + "'", null, null, null, "TraceID DESC limit 0,1");
 
         Cursor cursor = db.query(TABLE5_NAME, null,
                 " userID='" + userID + "'", null, null, null, null);
@@ -325,33 +291,6 @@ public class MyTraceDBHelper {
         }
     }
 
-    /**
-     * 弃用
-     * 更新步数表
-     * @param traceNo
-     * @param status
-     * @param userID
-     */
-    //    public void updatesteps(StepData data, long traceID, String userID) {
-//        if (isStepExists(traceID, userID)) {
-//            SQLiteDatabase db = dbhelper.getWritableDatabase();
-//
-//            try {
-//                ContentValues values = new ContentValues();
-//                values.put(COLUMNS4[0], data.getUserID());
-//                values.put(COLUMNS4[1], data.getTraceID());
-//                values.put(COLUMNS4[2], data.getSteps());
-//
-//                long row = db.update(TABLE4_NAME, values, " userID='" + userID + "'" + " and TraceID=('" + traceID + "')", null);
-//                Log.i("MyTraceDBDupdatesteps", "step:row:" + row);
-//            } catch (SQLException e) {
-//            }
-//            //            db.close();
-//        } else {
-//            insertintoSteps(data);
-//        }
-//    }
-
     public void updateStatus(long traceNo, int status, String userID) {
         if (isStatusExists(traceNo, userID)) {
             SQLiteDatabase db = dbhelper.getWritableDatabase();
@@ -370,19 +309,6 @@ public class MyTraceDBHelper {
         } else {
             insertintoStatus(traceNo, status, userID);
         }
-    }
-
-    // 更新位置信息(这里是更新TraceID)
-    public void updateGpsByTraceID(long traceID, long newTraceID, String userID) {
-        SQLiteDatabase db = dbhelper.getWritableDatabase();
-        try {
-            ContentValues values = new ContentValues();
-            values.put(COLUMNS[6], newTraceID);
-            db.update(TABLE1_NAME, values, " userID='" + userID + "' and TraceID=('" + traceID + "')", null);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        db.close();
     }
 
     // 插入位置信息，成功时返回0，否则返回-1
@@ -480,23 +406,6 @@ public class MyTraceDBHelper {
         return 0;
     }
 
-//    public int insertintoSteps(StepData data) {
-//        SQLiteDatabase db = dbhelper.getWritableDatabase();
-//        try {
-//            ContentValues values = new ContentValues();
-//            values.put(COLUMNS4[0], data.getUserID());
-//            values.put(COLUMNS4[1], data.getTraceID());
-//            values.put(COLUMNS4[2], data.getSteps());
-//
-//            db.insert(TABLE4_NAME, null, values);
-//        } catch (SQLException e) {
-//            db.close();
-//            return -1;
-//        }
-//        //        db.close();
-//        return 0;
-//    }
-
     public int insertintoStatus(long traceNo, int status, String userID) {
         SQLiteDatabase db = dbhelper.getWritableDatabase();
         try {
@@ -577,35 +486,6 @@ public class MyTraceDBHelper {
         return datalist;
     }
 
-    public ArrayList<GpsData> getallGps(String userID) {
-        SQLiteDatabase db = dbhelper.getReadableDatabase();
-        ArrayList<GpsData> datalist = new ArrayList<GpsData>();
-
-        Cursor cursor = db.query(TABLE1_NAME, null,
-
-                " userID='" + userID + "'", null, null, null, null);
-        int rows = cursor.getCount();
-        if (rows != 0) {
-            cursor.moveToFirst();
-            for (int i = 0; i < rows; i++) {
-                GpsData data = new GpsData();
-                data.setUserID(cursor.getString(0));
-                data.setCreateTime(cursor.getString(1));
-                data.setLongitude(cursor.getDouble(2));
-                data.setLatitude(cursor.getDouble(3));
-                data.setAltitude(cursor.getDouble(4));
-                data.setSpeed(cursor.getDouble(5));
-                data.setTraceID(cursor.getLong(6));
-                datalist.add(data);
-                cursor.moveToNext();
-            }
-        }
-
-        cursor.close();
-        //        db.close();
-        return datalist;
-    }
-
     public ArrayList<TraceData> getallTrail(String userID) {
         SQLiteDatabase db = dbhelper.getReadableDatabase();
         ArrayList<TraceData> datalist = new ArrayList<TraceData>();
@@ -668,53 +548,6 @@ public class MyTraceDBHelper {
         return data;
     }
 
-//    public ArrayList<StepData> getallSteps(String userID) {
-//        SQLiteDatabase db = dbhelper.getReadableDatabase();
-//        ArrayList<StepData> datalist = new ArrayList<StepData>();
-//
-//        Cursor cursor = db.query(TABLE4_NAME, null,
-//
-//                "  userID='" + userID + "'", null, null, null, null);
-//        int rows = cursor.getCount();
-//        if (rows != 0) {
-//            cursor.moveToFirst();
-//            for (int i = 0; i < rows; i++) {
-//                StepData data = new StepData();
-//                data.setUserID(cursor.getString(0));
-//                data.setTraceID(cursor.getLong(1));
-//                data.setSteps(cursor.getInt(2));
-//                datalist.add(data);
-//                cursor.moveToNext();
-//            }
-//        }
-//
-//        cursor.close();
-//        //        db.close();
-//        return datalist;
-//    }
-
-//    public StepData querryformstepsbyTraceNo(long num, String userID) {
-//
-//        SQLiteDatabase db = dbhelper.getReadableDatabase();
-//        StepData data = new StepData();
-//
-//        Cursor cursor = db.query(TABLE4_NAME, null,
-//
-//                "  userID='" + userID + "'" + " and  TraceID=('" + num + "')", null, null, null, null);
-//        int rows = cursor.getCount();
-//        if (rows != 0) {
-//            cursor.moveToFirst();
-//            data.setUserID(cursor.getString(0));
-//            data.setTraceID(cursor.getLong(1));
-//            data.setSteps(cursor.getInt(2));
-//
-//        }
-//
-//        cursor.close();
-//        //        db.close();
-//        return data;
-//    }
-
     public ArrayList<PhoneEventsData> queryfromEventsbylasttime(String lasttime, String userID) {
         SQLiteDatabase db = dbhelper.getReadableDatabase();
         ArrayList<PhoneEventsData> datalist = new ArrayList<PhoneEventsData>();
@@ -743,12 +576,6 @@ public class MyTraceDBHelper {
         return datalist;
     }
 
-    public void deleteGpsByDate(String date, String userID) {
-        SQLiteDatabase db = dbhelper.getWritableDatabase();
-        db.delete(TABLE1_NAME, " userID='" + userID + "'" + " and datetime(createTime)<=datetime('" + date + "')", null);
-        db.close();
-    }
-
     public void deleteTrailByTraceNo(long num, String userID) {
         SQLiteDatabase db = dbhelper.getWritableDatabase();
         db.delete(TABLE2_NAME, " userID='" + userID + "'" + " and TraceID=('" + num + "')", null);
@@ -760,12 +587,6 @@ public class MyTraceDBHelper {
             //            db2.close();
         }
 
-    }
-
-    public void deleteallGps() {
-        SQLiteDatabase db = dbhelper.getWritableDatabase();
-        db.delete(TABLE1_NAME, null, null);
-        db.close();
     }
 
     public void deleteStatus() {

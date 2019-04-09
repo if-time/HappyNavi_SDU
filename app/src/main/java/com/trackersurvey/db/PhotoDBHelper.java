@@ -171,22 +171,6 @@ public class PhotoDBHelper {
         return 0;
     }
 
-    /**
-     * 删除事件，同时删除事件文件
-     *
-     * @param where
-     * @return
-     */
-//    public int deleteEvent(String where) {
-//        try {
-//            dbWrite.delete(USEREVENT_TABLE, where, null);
-//            deleteFiles(where);
-//        } catch (SQLException e) {
-//            return -1;
-//        }
-//        return 0;
-//    }
-
     // 从用户表中查询
     public Cursor selectEvent(String[] columns, String selection,
                               String[] selectionArgs, String groupBy, String having,
@@ -237,20 +221,6 @@ public class PhotoDBHelper {
         Cursor cursor = dbRead.query(FILE_TABLE, columns, selection,
                 selectionArgs, groupBy, having, orderBy);
         return cursor;
-    }
-
-    /**
-     * 删除对应CreateTime的所有文件
-     *
-     * @param where
-     * @return
-     */
-    public int deleteFiles(String where) {
-        try {
-            return dbWrite.delete(FILE_TABLE, where, null);
-        } catch (SQLException e) {
-            return -1;
-        }
     }
 
     /**
@@ -307,24 +277,6 @@ public class PhotoDBHelper {
 //            String[] FileArgs = {dateTime};
 
             dbWrite.delete(FILE_TABLE, FileWhere, null);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
-        }
-
-        return 0;
-    }
-
-    public int deleteEvent(String startTime, String endTime, String userId) {
-        try {
-            String UEwhereClause = COLUMNS_UE[0] + " between ? and ? and " + COLUMNS_UE[10] + "=?";
-            String[] UEwhereArgs = {startTime, endTime, userId};
-            dbWrite.delete(USEREVENT_TABLE, UEwhereClause, UEwhereArgs);
-
-            String FileWhere = COLUMNS_FILE[2] + " between ? and ? ";
-            String[] FileArgs = {startTime, endTime};
-
-            dbWrite.delete(FILE_TABLE, FileWhere, FileArgs);
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;

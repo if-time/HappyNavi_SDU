@@ -21,17 +21,6 @@ public class GpsData {
     private int sportType;
 
     public GpsData(String userID, String createTime, double altitude, double latitude, double longitude,
-                   double speed, long traceID) {
-        this.userID = userID;
-        this.createTime = createTime;
-        this.altitude = altitude;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.speed = speed;
-        this.traceID = traceID;
-    }
-
-    public GpsData(String userID, String createTime, double altitude, double latitude, double longitude,
                    double speed, long traceID, int cityID, String deviceID, int sportType) {
         this.userID = userID;
         this.createTime = createTime;

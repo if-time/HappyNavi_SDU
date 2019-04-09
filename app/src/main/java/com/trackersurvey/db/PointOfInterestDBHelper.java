@@ -83,6 +83,7 @@ public class PointOfInterestDBHelper {
             // db.execSQL("drop table if exists "+TABLE5_NAME);//删除旧版表格
         }
     }
+
     public PointOfInterestDBHelper(Context context) {
         dbhelper = DBOpenHelper.getInstence(context);
     }
@@ -100,6 +101,7 @@ public class PointOfInterestDBHelper {
         }
 //        db.close();
     }
+
     public void insertBehaviour(PointOfInterestData data) {
         SQLiteDatabase db = dbhelper.getWritableDatabase();
         try {
@@ -113,6 +115,7 @@ public class PointOfInterestDBHelper {
         }
 //        db.close();
     }
+
     public void insertPartnerNum(PointOfInterestData data) {
         SQLiteDatabase db = dbhelper.getWritableDatabase();
         try {
@@ -126,6 +129,7 @@ public class PointOfInterestDBHelper {
         }
 //        db.close();
     }
+
     public void insertPartnerRelation(PointOfInterestData data) {
         SQLiteDatabase db = dbhelper.getWritableDatabase();
         try {
@@ -139,6 +143,7 @@ public class PointOfInterestDBHelper {
         }
 //        db.close();
     }
+
     public void delete(){
         SQLiteDatabase db = dbhelper.getWritableDatabase();
         db.execSQL("delete from DURATION");
@@ -147,6 +152,7 @@ public class PointOfInterestDBHelper {
         db.execSQL("delete from RELATION");
 //        db.close();
     }
+
     public ArrayList<String> getDuration(){
         SQLiteDatabase db = dbhelper.getWritableDatabase();
         duration = new ArrayList<String>();
@@ -166,6 +172,7 @@ public class PointOfInterestDBHelper {
 //        db.close();
         return duration;
     }
+
     public ArrayList<String> getBehaviour(){
         SQLiteDatabase db = dbhelper.getWritableDatabase();
         behaviour = new ArrayList<String>();
@@ -183,6 +190,7 @@ public class PointOfInterestDBHelper {
 //        db.close();
         return behaviour;
     }
+
     public ArrayList<String> getPartnerNum(){
         SQLiteDatabase db = dbhelper.getWritableDatabase();
         partnerNum = new ArrayList<String>();
@@ -200,6 +208,7 @@ public class PointOfInterestDBHelper {
 //        db.close();
         return partnerNum;
     }
+
     public ArrayList<String> getRelation(){
         SQLiteDatabase db = dbhelper.getWritableDatabase();
         relation = new ArrayList<String>();
@@ -216,12 +225,5 @@ public class PointOfInterestDBHelper {
         cursor.close();
 //        db.close();
         return relation;
-    }
-    public Cursor select(String[] columns, String selection,
-                         String[] selectionArgs, String groupBy, String having,
-                         String orderBy){
-        SQLiteDatabase db = dbhelper.getReadableDatabase();
-        Cursor cursor = db.query(TABLE1_NAME, columns, selection, selectionArgs, groupBy, having, orderBy);
-        return cursor;
     }
 }

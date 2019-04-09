@@ -1757,7 +1757,8 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                         linkPoints.add(insertpos, options.getPoints().get(i));
                         linkTraces.add(insertpos, new GpsData(linkTraces.get(startpos).getUserID(),
                                 linkTraces.get(startpos).getCreateTime(), options.getPoints().get(i).longitude,
-                                options.getPoints().get(i).latitude, 0, 0, linkTraces.get(startpos).getTraceID()));
+                                options.getPoints().get(i).latitude, 0, 0, linkTraces.get(startpos).getTraceID(),
+                                linkTraces.get(startpos).getCityID(), linkTraces.get(startpos).getDeviceID(), linkTraces.get(startpos).getSportType()));
                         insertpos++;
                     }
                     start.add(startpos);
@@ -1775,7 +1776,8 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                         linkPoints.add(insertpos, options.getPoints().get(i));
                         linkTraces.add(insertpos, new GpsData(linkTraces.get(startpos).getUserID(),
                                 linkTraces.get(startpos).getCreateTime(), options.getPoints().get(i).longitude,
-                                options.getPoints().get(i).latitude, 0, 0, linkTraces.get(startpos).getTraceID()));
+                                options.getPoints().get(i).latitude, 0, 0, linkTraces.get(startpos).getTraceID(),
+                                linkTraces.get(startpos).getCityID(), linkTraces.get(startpos).getDeviceID(), linkTraces.get(startpos).getSportType()));
                         insertpos++;
                     }
                     start.add(startpos);
@@ -1854,7 +1856,8 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                         linkPoints.add(insertpos, options.getPoints().get(i));
                         linkTraces.add(insertpos, new GpsData(linkTraces.get(startpos).getUserID(),
                                 linkTraces.get(startpos).getCreateTime(), options.getPoints().get(i).longitude,
-                                options.getPoints().get(i).latitude, 0, 0, linkTraces.get(startpos).getTraceID()));
+                                options.getPoints().get(i).latitude, 0, 0, linkTraces.get(startpos).getTraceID(),
+                                linkTraces.get(startpos).getCityID(), linkTraces.get(startpos).getDeviceID(), linkTraces.get(startpos).getSportType()));
                         insertpos++;
                     }
                     start.add(startpos);
@@ -1872,7 +1875,8 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                         linkPoints.add(insertpos, options.getPoints().get(i));
                         linkTraces.add(insertpos, new GpsData(linkTraces.get(startpos).getUserID(),
                                 linkTraces.get(startpos).getCreateTime(), options.getPoints().get(i).longitude,
-                                options.getPoints().get(i).latitude, 0, 0, linkTraces.get(startpos).getTraceID()));
+                                options.getPoints().get(i).latitude, 0, 0, linkTraces.get(startpos).getTraceID(),
+                                linkTraces.get(startpos).getCityID(), linkTraces.get(startpos).getDeviceID(), linkTraces.get(startpos).getSportType()));
                         insertpos++;
                     }
                     start.add(startpos);
