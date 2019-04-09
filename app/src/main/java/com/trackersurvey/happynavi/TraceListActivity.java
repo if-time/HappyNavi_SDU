@@ -28,7 +28,6 @@ import com.trackersurvey.db.MyTraceDBHelper;
 import com.trackersurvey.http.DeleteTraceRequest;
 import com.trackersurvey.http.UpLoadGpsRequest;
 import com.trackersurvey.model.GpsData;
-import com.trackersurvey.model.StepData;
 import com.trackersurvey.model.TraceData;
 import com.trackersurvey.bean.TraceListItemData;
 import com.trackersurvey.http.DownLoadTraceList;
@@ -68,9 +67,6 @@ public class TraceListActivity extends BaseActivity implements View.OnClickListe
     private ArrayList<TraceListItemData> traceItems  = new ArrayList<TraceListItemData>();
     private ArrayList<TraceData>         trace_Local = new ArrayList<TraceData>();
     private ArrayList<TraceData>         trace_Cloud = new ArrayList<TraceData>();
-    private ArrayList<StepData>          steps_Local = new ArrayList<StepData>();
-    private ArrayList<StepData>          steps_Cloud = new ArrayList<StepData>();
-    private ArrayList<StepData>          steps_Both  = new ArrayList<StepData>();
     private ProgressDialog               proDialog   = null;
 
     private int    downloadCount = 0;//用于标识是否所选轨迹均下载完毕
@@ -198,13 +194,6 @@ public class TraceListActivity extends BaseActivity implements View.OnClickListe
                 if (isSuccess) {
                     trace_Cloud = (ArrayList<TraceData>) responseObject;
                     Log.i("TraceListActivity", "请求到的轨迹条数：" + trace_Cloud.size());
-                    for (int i = 0; i < trace_Cloud.size(); i++) {
-                        StepData stepData = new StepData();
-                        stepData.setUserID(trace_Cloud.get(i).getUserID());
-                        stepData.setTraceID(trace_Cloud.get(i).getTraceID());
-                        stepData.setSteps(trace_Cloud.get(i).getSteps());
-                        steps_Cloud.add(stepData);
-                    }
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -276,26 +265,7 @@ public class TraceListActivity extends BaseActivity implements View.OnClickListe
         } else {
             tv_tip.setVisibility(View.INVISIBLE);
         }
-        //步数信息操作同上
-        steps_Both.clear();
-        ArrayList<Long> dealedStepsNo = new ArrayList<Long>();
-        for (int i = 0; i < steps_Local.size(); i++) {
-            steps_Both.add(steps_Local.get(i));
-            dealedStepsNo.add(steps_Local.get(i).getTraceID());
-        }
-        for (int j = 0; j < steps_Cloud.size(); j++) {
-            long traceNo = steps_Cloud.get(j).getTraceID();
-            boolean isOnlyCloud = true;
-            for (int k = 0; k < dealedStepsNo.size(); k++) {
-                if (traceNo == dealedStepsNo.get(k).longValue()) {
-                    isOnlyCloud = false;
-                    break;
-                }
-            }
-            if (isOnlyCloud) {
-                steps_Both.add(steps_Cloud.get(j));
-            }
-        }
+
         Collections.sort(traceItems, new SortByTraceNo());//按时间排序
         if (isFirstCreateAdatper) {
             initAdapter();//首次加载时执行
@@ -305,7 +275,7 @@ public class TraceListActivity extends BaseActivity implements View.OnClickListe
                 //adapter.setDataSource(traceItems, steps_Both);
                 //adapter.notifyDataSetChanged();
 
-                adapter2.setDataSource(traceItems, steps_Both);
+                adapter2.setDataSource(traceItems);
                 adapter2.notifyDataSetChanged();
             } else {//数据数量变化，关闭菜单
                 showMenu(false, true);
@@ -316,7 +286,7 @@ public class TraceListActivity extends BaseActivity implements View.OnClickListe
     private void initAdapter() {
         //adapter = new TraceListAdapterRe(traceItems, steps_Both, this, tv_count);
         //traceListRv.setAdapter(adapter);
-        adapter2 = new TraceListAdapter(this, tv_count, traceItems, steps_Both);
+        adapter2 = new TraceListAdapter(this, tv_count, traceItems);
         traceList.setAdapter(adapter2);
     }
 
@@ -412,22 +382,19 @@ public class TraceListActivity extends BaseActivity implements View.OnClickListe
                     showDialog(getResources().getString(R.string.tip), getResources().getString(R.string.tips_downupmsg));
 
                     ArrayList<TraceData> trace_Upload = new ArrayList<TraceData>();
-                    ArrayList<StepData> steps_Upload = new ArrayList<StepData>();
+
                     int bothSize = 0;//所选的轨迹中云端和本地都有的个数
                     for (int i = 0; i < choosedid.size(); i++) {
                         TraceListItemData item = traceItems.get(choosedid.get(i));
                         if (item.isLocal() && !item.isCloud()) {
                             //本地有云端没有，备份到云端
                             TraceData traceData = new TraceData();
-                            StepData stepData = new StepData();
+
                             ArrayList<GpsData> gpsData = new ArrayList<GpsData>();
 
                             long traceNo = item.getTrace().getTraceID();
                             traceData = item.getTrace();
-                            if (traceData.getSportTypes() == 1) {
-//                                stepData = helper.querryformstepsbyTraceNo(traceNo, userID);
-                                steps_Upload.add(stepData);
-                            }
+
                             trace_Upload.add(traceData);
                             gpsData = helper.queryfromGpsbytraceID(traceNo, userID);
                             //                            PostGpsData gpsthread = new PostGpsData(uploadHandler,
@@ -452,13 +419,7 @@ public class TraceListActivity extends BaseActivity implements View.OnClickListe
                             downloadCount++;
                             helper.insertintoTrail(item.getTrace());
                             long traceNo = item.getTrace().getTraceID();
-                            if (item.getTrace().getSportTypes() == 1) {
-                                for (int j = 0; j < steps_Cloud.size(); j++) {
-                                    if (traceNo == steps_Cloud.get(j).getTraceID()) {
-//                                        helper.insertintoSteps(steps_Cloud.get(j));
-                                    }
-                                }
-                            }
+
                             // 下载轨迹，请求轨迹详细数据
                             // 原来的代码这里调用了下载轨迹接口PostEndTrail
 
@@ -472,10 +433,7 @@ public class TraceListActivity extends BaseActivity implements View.OnClickListe
                     }
                     if (trace_Upload.size() > 0) {
                         String traceinfo = GsonHelper.toJson(trace_Upload);
-                        String stepinfo = "";
-                        if (steps_Upload.size() > 0) {
-                            stepinfo = GsonHelper.toJson(steps_Upload);
-                        }
+
                         //Log.i("trailadapter","上传的轨迹："+traceinfo+","+stepinfo);
                         //                        PostEndTrail endTrailThread = new PostEndTrail(uploadHandler,
                         //                                URL_ENDTRAIL,traceinfo,stepinfo,deviceID); // 2,3
@@ -506,7 +464,6 @@ public class TraceListActivity extends BaseActivity implements View.OnClickListe
                             Log.i("TraceListActivity", "trace:" + trace);
                             Log.i("TraceListActivity", "step:" + step);
                             trace_Cloud = (ArrayList<TraceData>) GsonHelper.parseJsonToList(trace, TraceData.class);
-                            steps_Cloud = (ArrayList<StepData>) GsonHelper.parseJsonToList(step, StepData.class);
                             initBothTrace();
                             //adapter.notifyDataSetChanged();
                             mPullToRefreshView.onHeaderRefreshComplete("更新于:" + new Date().toLocaleString());
@@ -636,7 +593,7 @@ public class TraceListActivity extends BaseActivity implements View.OnClickListe
         adapter2.setIsMulti(isMulChoice);
 
         if (isNew) {
-            adapter2.setDataSource(traceItems, steps_Both);
+            adapter2.setDataSource(traceItems);
 
         }
         adapter2.resetList(isMulChoice);

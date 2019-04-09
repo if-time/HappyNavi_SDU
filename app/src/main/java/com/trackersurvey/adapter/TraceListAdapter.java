@@ -12,7 +12,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.trackersurvey.model.StepData;
 import com.trackersurvey.bean.TraceListItemData;
 import com.trackersurvey.happynavi.TraceDetailActivity;
 import com.trackersurvey.happynavi.R;
@@ -36,13 +35,12 @@ public class TraceListAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     //public  ArrayList<TraceData> trails;
     public ArrayList<TraceListItemData> traceItems;
-    public  ArrayList<StepData> steps;
     //private HashMap<Integer, View> mView ;
     public HashMap<Integer, Integer> visiblecheck ;//用来记录是否显示checkBox
     public  HashMap<Integer, Boolean> ischeck;
     public List<Integer> selectid;
     public  boolean isMulChoice;
-    private String stepstr = "--";//intent传参
+
     private TextView txtcount;
     private int currentPosition;
     int[] imageId = new int[]{
@@ -55,11 +53,10 @@ public class TraceListAdapter extends BaseAdapter {
     };
     private static SharedPreferences sp;
 
-    public TraceListAdapter(Context context, TextView txtcount, ArrayList<TraceListItemData> traceItems, ArrayList<StepData> steps){
+    public TraceListAdapter(Context context, TextView txtcount, ArrayList<TraceListItemData> traceItems){
         this.context = context;
         this.txtcount = txtcount;
         this.traceItems = traceItems;
-        this.steps = steps;
         mInflater = LayoutInflater.from(context); //(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         //mView = new HashMap<Integer, View>();
@@ -79,11 +76,10 @@ public class TraceListAdapter extends BaseAdapter {
             }
         }
     }
-    public void setDataSource(ArrayList<TraceListItemData> traceItems,ArrayList<StepData> steps){
+    public void setDataSource(ArrayList<TraceListItemData> traceItems){
         this.traceItems = traceItems;
-        this.steps=steps;
-
     }
+
     @Override
     public int getCount() {
         return traceItems.size();//不能使用默认返回
@@ -175,24 +171,6 @@ public class TraceListAdapter extends BaseAdapter {
 
         holder.interestPointNum.setText("" + poiNum);
 
-        boolean hasSteps = false;
-        if(traceItems.get(position).getTrace().getSportTypes() == 1){
-            for(int i = 0; i < steps.size(); i++){
-                if(traceItems.get(position).getTrace().getTraceID() == steps.get(i).getTraceID()){
-                    stepstr = steps.get(i).getSteps()+"";
-                    holder.stepcounts.setText(stepstr);
-                    //Log.i("trailadapter", "step:"+steps.get(i).getsteps()+",traceNo:"+steps.get(i).gettraceNo());
-//                    holder.lablestep.setVisibility(View.VISIBLE);
-//                    holder.stepcounts.setVisibility(View.VISIBLE);
-                    hasSteps=true;
-                    break;
-                }
-            }
-        }
-        if(!hasSteps){
-            holder.lablestep.setVisibility(View.GONE);
-            holder.stepcounts.setVisibility(View.GONE);
-        }
 //        if (isMulChoice) {
 //            holder.checkbox.setVisibility(View.VISIBLE);
 //        }else {
@@ -226,19 +204,9 @@ public class TraceListAdapter extends BaseAdapter {
                 }else {
 
                     String trail= GsonHelper.toJson(traceItems.get(pos).getTrace());
-                    stepstr="--";
-                    if(traceItems.get(pos).getTrace().getSportTypes()==1){
-                        for(int i=0;i<steps.size();i++){
-                            if(traceItems.get(pos).getTrace().getTraceID()==steps.get(i).getTraceID()){
 
-                                stepstr=GsonHelper.toJson(steps.get(i));
-                                break;
-                            }
-                        }
-                    }
                     Intent intent=new Intent();
                     intent.putExtra("trail", trail);
-                    intent.putExtra("step", stepstr);
                     Log.i("TraceListAdapter", "isonline:" + !traceItems.get(pos).isLocal());
                     intent.putExtra("isonline", traceItems.get(pos).isCloud());
                     intent.setClass(context, TraceDetailActivity.class);

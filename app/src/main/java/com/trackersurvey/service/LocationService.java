@@ -49,7 +49,6 @@ import com.trackersurvey.http.UploadTraceRequest;
 import com.trackersurvey.httpconnection.PostOnOffline;
 import com.trackersurvey.httpconnection.PostTimeValues;
 import com.trackersurvey.model.GpsData;
-import com.trackersurvey.model.StepData;
 import com.trackersurvey.model.TraceData;
 import com.trackersurvey.util.ActivityCollector;
 import com.trackersurvey.util.Common;
@@ -114,8 +113,6 @@ public class LocationService extends Service implements AMapLocationListener {
     private TraceData                trail_up           = new TraceData();
     private List<Long>               traceno_up         = new ArrayList<>();
 
-    private List<StepData>             steps_up      = new ArrayList<>();
-    private StepData                   step_up       = new StepData();
     private ArrayList<PhoneEventsData> eventdatalist = new ArrayList<>();
     private String                     gpsData;
     private String                     gpsData_up;
@@ -485,11 +482,7 @@ public class LocationService extends Service implements AMapLocationListener {
             for (int i = 0; i < traceno_up.size(); i++) {
                 trail_up = helper.queryfromTrailbytraceID(traceno_up.get(i), Common.getUserID(getApplicationContext()));
                 trails_up.add(trail_up);
-                if (trail_up.getSportTypes() == 1) {
-//                    step_up = helper.querryformstepsbyTraceNo(traceno_up.get(i), Common.getUserID(getApplicationContext()));
-                    steps_up.add(step_up);
-                    step_up = null;
-                }
+
                 trail_up = null;
                 // 按轨迹号查询位置数据
                 datalist_up = helper.queryfromGpsbytraceID(traceno_up.get(i), Common.getUserID(getApplicationContext()));
@@ -525,9 +518,7 @@ public class LocationService extends Service implements AMapLocationListener {
             }
             traceData_up = GsonHelper.toJson(trails_up);
             stepsdata_up = "";
-            if (steps_up.size() > 0) {
-                stepsdata_up = GsonHelper.toJson(steps_up);
-            }
+
             Log.i("trailadapter", "自动上传的轨迹：" + traceData_up + "," + stepsdata_up);
             // 结束记录，上传轨迹信息，其中traceData_up为轨迹信息
             //            PostEndTrail endTrailThread = new PostEndTrail(mhandler,URL_ENDTRAIL,traceData_up,stepsdata_up,
@@ -552,7 +543,6 @@ public class LocationService extends Service implements AMapLocationListener {
             });
 
             trails_up.clear();
-            steps_up.clear();
             traceData_up = null;
             stepsdata_up = null;
         }

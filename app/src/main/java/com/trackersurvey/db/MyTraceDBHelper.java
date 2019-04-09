@@ -10,7 +10,6 @@ import android.util.Log;
 
 import com.trackersurvey.model.GpsData;
 import com.trackersurvey.bean.PhoneEventsData;
-import com.trackersurvey.model.StepData;
 import com.trackersurvey.model.TraceData;
 
 import java.util.ArrayList;
@@ -26,12 +25,10 @@ public class MyTraceDBHelper {
     private static final String       TABLE1_NAME      = "LOCATION";   //位置信息表
     private static final String       TABLE2_NAME      = "TRAIL";      //轨迹记录表
     private static final String       TABLE3_NAME      = "EVENTS";    //事件表
-    private static final String       TABLE4_NAME      = "STEPS";     //步数表
     private static final String       TABLE5_NAME      = "TRAILSTATUS"; //轨迹状态表，只存储未上传和记录中断的轨迹:0 正常，已上传；1：记录中断；2：记录正常结束但未上传
     private static final String[]     COLUMNS          = {"userID", "CreateTime", "Longitude", "Latitude", "Altitude", "Speed", "TraceID", "CityID", "DeviceID", "SportType"};
     private static final String[]     COLUMNS2         = {"userID", "TraceName", "TraceID", "StartTime", "EndTime", "Duration", "Distance", "SportType", "ShareType", "Calorie", "PoiCount", "Steps"};
     private static final String[]     COLUMNS3         = {"userID", "CreateTime", "EventType", "Longitude", "Latitude", "Altitude"};
-    private static final String[]     COLUMNS4         = {"userID", "TraceID", "Steps"};
     private static final String[]     COLUMNS5         = {"userID", "TraceID", "TraceStatus"};
     private              DBOpenHelper dbhelper         = null;
 
@@ -49,8 +46,6 @@ public class MyTraceDBHelper {
         private static final String CREATE_TABLE3 = "create table " + TABLE3_NAME + "(" + COLUMNS3[0] +
                 " integer NOT NULL ," + COLUMNS3[1] + " TimeStamp NOT NULL DEFAULT (datetime('now','localtime')),"
                 + COLUMNS3[2] + " integer ," + COLUMNS3[3] + " real ," + COLUMNS3[4] + " real ," + COLUMNS3[5] + " real );";
-        private static final String CREATE_TABLE4 = "create table " + TABLE4_NAME + "(" + COLUMNS4[0] +
-                " integer NOT NULL ," + COLUMNS4[1] + " integer NOT NULL ," + COLUMNS4[2] + " integer  );";
         private static final String CREATE_TABLE5 = "create table " + TABLE5_NAME + "(" + COLUMNS5[0] +
                 " integer NOT NULL ," + COLUMNS5[1] + " integer NOT NULL ," + COLUMNS5[2] + " integer  NOT NULL DEFAULT ('1'));";
 
@@ -74,7 +69,6 @@ public class MyTraceDBHelper {
             db.execSQL(CREATE_TABLE1);
             db.execSQL(CREATE_TABLE2);
             db.execSQL(CREATE_TABLE3);
-            db.execSQL(CREATE_TABLE4);
             db.execSQL(CREATE_TABLE5);
         }
 
@@ -86,7 +80,6 @@ public class MyTraceDBHelper {
             //db.execSQL("drop table if exists "+TABLE3_NAME);//删除旧版表格
             //db.execSQL("drop table if exists "+TABLE4_NAME);//删除旧版表格
             if (oldVersion == 1) {//增加计步表
-                db.execSQL(CREATE_TABLE4);
                 db.execSQL(CREATE_TABLE5);
                 db.execSQL("ALTER TABLE " + TABLE2_NAME + " RENAME TO " + TABLE2_NAME + "_TEMP");
                 db.execSQL(CREATE_TABLE2);
@@ -144,13 +137,6 @@ public class MyTraceDBHelper {
                         "SportType,ShareType,Calorie,PoiCount from " + TABLE2_NAME + "_TEMP");
                 db.execSQL("drop table " + TABLE2_NAME + "_TEMP");
 
-                // 表4(步数表)的TraceNo字段名改为TraceID
-                db.execSQL("ALTER TABLE " + TABLE4_NAME + " RENAME TO " + TABLE4_NAME + "_TEMP");
-                db.execSQL(CREATE_TABLE4);
-                db.execSQL("insert into " + TABLE4_NAME + "(userID,TraceID,Steps)" +
-                        "select userID,TraceNo,Steps from " + TABLE4_NAME + "_TEMP");
-                db.execSQL("drop table " + TABLE4_NAME + "_TEMP");
-
                 // 表5(位置数据表)的TraceNo字段名改为TraceID
                 db.execSQL("ALTER TABLE " + TABLE5_NAME + " RENAME TO " + TABLE5_NAME + "_TEMP");
                 db.execSQL(CREATE_TABLE5);
@@ -178,21 +164,6 @@ public class MyTraceDBHelper {
         if (rows > 0) {
             Log.i("MyTraceDB isTraceExists", "存在这条轨迹，traceID:" + traceID);
         }
-        if (rows > 0) {
-            cursor.close();
-            //            db.close();
-            return true;
-        }
-        cursor.close();
-        //        db.close();
-        return false;
-    }
-
-    public boolean isStepExists(long traceID, String userID) {
-        SQLiteDatabase db = dbhelper.getReadableDatabase();
-        Cursor cursor = db.query(TABLE4_NAME, null,
-                " userID='" + userID + "'" + " and  TraceID=('" + traceID + "')", null, null, null, null);
-        int rows = cursor.getCount();
         if (rows > 0) {
             cursor.close();
             //            db.close();
@@ -581,12 +552,6 @@ public class MyTraceDBHelper {
         db.delete(TABLE2_NAME, " userID='" + userID + "'" + " and TraceID=('" + num + "')", null);
         db.delete(TABLE1_NAME, " userID='" + userID + "'" + " and TraceID=('" + num + "')", null);
         //        db.close();
-        if (isStepExists(num, userID)) {
-            SQLiteDatabase db2 = dbhelper.getWritableDatabase();
-            db2.delete(TABLE4_NAME, " userID='" + userID + "'" + " and TraceID=('" + num + "')", null);
-            //            db2.close();
-        }
-
     }
 
     public void deleteStatus() {

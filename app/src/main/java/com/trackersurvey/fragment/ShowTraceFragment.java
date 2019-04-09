@@ -83,7 +83,6 @@ import com.trackersurvey.http.UpLoadGpsRequest;
 import com.trackersurvey.model.GpsData;
 import com.trackersurvey.model.MyCommentModel;
 import com.trackersurvey.model.PoiChoiceModel;
-import com.trackersurvey.model.StepData;
 import com.trackersurvey.model.TraceData;
 import com.trackersurvey.photoview.SlideListView;
 import com.trackersurvey.service.CommentUploadService;
@@ -131,7 +130,6 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
     private ProgressDialog                     proDialog        = null;
     private List<GpsData>                      traces           = new ArrayList<GpsData>();
     private List<GpsData>                      linkTraces       = new LinkedList<GpsData>();
-    private StepData                           stepdata         = new StepData();
     //private List<LatLng> points = new ArrayList<LatLng>();
     private List<TraceLatLng>                  tracePoints      = new ArrayList<>(); // 用于存储位置点数据（经纬度、运动类型、创建时间）
     private List<LatLng>                       linkPoints       = new LinkedList<LatLng>();
@@ -363,10 +361,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
         trailobj = GsonHelper.parseJson(trail, TraceData.class);
         currentTraceID = trailobj.getTraceID();
         Log.i("trailobj", "startTime:" + trailobj.getStartTime() + "endTime" + trailobj.getEndTime());
-        if (!"--".equals(stepstr)) {
-            stepdata = GsonHelper.parseJson(stepstr, StepData.class);
-            stepstr = stepdata.getSteps() + "";
-        }
+
         if (isOnline) {
             showDialog(getResources().getString(R.string.tips_dlgtle_init), getResources().getString(R.string.tips_dlgmsg_inittrace));
             DownloadTraceDetailRequest downloadTraceDetail = new DownloadTraceDetailRequest(
@@ -1572,11 +1567,8 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
             shareToWX();
             return;
         }
-        List<StepData> steps_upload = new ArrayList<StepData>();
 
-        if (trailobj.getSportTypes() == 1) {
-            steps_upload.add(stepdata);
-        }
+
         List<TraceData> traces_upload = new ArrayList<TraceData>();
 
         traces_upload.add(trailobj);
@@ -1597,10 +1589,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
             }
         });
         String traceinfo = GsonHelper.toJson(traces_upload);
-        String stepinfo = "";
-        if (steps_upload.size() > 0) {
-            stepinfo = GsonHelper.toJson(steps_upload);
-        }
+
         // Log.i("trailadapter","上传的轨迹："+traceinfo+","+stepinfo);
         //        PostEndTrail endTrailThread = new PostEndTrail(shareHandler, URL_ENDTRAIL, traceinfo, stepinfo,
         //                Common.getDeviceId(context));
