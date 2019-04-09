@@ -3,9 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/splash_page"
     tools:context="com.trackersurvey.happynavi.SplashActivity">
 
     <ImageView
+        android:visibility="gone"
+        android:src="@mipmap/splash_page"
         android:id="@+id/iv_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,7 +21,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:text="V 2.0.5"
-        android:layout_margin="15dp"
+       android:layout_marginBottom="15dp"
         android:textSize="30sp"
         android:textColor="@color/white" />
 
