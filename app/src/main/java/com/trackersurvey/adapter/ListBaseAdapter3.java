@@ -23,15 +23,22 @@ import com.trackersurvey.bean.ListItemData;
 import com.trackersurvey.db.PointOfInterestDBHelper;
 import com.trackersurvey.happynavi.R;
 import com.trackersurvey.happynavi.SelectedPictureActivity;
+import com.trackersurvey.litepal.pointofinterestdata.Behaviour;
+import com.trackersurvey.litepal.pointofinterestdata.Duration;
+import com.trackersurvey.litepal.pointofinterestdata.PartnerNum;
+import com.trackersurvey.litepal.pointofinterestdata.Relation;
 import com.trackersurvey.model.MyCommentModel;
 import com.trackersurvey.util.Common;
 import com.trackersurvey.util.NoScrollGridView;
+
+import org.litepal.LitePal;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by zh931 on 2018/5/19.
@@ -247,10 +254,27 @@ public class ListBaseAdapter3 extends BaseAdapter {
         ArrayList<String> duration = new ArrayList<String>();
         ArrayList<String> behaviour = new ArrayList<String>();
         PointOfInterestDBHelper helper = new PointOfInterestDBHelper(context);
-        partnerNum = helper.getPartnerNum();
-        relation = helper.getRelation();
-        duration = helper.getDuration();
-        behaviour = helper.getBehaviour();
+//        partnerNum = helper.getPartnerNum();
+//        relation = helper.getRelation();
+//        duration = helper.getDuration();
+//        behaviour = helper.getBehaviour();
+        List<PartnerNum> partnerNums = LitePal.findAll(PartnerNum.class);
+        List<Relation> relations = LitePal.findAll(Relation.class);
+        List<Duration> durations = LitePal.findAll(Duration.class);
+        List<Behaviour> behaviours = LitePal.findAll(Behaviour.class);
+        for (PartnerNum partnerNum1 : partnerNums) {
+            partnerNum.add(partnerNum1.getValue());
+        }
+        for (Relation relation1: relations) {
+            relation.add(relation1.getValue());
+        }
+        for (Duration duration1 : durations) {
+            duration.add(duration1.getValue());
+        }
+        for (Behaviour behaviour1 : behaviours) {
+            behaviour.add(behaviour1.getValue());
+        }
+
         holder.tv_time.setText(itemEntity.getTime());
         holder.tv_place.setText(itemEntity.getPlace());
         holder.tv_comment.setText(itemEntity.getComment());

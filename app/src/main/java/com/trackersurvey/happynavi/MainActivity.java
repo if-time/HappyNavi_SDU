@@ -35,6 +35,8 @@ import com.trackersurvey.util.CustomDialog;
 
 import com.trackersurvey.util.ShareToWeChat;
 
+import org.litepal.LitePal;
+
 import java.util.ArrayList;
 
 /**
@@ -115,6 +117,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         initApkBroadCastReceiver = new InitApkBroadCastReceiver();
         registerReceiver(initApkBroadCastReceiver, intentFilter);
         setCheckNetWork(true);
+
+        LitePal.getDatabase();
     }
 
     private void initView() {

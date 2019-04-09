@@ -26,10 +26,6 @@ public class JobSchedulerService extends JobService {
     }
 
     public void startMainService() {
-        if (Build.VERSION.SDK_INT >= 26) {
-            startForegroundService(JobSchedulerMainService.getIntentAlarm(this));
-        } else {
-            startService(JobSchedulerMainService.getIntentAlarm(this));
-        }
+        startService(JobSchedulerMainService.getIntentAlarm(this));
     }
 }
