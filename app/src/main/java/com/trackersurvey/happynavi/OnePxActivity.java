@@ -18,7 +18,7 @@ public class OnePxActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_one_px);
 
-
+        // 获得activity的Window对象，设置其属性
         Window window = getWindow();
         window.setGravity(Gravity.LEFT | Gravity.TOP);
         WindowManager.LayoutParams params = window.getAttributes();
