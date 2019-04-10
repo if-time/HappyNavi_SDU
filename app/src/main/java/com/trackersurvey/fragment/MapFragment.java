@@ -71,6 +71,7 @@ import com.trackersurvey.happynavi.BGRunningGuideActivity;
 import com.trackersurvey.happynavi.CommentActivity;
 import com.trackersurvey.happynavi.LoginActivity;
 import com.trackersurvey.happynavi.R;
+import com.trackersurvey.happynavi.SplashActivity;
 import com.trackersurvey.http.DownloadPoiChoices;
 import com.trackersurvey.http.DownloadTraceDetailRequest;
 import com.trackersurvey.http.EndTraceRequest;
@@ -79,11 +80,13 @@ import com.trackersurvey.http.StartTraceRequest;
 import com.trackersurvey.http.UpLoadGpsRequest;
 import com.trackersurvey.model.GpsData;
 import com.trackersurvey.model.PoiChoiceModel;
+import com.trackersurvey.model.StepData;
 import com.trackersurvey.model.TraceData;
 import com.trackersurvey.service.CommentUploadService;
 import com.trackersurvey.service.LocationService;
 import com.trackersurvey.service.OnePxService;
 import com.trackersurvey.service.PlayerMusicService;
+import com.trackersurvey.service.StepCounterService;
 import com.trackersurvey.util.ActivityCollector;
 import com.trackersurvey.util.Common;
 import com.trackersurvey.util.CustomDialog;
@@ -123,7 +126,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     private ImageButton    changeSportTypeIb;
     private ImageButton    endTrail;
     private ImageButton    takePhoto;
+    private TextView       stepTv;
     private TextView       locationTv;
+    private TextView       calculateTv;
     private ProgressDialog proDialog = null;
     private int            sportType;
 
@@ -149,6 +154,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     private boolean bound_trace          = false;
     private boolean bound_comment_upload = false;
     private boolean istimeset            = false;
+    private boolean iscountstep          = false;
     private boolean isShowNonLocDlg      = false; //无法定位对话框是否正在显示
     private boolean isShowBGRGuideChecked = true;
 
@@ -161,6 +167,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     private int                       total_step         = 0;   //走的总步数
     private TraceData                 tracedata          = new TraceData(); // 轨迹信息
     private String                    traceName          = "";
+    private StepData                  stepdata           = new StepData(); // 步行轨迹的步数信息
     private List<GpsData>             tracegps           = new ArrayList<GpsData>();
     private MyBroadcastReceiver       myReceiver         = null;//用于接收后台发送的定位广播
     private AccuracyBroadcastReceiver accuracyReciver    = null;
@@ -170,6 +177,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     private CommentUploadService commentUploadService;
     private Intent               locationServiceIntent;
     private Intent               commentServiceIntent;
+    private Intent               stepCountServiceIntent;
+    private Intent               updateServiceIntent;
+    private Thread               stepThread;
     private MyTraceDBHelper      traceDBHelper;
     private SharedPreferences    sp;  //存储基本配置信息 如账号、密码
     private SharedPreferences    uploadCache;//存储待上传的评论信息
@@ -225,6 +235,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         ShareToWeChat.registToWeChat(getContext());
         mapView = (MapView) homepageLayout.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
+        stepTv = (TextView) homepageLayout.findViewById(R.id.tv_step);
+        stepTv.setVisibility(View.INVISIBLE);
         locationTv = (TextView) homepageLayout.findViewById(R.id.tv_location);
         // 这里放测量相关的控件
         startTrail = (ImageButton) homepageLayout.findViewById(R.id.imgbtn_starttrail); // 开始记录按钮
@@ -446,12 +458,33 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             }
         }
         getActivity().bindService(locationServiceIntent, connection, Context.BIND_AUTO_CREATE);
+        stepCountServiceIntent = new Intent(getContext(), StepCounterService.class);
         /*
          * MainActivity.this.getApplicationContext().
          * 在TabActivy的TabHost中的Activity如果需要bindService的话
          * ，需要先调用getApplicationContext()获取其所属的Activity的上下文环境才能正常bindService
          */
 
+        if (stepThread == null) {
+            stepThread = new Thread() {// 子线程用于监听当前步数的变化
+                @Override
+                public void run() {
+                    super.run();
+                    while (iscountstep) {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        if (StepCounterService.FLAG) {
+                            Message msg = Message.obtain();
+                            msg.what = 9;
+                            handler.sendMessage(msg);// 通知主线程
+                        }
+                    }
+                }
+            };
+        }
         /**
          判断上次轨迹记录是否意外中断，如果有意外中断，提醒用户是否继续记录
          */
@@ -874,6 +907,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         // myLocationStyle.anchor(int,int)//设置小蓝点的锚点
         myLocationStyle.strokeWidth(1.0f);// 设置圆形的边框粗细
         aMap.setMyLocationStyle(myLocationStyle); // 改变定位模式为蓝点始终在屏幕中间
+        stepdata.setUserID(Common.getUserID(getContext()));
+        stepdata.setTraceID(traceID);
         Log.i("LogDemo", "starttrail,localTraceNo：" + traceID + ",id:" + Common.getUserID(getContext()));
         Log.i("LogDemo", "starttrail,traceNo：" + traceID + ",id:" + Common.getUserID(getContext()));
         List<TraceData> traceList = new ArrayList<>();
@@ -895,6 +930,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                             Log.i("MapFragment", "开始记录轨迹了，获取了traceID:" + traceID);
                             // 一旦获取到traceID，发送给LocationService
                             tracedata.setTraceID(traceID);
+                            stepdata.setTraceID(traceID);
                             locationService.setTraceID(traceID);
                             // 获取到traceID后
                             if (traceID != 0) {
@@ -948,6 +984,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 locationService.changeSportType(true);
 //                StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserID(getContext())).getSteps();
                 total_step = StepDetector.CURRENT_STEP;
+                getActivity().startService(stepCountServiceIntent);
+                iscountstep = true;
+//                new Thread(stepThread).start();
+                //            stepTv.setVisibility(View.VISIBLE);
+                stepTv.setText(getResources().getString(R.string.step_label) + "：" + total_step);
             }
         } else {
             Log.i("LogDemo", "记录结束了!!!!!!!!!!!!!!!!!!!!!我是记录结束分割线！！！！！！！！！！！！");
@@ -957,7 +998,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             locationService.changeStatus(false); // 改为非记录状态
             if (tracedata.getSportTypes() == 1) {
                 //轨迹类型为步行，结束轨迹时iswalk置为false，停止记录步数
+                iscountstep = false;//结束线程
                 locationService.changeSportType(false);//是否步行设置为否
+                getActivity().stopService(stepCountServiceIntent);//结束计步服务
                 //stepThread.stop();
                 //handler.removeCallbacks(stepThread);
             }
@@ -966,6 +1009,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             changeSportTypeIb.setVisibility(View.INVISIBLE);
             //pauseTrail.setVisibility(View.INVISIBLE);
             endTrail.setVisibility(View.INVISIBLE);
+            stepTv.setVisibility(View.INVISIBLE);
             isstart = false;
             ispause = false;
             isend = true;
@@ -990,6 +1034,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         // myLocationStyle.anchor(int,int)//设置小蓝点的锚点
         myLocationStyle.strokeWidth(1.0f);// 设置圆形的边框粗细
         aMap.setMyLocationStyle(myLocationStyle); // 改变定位模式为蓝点始终在屏幕中间
+        stepdata.setUserID(Common.getUserID(getContext()));
+        stepdata.setTraceID(traceID);
         Log.i("LogDemo", "starttrail,localTraceNo：" + traceID + ",id:" + Common.getUserID(getContext()));
         Log.i("LogDemo", "starttrail,traceNo：" + traceID + ",id:" + Common.getUserID(getContext()));
         List<TraceData> traceList = new ArrayList<>();
@@ -1002,6 +1048,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         Log.i("MapFragment", "开始记录轨迹了，获取了traceID:" + traceID);
         // 一旦获取到traceID，发送给LocationService
         tracedata.setTraceID(traceID);
+        stepdata.setTraceID(traceID);
         locationService.setTraceID(traceID);
         // 获取到traceID后
         if (traceID != 0) {
@@ -1043,6 +1090,12 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             locationService.changeSportType(true);
 //            StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserID(getContext())).getSteps();
             total_step = StepDetector.CURRENT_STEP;
+            getActivity().startService(stepCountServiceIntent);
+            iscountstep = true;
+//            new Thread(stepThread).start();
+            //            stepTv.setVisibility(View.VISIBLE);
+            stepTv.setText(getResources().getString(R.string.step_label) + "：" + total_step);
+
         }
     }
 
@@ -1098,6 +1151,14 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             tracedata.setPoiCount(poiCount);
             String traceInfo = GsonHelper.toJson(tracedata);
             Log.i("HomePageFragment", "traceInfo:" + traceInfo);
+            String stepInfo;
+            if (tracedata.getSportTypes() == 1) {
+                List<StepData> steplist = new ArrayList<StepData>();
+                steplist.add(stepdata);
+                stepInfo = GsonHelper.toJson(steplist);
+            } else {
+                stepInfo = "";
+            }
             traceDBHelper.updateStatus(traceID, 2, Common.getUserID(getContext()));
             UiRefresh = false;
             // 结束轨迹
@@ -1162,11 +1223,14 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         gpsDataIsOnline(termtraceID);
         if (tracedata.getSportTypes() == 1) {
             //轨迹类型为步行，结束轨迹时iswalk置为false，停止记录步数
+            iscountstep = false;//结束线程
             locationService.changeSportType(false);//是否步行设置为否
+            getActivity().stopService(stepCountServiceIntent);//结束计步服务
         }
         startTrail.setVisibility(View.VISIBLE);
         changeSportTypeIb.setVisibility(View.INVISIBLE);
         endTrail.setVisibility(View.INVISIBLE);
+        stepTv.setVisibility(View.INVISIBLE);
         isstart = false;
         ispause = false;
         isend = true;
@@ -1268,6 +1332,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             }
             tracedata.setDistance(distance);
             Log.i("dongiyuansetDuration", "duration: " + duration + " distance: " + distance);
+            if (tracedata.getSportTypes() == 1) {
+                stepdata.setSteps(total_step);
+//                traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
+                Log.i("LogDemo", "步数表更新数据了");
+                Log.i("LogDemo", "stepdata:" + GsonHelper.toJson(stepdata));
+                tracedata.setCalorie(calculateCalorie_Walk(distance));
+            }
             if (tracedata.getSportTypes() == 2) {
                 tracedata.setCalorie(calculateCalorie_Ride(distance, duration));
             }
@@ -1303,7 +1374,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             locationService.changeStatus(false); // 改为非记录状态
             if (tracedata.getSportTypes() == 1) {
                 //轨迹类型为步行，结束轨迹时iswalk置为false，停止记录步数
+                iscountstep = false;//结束线程
                 locationService.changeSportType(false);//是否步行设置为否
+                getActivity().stopService(stepCountServiceIntent);//结束计步服务
                 //stepThread.stop();
                 //handler.removeCallbacks(stepThread);
             }
@@ -1312,6 +1385,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             changeSportTypeIb.setVisibility(View.INVISIBLE);
             //pauseTrail.setVisibility(View.INVISIBLE);
             endTrail.setVisibility(View.INVISIBLE);
+            stepTv.setVisibility(View.INVISIBLE);
             isstart = false;
             ispause = false;
             isend = true;
@@ -1479,7 +1553,12 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     break;
                 case 9://更新步数
                     countStep();
-
+                    stepTv.setText(getResources().getString(R.string.step_label) + "：" + total_step);
+                    if (tracedata.getSportTypes() == 1) {
+                        stepdata.setSteps(total_step);
+//                        traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
+                        Log.i("MyTraceDBDupdatesteps", "step:row:" + traceDBHelper);
+                    }
                     break;
                 case 10:
                     dismissDialog();
@@ -1955,6 +2034,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     @Override
     public void onDestroy() {
         super.onDestroy();
+        iscountstep = false;
         deactivate();
         if (null != mlocationClient) {
             mlocationClient.onDestroy();
@@ -1980,6 +2060,14 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         if (null != commentServiceIntent) {
             getActivity().stopService(commentServiceIntent);
             Log.i("HomePage", "停止服务");
+        }
+        if (null != updateServiceIntent) {
+            getActivity().stopService(updateServiceIntent);
+            Log.i("HomePage", "停止更新服务");
+        }
+        if (null != stepCountServiceIntent) {
+            getActivity().stopService(stepCountServiceIntent);
+            Log.i("HomePage", "停止记步服务");
         }
         if (null != myReceiver) {
         }

@@ -3,7 +3,6 @@ package com.trackersurvey.service;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Intent;
-import android.os.Build;
 
 public class JobSchedulerService extends JobService {
 
@@ -25,11 +24,7 @@ public class JobSchedulerService extends JobService {
         startMainService();
     }
 
-    public void startMainService() {
-        if (Build.VERSION.SDK_INT >= 26) {
-            startForegroundService(JobSchedulerMainService.getIntentAlarm(this));
-        } else {
-            startService(JobSchedulerMainService.getIntentAlarm(this));
-        }
+    public void startMainService(){
+        startService(JobSchedulerMainService.getIntentAlarm(this));
     }
 }
