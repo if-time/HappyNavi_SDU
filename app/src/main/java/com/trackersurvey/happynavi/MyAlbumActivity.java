@@ -453,4 +453,97 @@ public class MyAlbumActivity extends BaseActivity implements View.OnClickListene
     private void deleteComment(String dateTime, int poiID, long traceID) {
         myComment.deleteComment(dateTime, poiID, traceID);
     }
+    //传递给PostPointOfInterestData的handler1
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    if(msg.obj!=null){
+                        String[] poiStr = msg.obj.toString().trim().split("#");
+                        String[] behaviourStr = poiStr[1].split("[$]");
+                        String[] durationStr = poiStr[0].split("[$]");
+                        String[] partnerNumStr = poiStr[2].trim().split("[$]");
+                        String[] relationStr = poiStr[3].trim().split("[$]");
+                        behaviourData = new PointOfInterestData();
+                        durationData = new PointOfInterestData();
+                        partnerNumData = new PointOfInterestData();
+                        relationData = new PointOfInterestData();
+                        //Log.i("poiStr", poiStr[0]);
+                        helper.delete();
+                        try {
+                            for(int i = 0;i<behaviourStr.length;i++){
+                                behaviourData.setKey(i);
+                                behaviourData.setValue(behaviourStr[i]);
+                                helper.insertBehaviour(behaviourData);
+                            }
+                            for(int i = 0;i<durationStr.length;i++){
+                                durationData.setKey(i);
+                                durationData.setValue(durationStr[i]);
+                                //将数据插入到POI数据库中
+                                helper.insertDuration(durationData);
+                            }
+                            for(int i = 0;i<partnerNumStr.length;i++){
+                                partnerNumData.setKey(i);
+                                partnerNumData.setValue(partnerNumStr[i]);
+                                helper.insertPartnerNum(partnerNumData);
+                            }
+                            for(int i = 0;i<relationStr.length;i++){
+                                relationData.setKey(i);
+                                relationData.setValue(relationStr[i]);
+                                helper.insertPartnerRelation(relationData);
+                            }
+                        } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+
+                    }
+                    break;
+                case 1:
+
+                    break;
+            }
+        }
+    };
+    private void initPOI(){
+        //从服务器下载停留时长、行为类型、同伴人数、关系等选项的数据
+        DownloadPoiChoices downloadPoiChoices = new DownloadPoiChoices(sp.getString("token", ""));
+        downloadPoiChoices.requestHttpData(new ResponseData() {
+            @Override
+            public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
+                if (isSuccess) {
+                    if (code.equals("0")) {
+                        PoiChoiceModel poiChoiceModel = (PoiChoiceModel) responseObject;
+                        behaviourData = new PointOfInterestData();
+                        durationData = new PointOfInterestData();
+                        partnerNumData = new PointOfInterestData();
+                        relationData = new PointOfInterestData();
+                        helper.delete();
+                        for (int i = 0; i < poiChoiceModel.getActivityTypeList().size(); i++) {
+                            behaviourData.setKey(poiChoiceModel.getActivityTypeList().get(i).getActivityType());
+                            behaviourData.setValue(poiChoiceModel.getActivityTypeList().get(i).getActivityName());
+                            helper.insertBehaviour(behaviourData);
+                        }
+                        for (int i = 0; i < poiChoiceModel.getRetentionTypeList().size(); i++) {
+                            durationData.setKey(poiChoiceModel.getRetentionTypeList().get(i).getRetentionType());
+                            durationData.setValue(poiChoiceModel.getRetentionTypeList().get(i).getRetentionTypeName());
+                            helper.insertDuration(durationData);
+                        }
+                        for (int i = 0; i < poiChoiceModel.getCompanionTypeList().size(); i++) {
+                            partnerNumData.setKey(poiChoiceModel.getCompanionTypeList().get(i).getCompanionType());
+                            partnerNumData.setValue(poiChoiceModel.getCompanionTypeList().get(i).getCompanionTypeName());
+                            helper.insertPartnerNum(partnerNumData);
+                        }
+                        for (int i = 0; i < poiChoiceModel.getRelationTypeList().size(); i++) {
+                            relationData.setKey(poiChoiceModel.getRelationTypeList().get(i).getRelationType());
+                            relationData.setValue(poiChoiceModel.getRelationTypeList().get(i).getRelationTypeName());
+                            helper.insertPartnerRelation(relationData);
+                        }
+                    }
+                }
+            }
+        });
+    }
 }

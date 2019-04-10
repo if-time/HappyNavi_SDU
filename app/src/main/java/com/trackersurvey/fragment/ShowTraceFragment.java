@@ -80,10 +80,6 @@ import com.trackersurvey.http.DownloadPoiChoices;
 import com.trackersurvey.http.DownloadTraceDetailRequest;
 import com.trackersurvey.http.ResponseData;
 import com.trackersurvey.http.UpLoadGpsRequest;
-import com.trackersurvey.litepal.pointofinterestdata.Behaviour;
-import com.trackersurvey.litepal.pointofinterestdata.Duration;
-import com.trackersurvey.litepal.pointofinterestdata.PartnerNum;
-import com.trackersurvey.litepal.pointofinterestdata.Relation;
 import com.trackersurvey.model.GpsData;
 import com.trackersurvey.model.MyCommentModel;
 import com.trackersurvey.model.PoiChoiceModel;
@@ -98,8 +94,6 @@ import com.trackersurvey.util.GsonHelper;
 import com.trackersurvey.util.ShareToWeChat;
 import com.trackersurvey.util.TextMoveLayout;
 import com.trackersurvey.util.ToastUtil;
-
-import org.litepal.LitePal;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -522,30 +516,10 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                     markLatLng = new LatLng(tracePoints.get(praseProgressToPosition(currentProgress)).getLatLng().latitude,
                             tracePoints.get(praseProgressToPosition(currentProgress)).getLatLng().longitude);
                     //从POI数据库中取数据
-//                    ArrayList<String> behaviour = helper2.getBehaviour();
-//                    ArrayList<String> duration = helper2.getDuration();
-//                    ArrayList<String> partnerNum = helper2.getPartnerNum();
-//                    ArrayList<String> relation = helper2.getRelation();
-                    ArrayList<String> partnerNum = new ArrayList<String>();
-                    ArrayList<String> relation = new ArrayList<String>();
-                    ArrayList<String> duration = new ArrayList<String>();
-                    ArrayList<String> behaviour = new ArrayList<String>();
-                    List<PartnerNum> partnerNums = LitePal.findAll(PartnerNum.class);
-                    List<Relation> relations = LitePal.findAll(Relation.class);
-                    List<Duration> durations = LitePal.findAll(Duration.class);
-                    List<Behaviour> behaviours = LitePal.findAll(Behaviour.class);
-                    for (PartnerNum partnerNum1 : partnerNums) {
-                        partnerNum.add(partnerNum1.getValue());
-                    }
-                    for (Relation relation1: relations) {
-                        relation.add(relation1.getValue());
-                    }
-                    for (Duration duration1 : durations) {
-                        duration.add(duration1.getValue());
-                    }
-                    for (Behaviour behaviour1 : behaviours) {
-                        behaviour.add(behaviour1.getValue());
-                    }
+                    ArrayList<String> behaviour = helper2.getBehaviour();
+                    ArrayList<String> duration = helper2.getDuration();
+                    ArrayList<String> partnerNum = helper2.getPartnerNum();
+                    ArrayList<String> relation = helper2.getRelation();
                     //Log.i("duration", duration.toString());
                     Intent intent = new Intent();
                     intent.setClass(context, CommentActivity.class);
@@ -2121,6 +2095,46 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                     return true;
                 }
                 return false;
+            }
+        });
+    }
+
+    private void initPOI() {
+        //从服务器下载停留时长、行为类型、同伴人数、关系等选项的数据
+        DownloadPoiChoices downloadPoiChoices = new DownloadPoiChoices(sp.getString("token", ""));
+        downloadPoiChoices.requestHttpData(new ResponseData() {
+            @Override
+            public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
+                if (isSuccess) {
+                    if (code.equals("0")) {
+                        PoiChoiceModel poiChoiceModel = (PoiChoiceModel) responseObject;
+                        behaviourData = new PointOfInterestData();
+                        durationData = new PointOfInterestData();
+                        partnerNumData = new PointOfInterestData();
+                        relationData = new PointOfInterestData();
+                        helper2.delete();
+                        for (int i = 0; i < poiChoiceModel.getActivityTypeList().size(); i++) {
+                            behaviourData.setKey(poiChoiceModel.getActivityTypeList().get(i).getActivityType());
+                            behaviourData.setValue(poiChoiceModel.getActivityTypeList().get(i).getActivityName());
+                            helper2.insertBehaviour(behaviourData);
+                        }
+                        for (int i = 0; i < poiChoiceModel.getRetentionTypeList().size(); i++) {
+                            durationData.setKey(poiChoiceModel.getRetentionTypeList().get(i).getRetentionType());
+                            durationData.setValue(poiChoiceModel.getRetentionTypeList().get(i).getRetentionTypeName());
+                            helper2.insertDuration(durationData);
+                        }
+                        for (int i = 0; i < poiChoiceModel.getCompanionTypeList().size(); i++) {
+                            partnerNumData.setKey(poiChoiceModel.getCompanionTypeList().get(i).getCompanionType());
+                            partnerNumData.setValue(poiChoiceModel.getCompanionTypeList().get(i).getCompanionTypeName());
+                            helper2.insertPartnerNum(partnerNumData);
+                        }
+                        for (int i = 0; i < poiChoiceModel.getRelationTypeList().size(); i++) {
+                            relationData.setKey(poiChoiceModel.getRelationTypeList().get(i).getRelationType());
+                            relationData.setValue(poiChoiceModel.getRelationTypeList().get(i).getRelationTypeName());
+                            helper2.insertPartnerRelation(relationData);
+                        }
+                    }
+                }
             }
         });
     }

@@ -7,8 +7,6 @@ import android.text.TextUtils;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.trackersurvey.com.huawei.android.hms.agent.HMSAgent;
 
-import org.litepal.LitePalApplication;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,7 +14,7 @@ import java.io.IOException;
 import cn.finalteam.okhttpfinal.OkHttpFinal;
 import cn.finalteam.okhttpfinal.OkHttpFinalConfiguration;
 
-public class MyApplication extends LitePalApplication {
+public class MyApplication extends Application {
 
 
     private static MyApplication mApplication = null;

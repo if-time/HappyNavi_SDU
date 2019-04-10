@@ -27,23 +27,15 @@ import com.trackersurvey.bean.ListItemData;
 import com.trackersurvey.db.PointOfInterestDBHelper;
 import com.trackersurvey.happynavi.R;
 import com.trackersurvey.happynavi.SelectedPictureActivity;
-import com.trackersurvey.litepal.pointofinterestdata.Behaviour;
-import com.trackersurvey.litepal.pointofinterestdata.Duration;
-import com.trackersurvey.litepal.pointofinterestdata.PartnerNum;
-import com.trackersurvey.litepal.pointofinterestdata.Relation;
 import com.trackersurvey.model.MyCommentModel;
 import com.trackersurvey.util.Common;
 import com.trackersurvey.util.NoScrollGridView;
-
-import org.litepal.LitePal;
-import org.litepal.crud.LitePalSupport;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by zh931 on 2018/5/20.
@@ -270,27 +262,10 @@ public class ListBaseAdapter extends BaseAdapter {
         ArrayList<String> duration = new ArrayList<String>();
         ArrayList<String> behaviour = new ArrayList<String>();
         PointOfInterestDBHelper helper = new PointOfInterestDBHelper(context);
-        //        partnerNum = helper.getPartnerNum();
-        //        relation = helper.getRelation();
-        //        duration = helper.getDuration();
-        //        behaviour = helper.getBehaviour();
-        List<PartnerNum> partnerNums = LitePal.findAll(PartnerNum.class);
-        List<Relation> relations = LitePal.findAll(Relation.class);
-        List<Duration> durations = LitePal.findAll(Duration.class);
-        List<Behaviour> behaviours = LitePal.findAll(Behaviour.class);
-        for (PartnerNum partnerNum1 : partnerNums) {
-            partnerNum.add(partnerNum1.getValue());
-        }
-        for (Relation relation1: relations) {
-            relation.add(relation1.getValue());
-        }
-        for (Duration duration1 : durations) {
-            duration.add(duration1.getValue());
-        }
-        for (Behaviour behaviour1 : behaviours) {
-            behaviour.add(behaviour1.getValue());
-        }
-
+        partnerNum = helper.getPartnerNum();
+        relation = helper.getRelation();
+        duration = helper.getDuration();
+        behaviour = helper.getBehaviour();
         holder.tv_time.setText(itemEntity.getTime());
         holder.tv_place.setText(itemEntity.getPlace());
         holder.tv_comment.setText(itemEntity.getComment());
@@ -353,7 +328,7 @@ public class ListBaseAdapter extends BaseAdapter {
                     Log.i("dongiysuanimgFile", "getView: " + imgFile);
                     if (imgFile.exists()) {
                         imgPath = thumbPic;
-                        Log.e("/////", "getView: " + imgPath);
+                        Log.e("/////", "getView: "+imgPath );
                     } else {
                         allThumb = false;
                     }
@@ -361,7 +336,7 @@ public class ListBaseAdapter extends BaseAdapter {
                 map.put("itemImage", imgPath);
                 imageItems.add(map);
             }
-            Log.e("333", "GridItemAdapter: " + imageItems.get(0));
+            Log.e("333", "GridItemAdapter: "+ imageItems.get(0));
             holder.sAdapter = new GridItemAdapter(context, imageItems, colWidth);
             holder.gridview.setAdapter(holder.sAdapter);
             // 点击九宫格，查看大图，当该评论所有图片本地都存在时，可滑动查看所有图片，
@@ -529,12 +504,12 @@ public class ListBaseAdapter extends BaseAdapter {
                         File videoUri = new File(clickedpathName);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            uri = FileProvider.getUriForFile(context, "com.trackersurvey.happynavi.fileProvider", videoUri);
+                            uri = FileProvider.getUriForFile(context,  "com.trackersurvey.happynavi.fileProvider", videoUri);
                         } else {
                             uri = Uri.fromFile(videoUri);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         }
-                        Log.e("11111111", "onItemClick: " + uri);
+                        Log.e("11111111", "onItemClick: "+uri );
                         intent.setDataAndType(uri, "video/*");
                         context.startActivity(intent);
                     }
@@ -570,7 +545,7 @@ public class ListBaseAdapter extends BaseAdapter {
         @Override
         public void onFileDownload(int msg, int listPosition, int filePosition) {
             Message message = new Message();
-            //            ProgressBar pb = downloadingFiles.remove("" + listPosition + filePosition);
+//            ProgressBar pb = downloadingFiles.remove("" + listPosition + filePosition);
             if (msg == 0) {
                 message.what = 3;
                 message.arg1 = listPosition;
@@ -582,18 +557,17 @@ public class ListBaseAdapter extends BaseAdapter {
             }
 
 
-            //            if (pb != null) {
-            //                pb.setVisibility(View.GONE);
-            //            }
-            //            if (msg != 0) {
-            //                modelTips(msg);
-            //            }
+//            if (pb != null) {
+//                pb.setVisibility(View.GONE);
+//            }
+//            if (msg != 0) {
+//                modelTips(msg);
+//            }
         }
     };
 
     /**
      * 通知model下载缩略图
-     *
      * @param gridView
      * @param position
      * @param time
@@ -618,15 +592,15 @@ public class ListBaseAdapter extends BaseAdapter {
                 message.arg1 = listPosition;
                 message.obj = newThumbs;
                 handler.sendMessage(message);
-                //                Log.i("Eaa", listPosition + "newThumbs:" + newThumbs.toString());
-                //                GridItemAdapter gView = downloadingThumbs.remove(listPosition);
-                //                if (null != gView) {
-                //                    gView.setItems(newThumbs).notifyDataSetChanged();
-                //                }
+//                Log.i("Eaa", listPosition + "newThumbs:" + newThumbs.toString());
+//                GridItemAdapter gView = downloadingThumbs.remove(listPosition);
+//                if (null != gView) {
+//                    gView.setItems(newThumbs).notifyDataSetChanged();
+//                }
             } else {
                 message.what = 2;
                 handler.sendMessage(message);
-                //                modelTips(msg);
+//                modelTips(msg);
             }
         }
     };
