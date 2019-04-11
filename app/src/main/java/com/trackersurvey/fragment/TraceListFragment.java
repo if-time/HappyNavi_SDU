@@ -248,6 +248,7 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
                 if (isSuccess) {
                     if (responseObject != null)
                         trace_Cloud = (ArrayList<TraceData>) responseObject;
+                    Log.i("dongsitrace_Cloud", "onResponseData: " + trace_Cloud.size());
 
                     for (int i = 0; i < trace_Cloud.size(); i++) {
                         StepData stepData = new StepData();
@@ -443,14 +444,9 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
                                                     @Override
                                                     public void run() {
                                                         dismissDialog();
-                                                        getActivity().runOnUiThread(new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                showMenu(false, false);
-                                                                init();
-                                                                ToastUtil.show(getContext(), getResources().getString(R.string.tips_deletesuccess));
-                                                            }
-                                                        });
+                                                        init();
+                                                        showMenu(false, false);
+                                                        ToastUtil.show(getContext(), getResources().getString(R.string.tips_deletesuccess));
                                                     }
                                                 });
                                             }
@@ -473,6 +469,8 @@ public class TraceListFragment extends Fragment implements View.OnClickListener,
                             } else {
                                 init();
                             }
+
+
                             dialog.dismiss();
                         }
                     });

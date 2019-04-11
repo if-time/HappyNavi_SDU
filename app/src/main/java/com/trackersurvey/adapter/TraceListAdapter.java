@@ -225,24 +225,26 @@ public class TraceListAdapter extends BaseAdapter {
                     txtcount.setText(context.getResources().getString(R.string.totaltxt1)+selectid.size()+context.getResources().getString(R.string.totaltxt2));
                 }else {
 
-                    String trail= GsonHelper.toJson(traceItems.get(pos).getTrace());
-                    stepstr="--";
-                    if(traceItems.get(pos).getTrace().getSportTypes()==1){
-                        for(int i=0;i<steps.size();i++){
-                            if(traceItems.get(pos).getTrace().getTraceID()==steps.get(i).getTraceID()){
+                    if (traceItems.size() > pos) {
+                        String trail= GsonHelper.toJson(traceItems.get(pos).getTrace());
+                        stepstr="--";
+                        if(traceItems.get(pos).getTrace().getSportTypes()==1){
+                            for(int i=0;i<steps.size();i++){
+                                if(traceItems.get(pos).getTrace().getTraceID()==steps.get(i).getTraceID()){
 
-                                stepstr=GsonHelper.toJson(steps.get(i));
-                                break;
+                                    stepstr=GsonHelper.toJson(steps.get(i));
+                                    break;
+                                }
                             }
                         }
+                        Intent intent=new Intent();
+                        intent.putExtra("trail", trail);
+                        intent.putExtra("step", stepstr);
+                        Log.i("TraceListAdapter", "isonline:" + !traceItems.get(pos).isLocal());
+                        intent.putExtra("isonline", traceItems.get(pos).isCloud());
+                        intent.setClass(context, TraceDetailActivity.class);
+                        context.startActivity(intent);
                     }
-                    Intent intent=new Intent();
-                    intent.putExtra("trail", trail);
-                    intent.putExtra("step", stepstr);
-                    Log.i("TraceListAdapter", "isonline:" + !traceItems.get(pos).isLocal());
-                    intent.putExtra("isonline", traceItems.get(pos).isCloud());
-                    intent.setClass(context, TraceDetailActivity.class);
-                    context.startActivity(intent);
                 }
             }
 

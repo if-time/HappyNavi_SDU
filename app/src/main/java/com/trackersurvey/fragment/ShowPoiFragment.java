@@ -189,7 +189,7 @@ public class ShowPoiFragment extends Fragment {
      */
     public void updateUI() {
         ArrayList<HashMap<String, Object>> items = ShowTraceFragment.myComment.getItems();
-        if (items == null || items.size() == 0) {
+        if (items == null) {
         } else {
             listAdapter.setItems(items);
             listAdapter.notifyDataSetChanged();
