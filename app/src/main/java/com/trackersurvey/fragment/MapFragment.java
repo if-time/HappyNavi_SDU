@@ -1216,49 +1216,49 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         } else {
             UiRefresh = false;
             ToastUtil.show(getContext(), getResources().getString(R.string.tips_recorderror_nogps));
-            ArrayList<Long> tobedeleteNo = new ArrayList<Long>();
-            tobedeleteNo.add(traceID);
-            String tobedelete = GsonHelper.toJson(tobedeleteNo);
-            DeleteTraceRequest deleteTraceRequest = new DeleteTraceRequest(sp.getString("token", ""), tobedelete);
-            deleteTraceRequest.requestHttpData(new ResponseData() {
-                @Override
-                public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
-                    if (isSuccess) {
-                        if (code.equals("0")) {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Log.i("trailadapter", "删除成功");
-                                    // 删本地
-                                    traceDBHelper.deleteTrailByTraceNo(traceID, Common.getUserID(getContext()));
-
-                                    // 同时删除兴趣点
-                                    deletePOI(traceID);
-                                    dismissDialog();
-                                    Intent intent = new Intent();
-                                    intent.setAction(REFRESH_ACTION);
-                                    getContext().sendBroadcast(intent);
-                                }
-                            });
-                        }
-                        if (code.equals("100") || code.equals("101")) {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    dismissDialog();
-                                    Toast.makeText(getContext(), "登录信息过期，请重新登录！", Toast.LENGTH_SHORT).show();
-                                    SharedPreferences.Editor editor = sp.edit();
-                                    editor.putString("token", ""); // 清空token
-                                    editor.apply();
-                                    ActivityCollector.finishActivity("TraceDetailActivity");
-                                    ActivityCollector.finishActivity("TraceListActivity");
-                                    ActivityCollector.finishActivity("MainActivity");
-                                }
-                            });
-                        }
-                    }
-                }
-            });
+//            ArrayList<Long> tobedeleteNo = new ArrayList<Long>();
+//            tobedeleteNo.add(traceID);
+//            String tobedelete = GsonHelper.toJson(tobedeleteNo);
+//            DeleteTraceRequest deleteTraceRequest = new DeleteTraceRequest(sp.getString("token", ""), tobedelete);
+//            deleteTraceRequest.requestHttpData(new ResponseData() {
+//                @Override
+//                public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
+//                    if (isSuccess) {
+//                        if (code.equals("0")) {
+//                            getActivity().runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    Log.i("trailadapter", "删除成功");
+//                                    // 删本地
+//                                    traceDBHelper.deleteTrailByTraceNo(traceID, Common.getUserID(getContext()));
+//
+//                                    // 同时删除兴趣点
+//                                    deletePOI(traceID);
+//                                    dismissDialog();
+//                                    Intent intent = new Intent();
+//                                    intent.setAction(REFRESH_ACTION);
+//                                    getContext().sendBroadcast(intent);
+//                                }
+//                            });
+//                        }
+//                        if (code.equals("100") || code.equals("101")) {
+//                            getActivity().runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    dismissDialog();
+//                                    Toast.makeText(getContext(), "登录信息过期，请重新登录！", Toast.LENGTH_SHORT).show();
+//                                    SharedPreferences.Editor editor = sp.edit();
+//                                    editor.putString("token", ""); // 清空token
+//                                    editor.apply();
+//                                    ActivityCollector.finishActivity("TraceDetailActivity");
+//                                    ActivityCollector.finishActivity("TraceListActivity");
+//                                    ActivityCollector.finishActivity("MainActivity");
+//                                }
+//                            });
+//                        }
+//                    }
+//                }
+//            });
         }
         long termtraceID = traceID;
         traceID = 0;
