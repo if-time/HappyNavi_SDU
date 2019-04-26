@@ -7,8 +7,8 @@
     <ImageView 
         android:id="@+id/grouplistitem_grouppic"
         
-        android:layout_width="50dp"
-   		android:layout_height="50dp"  
+        android:layout_width="30dp"
+   		android:layout_height="30dp"
    		android:layout_marginLeft="10dip" 
    		android:layout_alignParentLeft="true"
    		android:gravity="center_vertical"
@@ -21,10 +21,11 @@
     	android:layout_height="wrap_content"
     	android:layout_toRightOf="@id/grouplistitem_grouppic"
     	android:layout_alignParentTop="true"
-    	android:layout_marginRight="40dp"
+    	android:layout_marginRight="10dp"
     	android:orientation="horizontal"
 	    >
-	<TextView 
+	<TextView
+		android:layout_marginTop="10dp"
 		android:id="@+id/tv_itemgroupname"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -33,7 +34,8 @@
 		android:layout_marginLeft="20dp"
 		android:textColor="@color/black"
 	/>
-	<TextView 
+	<TextView
+		android:layout_marginTop="5dp"
 		android:id="@+id/tv_itemgroupdetail"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -41,7 +43,7 @@
 		android:textSize="15sp"
 		android:layout_below="@id/tv_itemgroupname"
 		android:layout_alignLeft="@id/tv_itemgroupname"
-		android:lines="3"
+		android:lines="2"
 		android:ellipsize="end"
 		android:textColor="@color/gray_6"
 	/>

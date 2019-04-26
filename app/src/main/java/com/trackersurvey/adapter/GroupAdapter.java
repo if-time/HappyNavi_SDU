@@ -113,10 +113,28 @@ public class GroupAdapter extends BaseAdapter implements ListView.OnScrollListen
         URLArray = new String[groups.size()];
         IconName = new String[groups.size()];
         for (int i = 0; i < URLArray.length; i++) {
-            IconName[i] = groups.get(i).getGroupPicUrl().substring(8);       // "/images/XinLab.jpg"
-            URLArray[i] = BASE_URL_NEW + groups.get(i).getGroupPicUrl() + "?token=" + token;
+            String mgroupPicUrl = groups.get(i).getGroupPicUrl();
+            String mgroupPicUrl1 = groups.get(i).getGroupPicUrl();
+            if (mgroupPicUrl==null||mgroupPicUrl.isEmpty()) {
+                IconName[i]="";
+                Log.i("----", "---: " + groups.get(i) + " " + IconName[i]);
+            } else {
+                IconName[i] = mgroupPicUrl.substring(8);       // "/images/XinLab.jpg"
+                //                URLArray[i] = BASE_URL_NEW + mgroupPicUrl1 + "?token=" + token;
 
-            Log.i("dongsiyuanURLArray", "GroupAdapter: " + URLArray[i] + " " + IconName[i]);
+                Log.i("dongsiyuanURLArray", "GroupAdapter: " + URLArray[i] + " " + IconName[i]);
+            }
+            if (mgroupPicUrl1==null||mgroupPicUrl1.isEmpty()) {
+                URLArray[i] ="";
+                Log.i("----", "---: " + groups.get(i) + " " + IconName[i]);
+            } else {
+                //                IconName[i] = mgroupPicUrl.substring(8);       // "/images/XinLab.jpg"
+                URLArray[i] = BASE_URL_NEW + mgroupPicUrl1 + "?token=" + token;
+
+                Log.i("dongsiyuanURLArray", "GroupAdapter: " + URLArray[i] + " " + IconName[i]);
+            }
+
+
         }
     }
 

@@ -197,7 +197,12 @@ public class UserInfoChangeActivity extends BaseActivity implements View.OnClick
         childNumTv.setText(sp.getString("childCount", ""));
 
         sexChoice = sp.getInt("sex", 0);
-        childNumChoice = Integer.parseInt(sp.getString("childCount", ""));
+        if (sp.getString("childCount", "").equals("")) {
+            childNumChoice = 0;
+        } else {
+            childNumChoice = Integer.parseInt(sp.getString("childCount", ""));
+        }
+
 
         String occupation = sp.getString("occupation", "");
         if (occupation.equals("学生") || occupation.equals("student")) {
@@ -615,16 +620,30 @@ public class UserInfoChangeActivity extends BaseActivity implements View.OnClick
         //        birthDate = birthDateStr.split("-");
         final Calendar calendar = Calendar.getInstance();
         //        calendar.set(Integer.parseInt(birthDate[0]), Integer.parseInt(birthDate[1])-1, Integer.parseInt(birthDate[2]));
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(year, month, dayOfMonth);
-                birthDateTv.setText(android.text.format.DateFormat.format("yyyy-MM-dd", calendar));
-                birthDateStr = String.valueOf(year) + "-" + String.valueOf(month + 1) + "-" + String.valueOf(dayOfMonth);
-            }
-        }, Integer.parseInt(birthDate[0]), Integer.parseInt(birthDate[1]), Integer.parseInt(birthDate[2]));
-//        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.show();
+        if (birthDate[0].equals("") || birthDate[1].equals("") || birthDate[2].equals("")) {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                    calendar.set(year, month, dayOfMonth);
+                    birthDateTv.setText(android.text.format.DateFormat.format("yyyy-MM-dd", calendar));
+                    birthDateStr = String.valueOf(year) + "-" + String.valueOf(month + 1) + "-" + String.valueOf(dayOfMonth);
+                }
+            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            datePickerDialog.show();
+        } else {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                    calendar.set(year, month, dayOfMonth);
+                    birthDateTv.setText(android.text.format.DateFormat.format("yyyy-MM-dd", calendar));
+                    birthDateStr = String.valueOf(year) + "-" + String.valueOf(month + 1) + "-" + String.valueOf(dayOfMonth);
+                }
+            }, Integer.parseInt(birthDate[0]), Integer.parseInt(birthDate[1]), Integer.parseInt(birthDate[2]));
+            datePickerDialog.show();
+        }
+
+        //        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
     }
 
     private void selectSex() {

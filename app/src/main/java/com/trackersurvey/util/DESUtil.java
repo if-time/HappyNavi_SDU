@@ -22,6 +22,7 @@ public class DESUtil {
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
         return toHexString(cipher.doFinal(message.getBytes("GBK")));
     }
+
     //解密
     public static String decrypt(String message) throws Exception {
 
