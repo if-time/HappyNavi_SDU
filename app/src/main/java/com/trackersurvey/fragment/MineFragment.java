@@ -1,43 +1,33 @@
 package com.trackersurvey.fragment;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.trackersurvey.db.MyTraceDBHelper;
-import com.trackersurvey.happynavi.MainActivity;
 import com.trackersurvey.happynavi.MyAlbumActivity;
 import com.trackersurvey.happynavi.MyGroupActivity;
 import com.trackersurvey.happynavi.R;
 import com.trackersurvey.happynavi.SettingActivity;
+import com.trackersurvey.happynavi.UserGuide;
 import com.trackersurvey.happynavi.UserInfoActivity;
-import com.trackersurvey.http.ResponseData;
-import com.trackersurvey.http.TestRequest;
 import com.trackersurvey.service.LocationService;
 import com.trackersurvey.util.AppManager;
 import com.trackersurvey.util.CircleImageView;
 import com.trackersurvey.util.Common;
 import com.trackersurvey.util.CustomDialog;
-
-import java.io.IOException;
 
 /**
  * Created by lenovo on 2017/9/4.
@@ -112,13 +102,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
                 break;
             case R.id.my_help_layout:
-                TestRequest testRequest = new TestRequest();
-                testRequest.requestHttpData(new ResponseData() {
-                    @Override
-                    public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
-
-                    }
-                });
+                Intent UserGuide = new Intent(getContext(), com.trackersurvey.happynavi.UserGuide.class);
+                startActivity(UserGuide);
                 break;
             case R.id.ll_exit_app:
                 exit();
