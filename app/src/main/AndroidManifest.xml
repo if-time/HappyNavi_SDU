@@ -249,6 +249,10 @@
         <activity android:name=".SetParameterActivity" />
         <activity android:name=".UserInfoActivity" />
         <activity android:name=".UserInfoChangeActivity" />
+        <activity
+            android:name="com.trackersurvey.happynavi.UserGuide"
+            android:screenOrientation="portrait" />
+
 
         <provider
             android:name="android.support.v4.content.FileProvider"

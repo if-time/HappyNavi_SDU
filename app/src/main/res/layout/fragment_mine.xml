@@ -110,6 +110,7 @@
         android:visibility="gone" />
 
     <LinearLayout
+      android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -144,27 +145,6 @@
             android:layout_marginLeft="35dp"
             android:layout_marginRight="35dp"
             android:background="@color/gray_b" />
-
-        <!--<LinearLayout
-            android:id="@+id/my_point_layout"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:background="@drawable/bg_mine_layout_press">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_mine_point"
-                android:layout_gravity="center"
-                android:layout_marginLeft="30dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/mine_point"
-                android:textSize="18sp"
-                android:textColor="@color/black"
-                android:layout_gravity="center"
-                android:layout_marginLeft="20dp"/>
-        </LinearLayout>-->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0.1dp"
@@ -184,14 +164,14 @@
             android:id="@+id/my_group_layout"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="150dp"
+            android:layout_height="140dp"
             android:orientation="vertical"
             android:background="@mipmap/kuang">
 
             <ImageView
                 android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_marginTop="20dp"
                 android:src="@mipmap/qunzu" />
             <TextView
@@ -212,14 +192,14 @@
         android:id="@+id/my_setting_layout"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="150dp"
+        android:layout_height="140dp"
         android:layout_marginTop="2dp"
         android:background="@mipmap/kuang">
 
         <ImageView
             android:layout_marginTop="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
 
             android:src="@mipmap/yingyong" />
@@ -235,6 +215,72 @@
     </LinearLayout>
 </LinearLayout>
 
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_marginTop="2dp"
+                android:padding="1dp"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/ll_exit_app"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="140dp"
+                android:orientation="vertical"
+                android:background="@mipmap/kuang">
+
+                <ImageView
+                    android:layout_gravity="center"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="20dp"
+                    android:src="@mipmap/tuichu" />
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:text="退出登入"
+                    android:textColor="#333333"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="1dp"
+                android:layout_marginRight="10dp"
+                android:orientation="vertical"
+                android:id="@+id/my_help_layout"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="140dp"
+                android:layout_marginTop="2dp"
+                android:background="@mipmap/kuang">
+
+                <ImageView
+                    android:layout_marginTop="25dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+
+                    android:src="@mipmap/ic_mine_help" />
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="帮助"
+                    android:textColor="#333333"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0.1dp"
@@ -243,26 +289,7 @@
             android:background="@color/gray_b"
             android:visibility="gone" />
 
-        <!--<LinearLayout
-            android:id="@+id/my_trace_layout"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:background="@drawable/bg_mine_layout_press">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_mine_trace"
-                android:layout_gravity="center"
-                android:layout_marginLeft="30dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/mine_trace"
-                android:textSize="18sp"
-                android:textColor="@color/black"
-                android:layout_gravity="center"
-                android:layout_marginLeft="20dp"/>
-        </LinearLayout>-->
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0.1dp"
@@ -271,26 +298,7 @@
             android:background="@color/gray_b"
             android:visibility="gone" />
 
-        <!--<LinearLayout
-            android:id="@+id/my_sport_layout"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:background="@drawable/bg_mine_layout_press">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_mine_sport"
-                android:layout_gravity="center"
-                android:layout_marginLeft="30dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/mine_sport"
-                android:textSize="18sp"
-                android:textColor="@color/black"
-                android:layout_gravity="center"
-                android:layout_marginLeft="20dp"/>
-        </LinearLayout>-->
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0.1dp"
@@ -299,26 +307,6 @@
             android:background="@color/gray_b"
             android:visibility="gone" />
 
-        <!--<LinearLayout
-            android:id="@+id/my_offline_map_layout"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:background="@drawable/bg_mine_layout_press">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_mine_offline_map"
-                android:layout_gravity="center"
-                android:layout_marginLeft="30dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/mine_offline_map"
-                android:textSize="18sp"
-                android:textColor="@color/black"
-                android:layout_gravity="center"
-                android:layout_marginLeft="20dp"/>
-        </LinearLayout>-->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0.1dp"
@@ -337,8 +325,9 @@
             android:visibility="gone" />
 
         <LinearLayout
+            android:visibility="gone"
             android:orientation="vertical"
-            android:id="@+id/ll_exit_app"
+            android:id="@+id/ll_exit_app1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="2dp"
@@ -363,7 +352,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/my_help_layout"
+            android:id="@+id/my_help_layout1"
             android:layout_width="match_parent"
             android:layout_height="43dp"
             android:background="@drawable/bg_mine_layout_press"
