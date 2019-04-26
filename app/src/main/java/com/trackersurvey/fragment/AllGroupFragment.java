@@ -27,11 +27,9 @@ import android.widget.Toast;
 
 import com.trackersurvey.adapter.GroupAdapter;
 import com.trackersurvey.bean.GroupInfoData;
-import com.trackersurvey.happynavi.GroupInfoActivity;
 import com.trackersurvey.happynavi.R;
 import com.trackersurvey.http.DownloadGroupList;
 import com.trackersurvey.http.ResponseData;
-import com.trackersurvey.httpconnection.PostGroupInfo;
 import com.trackersurvey.httpconnection.PostJoinOrExitGroup;
 import com.trackersurvey.util.Common;
 import com.trackersurvey.util.GsonHelper;
@@ -88,6 +86,9 @@ public class AllGroupFragment extends Fragment implements View.OnClickListener, 
         search = (ImageButton) view.findViewById(R.id.bt_search);
         join = (Button) view.findViewById(R.id.joingroup);
         et_search = (EditText) view.findViewById(R.id.et_search);
+        key = et_search.getText().toString().trim();
+
+        et_search.setSelection(key.length());
         search.setOnClickListener(this);
         cancel.setOnClickListener(this);
         join.setOnClickListener(this);
@@ -270,10 +271,13 @@ public class AllGroupFragment extends Fragment implements View.OnClickListener, 
             case R.id.bt_search:
                 //ToastUtil.show(context, et_search.getText().toString());
                 key = et_search.getText().toString().trim();
+
+                et_search.setSelection(key.length());
                 if (key == null || key.equals("")) {
                     ToastUtil.show(context, getResources().getString(R.string.tips_search_cannotnull));
                     return;
                 } else {
+
                     showDialog(getResources().getString(R.string.tip), getResources().getString(R.string.tips_searching));
 
                     init(key);

@@ -113,7 +113,9 @@ public class GroupInfoActivity extends BaseActivity {
         if (groupInfo != null) {
             mLoader = new MyImageLoader();
             //            mLoader.loadOneImage(iv_groupphoto, groupInfo.getGroupPicUrl(), groupInfo.getGroupPicUrl().substring(8));
-            mLoader.loadOneImage(iv_groupphoto, "http://219.218.118.176:8090/Image/711.jpg", groupInfo.getGroupPicUrl().substring(8));
+//            Log.i("iv_groupphoto", "groupInfo: " + groupInfo.getGroupPicUrl());
+            if (groupInfo.getGroupPicUrl() != null)
+                mLoader.loadOneImage(iv_groupphoto, "http://219.218.118.176:8090/Image/711.jpg", groupInfo.getGroupPicUrl().substring(8));
             tv_groupname.setText(groupInfo.getGroupName());
             tv_createman.setText(groupInfo.getCreateAdminID() + "");
             String[] ManagerIDs = groupInfo.getManagerIDs();

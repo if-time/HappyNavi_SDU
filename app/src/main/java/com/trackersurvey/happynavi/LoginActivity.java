@@ -150,14 +150,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         /**
          * SDK连接HMS
          */
-        HMSAgent.connect(this, new ConnectHandler() {
-            @Override
-            public void onConnect(int rst) {
-//                ToastUtil.show(LoginActivity.this, "HMS connect end:" + rst);
-            }
-        });
-        getToken();
-        registerBroadcast();
+//        HMSAgent.connect(this, new ConnectHandler() {
+//            @Override
+//            public void onConnect(int rst) {
+////                ToastUtil.show(LoginActivity.this, "HMS connect end:" + rst);
+//            }
+//        });
+//        getToken();
+//        registerBroadcast();
 
         //	    forgetpassword.setOnClickListener(new OnClickListener() {
         //

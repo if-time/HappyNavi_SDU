@@ -36,6 +36,8 @@
                         android:layout_alignBottom="@+id/bt_search"
                         android:hint="@string/searchgroups"
                         android:textSize="15sp"
+                        android:textColor="@color/black"
+                        android:text="香港海洋公园"
                         android:singleLine="true"
                         />
                     <ImageButton
