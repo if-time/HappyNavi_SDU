@@ -226,40 +226,15 @@
                 android:layout_marginTop="2dp"
                 android:padding="1dp"
                 android:layout_marginLeft="10dp"
-                android:id="@+id/ll_exit_app"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="140dp"
-                android:orientation="vertical"
-                android:background="@mipmap/kuang">
-
-                <ImageView
-                    android:layout_gravity="center"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginTop="20dp"
-                    android:src="@mipmap/tuichu" />
-                <TextView
-                    android:id="@+id/textView1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:text="退出登入"
-                    android:textColor="#333333"
-                    android:textSize="15sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:padding="1dp"
-                android:layout_marginRight="10dp"
-                android:orientation="vertical"
                 android:id="@+id/my_help_layout"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="140dp"
-                android:layout_marginTop="2dp"
+                android:orientation="vertical"
                 android:background="@mipmap/kuang">
+
+
+
 
                 <ImageView
                     android:layout_marginTop="25dp"
@@ -275,6 +250,49 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="帮助"
+                    android:textColor="#333333"
+                    android:textSize="15sp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="1dp"
+                android:layout_marginRight="10dp"
+                android:orientation="vertical"
+                android:id="@+id/ll_exit_app"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="140dp"
+                android:layout_marginTop="2dp"
+                android:background="@mipmap/kuang">
+
+
+                <ImageView
+                    android:layout_gravity="center"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="20dp"
+                    android:src="@mipmap/tuichu" />
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:text="退出"
                     android:textColor="#333333"
                     android:textSize="15sp" />
             </LinearLayout>
