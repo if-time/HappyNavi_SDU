@@ -1814,8 +1814,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                         commentServiceIntent.putExtra("createTime", commentTime);
                         commentUploadService.getToComment(data.getStringExtra("createTime"));
                     }// 如果是数据流量连接，第一次使用询问是否上传
-                    else if (Common.checkNetworkState(getContext()) == ConnectivityManager.TYPE_MOBILE
-                            && !Common.isOnlyWifiUploadPic(getContext())) {
+                    else if (Common.checkNetworkState(getContext()) == ConnectivityManager.TYPE_MOBILE) {
                         SharedPreferences sp = getActivity().getSharedPreferences("config",
                                 MODE_PRIVATE);
                         if (sp.getInt(LoginActivity.mobConnectFirst, 0) == 0) {

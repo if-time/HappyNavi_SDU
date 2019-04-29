@@ -1342,8 +1342,7 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
                         // commentUploadService.uploadComment(Common.getUserId(getApplicationContext()),
                         // commentTime);
                     } // 如果是数据流量连接，第一次使用询问是否上传
-                    else if (Common.checkNetworkState(context) == ConnectivityManager.TYPE_MOBILE
-                            && !Common.isOnlyWifiUploadPic(context)) {
+                    else if (Common.checkNetworkState(context) == ConnectivityManager.TYPE_MOBILE) {
                         SharedPreferences sp = getActivity().getSharedPreferences("config",
                                 android.content.Context.MODE_PRIVATE);
                         if (sp.getInt(LoginActivity.mobConnectFirst, 0) == 0) {
