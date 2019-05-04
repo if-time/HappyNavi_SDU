@@ -1,4 +1,3 @@
-
 **老接口文档：http://219.218.118.176:8090/doc/doc.html\#601**
 
 **一、注册登录**
@@ -493,3 +492,6 @@ System.out.println("关闭文件流发生异常: " + e);
 }
 
 }
+
+S \left[ \begin{array}{c}{x} \\ {y} \\ {1}\end{array}\right]=\left[ \begin{array}{ccc}{f_{x}} & {0} & {u_{0}} \\ {0} & {f_{y}} & {v_{0}} \\ {0} & {0} & {1}\end{array}\right] \left[ \begin{array}{cccc}{r 1} & {r 2} & {r 3} & {t 1} \\ {r 4} & {r 5} & {r 6} & {t 2} \\ {r 7} & {r 8} & {r 9} & {t 3}\end{array}\right] \left[ \begin{array}{l}{X} \\ {Y} \\ {Z} \\ {1}\end{array}\right]
+

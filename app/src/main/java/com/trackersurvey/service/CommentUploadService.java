@@ -387,7 +387,7 @@ public class CommentUploadService extends Service {
                         SharedPreferences uploadFiles = getSharedPreferences(SHAREDFILES, MODE_PRIVATE);
                         uploadFiles.edit().remove(key).commit();
                         Map<String, ?> fileCache = uploadFiles.getAll();
-                        //                        Log.i("upfile", "from service "+"" + msg.obj+"file size="+fileCache.size());
+                        Log.i("fileCache", "from service "+"" + fileCache +"file size="+fileCache.size());
                         if (!hasUploadComment) {
                             uploadFiles(1, fileCache);
                         }

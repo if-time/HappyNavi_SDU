@@ -209,7 +209,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             CustomDialog.Builder builder = new CustomDialog.Builder(LoginActivity.this);
             builder.setTitle(getResources().getString(R.string.tip));
             builder.setMessage(getResources().getString(R.string.tips_autoself));
-            builder.setNegativeButton(getResources().getString(R.string.cancl), new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(getResources().getString(R.string.close), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     // TODO Auto-generated method stub
