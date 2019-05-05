@@ -27,4 +27,6 @@
     <color name="driveTrace">#FF6C00</color>
     <color name="trainTrace">#FF0000</color>
     <color name="otherTrace">#E11AED</color>
+
+    <color name="gray_eeeeee">#eeeeee</color>
 </resources>

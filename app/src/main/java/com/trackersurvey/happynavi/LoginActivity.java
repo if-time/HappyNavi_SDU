@@ -63,6 +63,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     public              EditText   pwdEt;
     public              CheckBox   remeber_pwd;
     public              CheckBox   agree_protocol;
+    public TextView tv_forget_pwd;
     public              TextView   appVersion;
     //public TextView forgetpassword;
     public              TextView   protocal;
@@ -138,6 +139,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         pwdEt = (EditText) findViewById(R.id.et_password);
         //remeber_pwd=(CheckBox) findViewById(R.id.checkBox);
         agree_protocol = (CheckBox) findViewById(R.id.agree);
+        tv_forget_pwd = (TextView) findViewById(R.id.tx_forget_pwd);
         //forgetpassword=(TextView) findViewById(R.id.forgetpassword);
 
         protocal = (TextView) findViewById(R.id.protocal);
@@ -146,6 +148,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         login = (Button) findViewById(R.id.btn_login);
         register.setOnClickListener(this);
         login.setOnClickListener(this);
+        tv_forget_pwd.setOnClickListener(this);
 
         /**
          * SDK连接HMS
@@ -255,6 +258,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             case R.id.btn_register:
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.tx_forget_pwd:
+                Intent intent_for_pwd = new Intent(LoginActivity.this, ResettingPasswordActivity.class);
+                startActivity(intent_for_pwd);
                 break;
         }
     }

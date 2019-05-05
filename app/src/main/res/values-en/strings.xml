@@ -691,7 +691,8 @@
     <string name="share_detail">Track content</string>
         
     <string name="exit">exit </string>
-        <string name="confirmed">Confirm</string>
+        
+    <string name="confirmed">Confirm</string>
     <string name="open">open </string>
         
     <string name="tips_clean">Are you sure you want to clear the cached data for this app? Include photos, videos, and track information stored locally will be deleted </string>
@@ -1059,6 +1060,18 @@
 
         
     <string name="action_settings">Settings </string>
+
+    <string name="input_password_identify_code">Retrieve password</string>
+        
+    <string name="hint_phone">Please enter the phone number </string>
+        
+    <string name="hint_verify"> SMS verification code </string>
+        
+    <string name="get_verify">Get the verification code </string>
+        
+    <string name="hint_password">Please enter a password </string>
+        
+    <string name="hint_password_again">Enter the password again</string>
     <string-array name="sex">
                 
         <item>confidential</item>

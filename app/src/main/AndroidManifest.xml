@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.trackersurvey.happynavi"
-    android:versionCode="226"
-    android:versionName="2.2.6">
+    android:versionCode="227"
+    android:versionName="2.2.7">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -57,11 +57,13 @@
         android:roundIcon="@mipmap/app_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ResettingPasswordActivity"></activity>
+
         <service
             android:name="com.trackersurvey.service.PlayerMusicService"
             android:enabled="true"
             android:exported="true"
-            android:process=":music_service"></service>
+            android:process=":music_service" />
         <service
             android:name="com.trackersurvey.service.DownloadApkService"
             android:enabled="true"
@@ -250,9 +252,8 @@
         <activity android:name=".UserInfoActivity" />
         <activity android:name=".UserInfoChangeActivity" />
         <activity
-            android:name="com.trackersurvey.happynavi.UserGuide"
+            android:name=".UserGuide"
             android:screenOrientation="portrait" />
-
 
         <provider
             android:name="android.support.v4.content.FileProvider"
