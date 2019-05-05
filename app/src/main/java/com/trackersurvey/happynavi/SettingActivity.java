@@ -179,6 +179,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.ll_checkupdate:
 
                 Common.showDialog(proDialog, getResources().getString(R.string.tip), getResources().getString(R.string.tips_updatedlgmsg));
+                Log.i("token + versionCode", "token: "  + sp.getString("token", "") + " versionCode: " + versionCode);
 
                 DownloadUpdateApp downloadUpdateApp = new DownloadUpdateApp(sp.getString("token", ""), versionCode);
                 downloadUpdateApp.requestHttpData(new ResponseData() {
