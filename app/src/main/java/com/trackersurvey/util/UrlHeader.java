@@ -13,6 +13,7 @@ public class UrlHeader {
     public static final String BASE_URL_NEW = "http://211.87.227.204:8089/";
     public static final String GET_MSG_CODE_URL = "user/sendSMSCode"; //获取短信验证码（已调试）
     public static final String REGISTER_URL = "user/register"; // 注册（已调试）
+    public static final String UPDATEPWD_URL = "user/updatePasswd";
     public static final String LOGIN_URL_NEW = "user/login"; // 登录（已调试）
     public static final String LOGOUT_URL = "user/logout"; // 退出登录
     // 轨迹和位置上传

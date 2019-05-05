@@ -16,6 +16,11 @@ public class RegisterRequest extends HttpUtil {
     private String password = "";
     private String code = "";
 
+    public RegisterRequest(String loginName, String password) {
+        this.loginName = loginName;
+        this.password = password;
+    }
+
     public RegisterRequest(String loginName, String password, String code) {
         this.loginName = loginName;
         this.password = password;
@@ -35,7 +40,7 @@ public class RegisterRequest extends HttpUtil {
         RequestBody requestBody = new FormBody.Builder()
                 .add("loginName", loginName)
                 .add("password", password)
-                .add("code", code)
+//                .add("code", code)
                 .build();
         return requestBody;
     }

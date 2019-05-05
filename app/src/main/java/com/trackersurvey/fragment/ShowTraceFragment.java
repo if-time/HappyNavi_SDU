@@ -1552,16 +1552,15 @@ public class ShowTraceFragment extends Fragment implements View.OnClickListener,
         if (Common.url_wx == null || Common.url_wx.equals("")) {
             Common.url_wx = getResources().getString(R.string.url_wx);
         }
+        Log.i("shareToWX", "shareToWX: ");
         String title = getResources().getString(R.string.share_title);
         String detail = getResources().getString(R.string.distance_label) + ":"
                 + Common.transformDistance(trailobj.getDistance()) + getResources().getString(R.string.dis_unit) + "\n"
                 + getResources().getString(R.string.duration_label) + ":" + Common.transformTime(trailobj.getDuration());
-        //		ShareToWeChat.shareWeb((context),
-        //				Common.url_wx + "uid=" + Common.getUserId(context) + "&tid=" + trailobj.getTraceNo(), isTimeLine, title,
-        //				detail);
-        ShareToWeChat.shareWeb((context),
-                "http://www.baidu.com", isTimeLine, title,
-                detail);
+//        		ShareToWeChat.shareWeb((context),
+//        				Common.url_wx + "uid=" + Common.getUserID(context) + "&tid=" + trailobj.getTraceID(), isTimeLine, title,
+//        				detail);
+        ShareToWeChat.shareWeb((context), "http://www.baidu.com", isTimeLine, title, detail);
 
     }
 

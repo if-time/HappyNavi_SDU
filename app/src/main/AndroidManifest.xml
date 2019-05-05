@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.trackersurvey.happynavi"
-    android:versionCode="227"
-    android:versionName="2.2.7">
+    android:versionCode="228"
+    android:versionName="2.2.8">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />

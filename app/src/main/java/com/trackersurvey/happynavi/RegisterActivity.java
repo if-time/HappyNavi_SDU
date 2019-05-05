@@ -21,13 +21,13 @@ import java.io.IOException;
 
 public class RegisterActivity extends BaseActivity implements View.OnClickListener{
 
-    private static Button getVrfCodeBtn;
+//    private static Button getVrfCodeBtn;
     private EditText uidEt;
-    private EditText msgEt;
+//    private EditText msgEt;
     private EditText pwdEt;
     private EditText pwdConfirmEt;
     private Button registerBtn;
-    private MyCountDownTimer myCountDownTimer;
+//    private MyCountDownTimer myCountDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,61 +39,61 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         if (actionBar != null){
             actionBar.hide();
         }
-        getVrfCodeBtn = (Button) findViewById(R.id.btn_get_verification_code);
+//        getVrfCodeBtn = (Button) findViewById(R.id.btn_get_verification_code);
         uidEt = (EditText) findViewById(R.id.et_userid);
-        msgEt = (EditText) findViewById(R.id.et_verification_code);
+//        msgEt = (EditText) findViewById(R.id.et_verification_code);
         pwdEt = (EditText) findViewById(R.id.et_password);
         pwdConfirmEt = (EditText) findViewById(R.id.et_confirm_pwd);
         registerBtn = (Button) findViewById(R.id.register_complete);
-        getVrfCodeBtn.setOnClickListener(this);
+//        getVrfCodeBtn.setOnClickListener(this);
         registerBtn.setOnClickListener(this);
-        myCountDownTimer = new MyCountDownTimer(60000,1000);
+//        myCountDownTimer = new MyCountDownTimer(60000,1000);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.btn_get_verification_code:
-                myCountDownTimer.start();
-                GetMsgCodeRequest getMsgCodeRequest = new GetMsgCodeRequest(uidEt.getText().toString());
-                getMsgCodeRequest.requestHttpData(new ResponseData() {
-                    @Override
-                    public void onResponseData(boolean isSuccess, String code, Object responseObject, final String msg) throws IOException {
-                        if (isSuccess) {
-                            switch (code) {
-                                case "0":
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(RegisterActivity.this, "获取验证码成功！", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                    break;
-                                case "12":
-                                    // 手机号格式不正确,请使用中国大陆运营商正确手机号码!
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                    break;
-                                case "13":
-                                    // 手机验证码发送失败,请稍后再试!
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                    break;
-                            }
-                        } else {
-                            Toast.makeText(RegisterActivity.this, "请求超时", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                break;
+//            case R.id.btn_get_verification_code:
+//                myCountDownTimer.start();
+//                GetMsgCodeRequest getMsgCodeRequest = new GetMsgCodeRequest(uidEt.getText().toString());
+//                getMsgCodeRequest.requestHttpData(new ResponseData() {
+//                    @Override
+//                    public void onResponseData(boolean isSuccess, String code, Object responseObject, final String msg) throws IOException {
+//                        if (isSuccess) {
+//                            switch (code) {
+//                                case "0":
+//                                    runOnUiThread(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            Toast.makeText(RegisterActivity.this, "获取验证码成功！", Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    });
+//                                    break;
+//                                case "12":
+//                                    // 手机号格式不正确,请使用中国大陆运营商正确手机号码!
+//                                    runOnUiThread(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    });
+//                                    break;
+//                                case "13":
+//                                    // 手机验证码发送失败,请稍后再试!
+//                                    runOnUiThread(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    });
+//                                    break;
+//                            }
+//                        } else {
+//                            Toast.makeText(RegisterActivity.this, "请求超时", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
+//                break;
             case R.id.register_complete:
                 register();
                 break;
@@ -102,21 +102,23 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private void register(){
         String uid = uidEt.getText().toString();
-        String shortMsg = msgEt.getText().toString();
+//        String shortMsg = msgEt.getText().toString();
         String pwd = pwdEt.getText().toString();
         String pwdMD5 = MD5Util.string2MD5(pwd);
         if (uid.equals("")) {
             Toast.makeText(this, "请输入手机号", Toast.LENGTH_SHORT).show();
-        } else if (shortMsg.equals("")) {
-            Toast.makeText(this, "请输入验证码", Toast.LENGTH_SHORT).show();
-        } else if (pwd.equals("")) {
+        }
+//        else if (shortMsg.equals("")) {
+//            Toast.makeText(this, "请输入验证码", Toast.LENGTH_SHORT).show();
+//        }
+        else if (pwd.equals("")) {
             Toast.makeText(this, "请输入密码", Toast.LENGTH_SHORT).show();
         } else if (!pwd.equals(pwdConfirmEt.getText().toString())) {
             Toast.makeText(this, "您输入的密码不一致，请重新输入", Toast.LENGTH_SHORT).show();
         }else {
             Log.i("RegisterActivity", "uid : " + uid + " pwdMD5 : " + pwdMD5.toUpperCase()
                     + " deviceID : " + Common.getDeviceId(getApplicationContext()));
-            RegisterRequest registerRequest = new RegisterRequest(uid, pwdMD5.toUpperCase(), shortMsg);
+            RegisterRequest registerRequest = new RegisterRequest(uid, pwdMD5.toUpperCase());
             registerRequest.requestHttpData(new ResponseData() {
                 @Override
                 public void onResponseData(boolean isSuccess, String code, Object responseObject, final String msg) throws IOException {
@@ -174,38 +176,38 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    private class MyCountDownTimer extends CountDownTimer {
-
-        /**
-         * @param millisInFuture    The number of millis in the future from the call
-         *                          to {@link #start()} until the countdown is done and {@link #onFinish()}
-         *                          is called.
-         * @param countDownInterval The interval along the way to receive
-         *                          {@link #onTick(long)} callbacks.
-         */
-        public MyCountDownTimer(long millisInFuture, long countDownInterval) {
-            super(millisInFuture, countDownInterval);
-        }
-
-        //计时过程
-        @Override
-        public void onTick(long millisUntilFinished) {
-            //防止计时过程中重复点击
-            getVrfCodeBtn.setClickable(false);
-            getVrfCodeBtn.setTextColor(getResources().getColor(R.color.gray));
-            getVrfCodeBtn.setText(millisUntilFinished/1000 + "秒" + "后重新获取");
-            getVrfCodeBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_corner_get_vrf_wait_btn));
-        }
-
-        //计时完毕的方法
-        @Override
-        public void onFinish() {
-            //重新给Button设置文字
-            getVrfCodeBtn.setText("重新获取验证码");
-            getVrfCodeBtn.setTextColor(getResources().getColor(R.color.white));
-            getVrfCodeBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_corner_get_vrf_btn));
-            //设置可点击
-            getVrfCodeBtn.setClickable(true);
-        }
-    }
+//    private class MyCountDownTimer extends CountDownTimer {
+//
+//        /**
+//         * @param millisInFuture    The number of millis in the future from the call
+//         *                          to {@link #start()} until the countdown is done and {@link #onFinish()}
+//         *                          is called.
+//         * @param countDownInterval The interval along the way to receive
+//         *                          {@link #onTick(long)} callbacks.
+//         */
+//        public MyCountDownTimer(long millisInFuture, long countDownInterval) {
+//            super(millisInFuture, countDownInterval);
+//        }
+//
+//        //计时过程
+//        @Override
+//        public void onTick(long millisUntilFinished) {
+//            //防止计时过程中重复点击
+//            getVrfCodeBtn.setClickable(false);
+//            getVrfCodeBtn.setTextColor(getResources().getColor(R.color.gray));
+//            getVrfCodeBtn.setText(millisUntilFinished/1000 + "秒" + "后重新获取");
+//            getVrfCodeBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_corner_get_vrf_wait_btn));
+//        }
+//
+//        //计时完毕的方法
+//        @Override
+//        public void onFinish() {
+//            //重新给Button设置文字
+//            getVrfCodeBtn.setText("重新获取验证码");
+//            getVrfCodeBtn.setTextColor(getResources().getColor(R.color.white));
+//            getVrfCodeBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_corner_get_vrf_btn));
+//            //设置可点击
+//            getVrfCodeBtn.setClickable(true);
+//        }
+//    }
 }
