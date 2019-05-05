@@ -186,15 +186,18 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
                         if (isSuccess) {
+                            Log.i("code.equals", "onResponseData: " + code);
                             if (code.equals("0")) {
+
                                 final FileInfo fileInfo = (FileInfo) responseObject;
 
                                 Common.fileInfo = new FileInfo(fileInfo.getVersionid(), fileInfo.getVersioncode(),
                                         fileInfo.getVersionname(), fileInfo.getDownloadurl(), fileInfo.getVersiondesc(), 0 ,0);
                                 token = sp.getString("token", "");
-                                fileName = fileInfo.getDownloadurl().substring(9);
+                                Log.i("fileName", "onResponseData: " + fileInfo.getDownloadurl());
+                                fileName = fileInfo.getDownloadurl().substring(12);
                                 mSavePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "微足迹.apk";
-                                mDownloadUrl = UrlHeader.BASE_URL_NEW + fileInfo.getDownloadurl() + "?token=" + token;
+                                mDownloadUrl = "http://interface.hptracker.com:8090" + fileInfo.getDownloadurl() + "?token=" + token;
 
                                 Log.i("downloadUpdateApp", "onResponseData: " + fileInfo.toString());
                                 runOnUiThread(new Runnable() {
@@ -242,6 +245,15 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                                     }
                                 });
                             }
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Common.dismissDialog(proDialog);
+                                    ToastUtil.show(SettingActivity.this, "更新失败");
+                                }
+                            });
+                            Log.i("versionCode", "onResponseData: 失败" );
                         }
                     }
                 });

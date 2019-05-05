@@ -37,11 +37,11 @@ public class FileInfo implements Serializable {
 
     public FileInfo(JSONObject jsonObject) {
         try {
-            versionid = jsonObject.getInt("versionid");
-            versioncode = jsonObject.getString("versioncode");
-            versionname = jsonObject.getString("version");
-            downloadurl = jsonObject.getString("downloadurl");
-            versiondesc = jsonObject.getString("versiondesc");
+            versionid = jsonObject.getInt("VersionID");
+            versioncode = jsonObject.getString("VersionCode");
+            versionname = jsonObject.getString("VersionNo");
+            downloadurl = jsonObject.getString("ApkPath");
+            versiondesc = jsonObject.getString("Detail");
         } catch (JSONException e) {
             e.printStackTrace();
         }

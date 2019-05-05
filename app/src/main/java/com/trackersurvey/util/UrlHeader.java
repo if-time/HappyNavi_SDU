@@ -55,6 +55,7 @@ public class UrlHeader {
     // 下载兴趣点原文件
     // 下载兴趣点缩略图
     // 版本更新
-    public static final String DOWNLOAD_NEWSET_APP = "/user/updateVersion";
+//    public static final String DOWNLOAD_NEWSET_APP = "/user/updateVersion";
+    public static final String DOWNLOAD_NEWSET_APP = "/appUpdate/updateVersion";
     // 请求4个时间？？？
 }
