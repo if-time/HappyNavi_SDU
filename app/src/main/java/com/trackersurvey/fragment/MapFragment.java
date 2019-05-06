@@ -71,8 +71,6 @@ import com.trackersurvey.happynavi.BGRunningGuideActivity;
 import com.trackersurvey.happynavi.CommentActivity;
 import com.trackersurvey.happynavi.LoginActivity;
 import com.trackersurvey.happynavi.R;
-import com.trackersurvey.happynavi.SplashActivity;
-import com.trackersurvey.http.DeleteTraceRequest;
 import com.trackersurvey.http.DownloadPoiChoices;
 import com.trackersurvey.http.DownloadTraceDetailRequest;
 import com.trackersurvey.http.EndTraceRequest;
@@ -85,14 +83,12 @@ import com.trackersurvey.model.StepData;
 import com.trackersurvey.model.TraceData;
 import com.trackersurvey.service.CommentUploadService;
 import com.trackersurvey.service.LocationService;
-import com.trackersurvey.service.OnePxService;
 import com.trackersurvey.service.PlayerMusicService;
 import com.trackersurvey.service.StepCounterService;
 import com.trackersurvey.util.ActivityCollector;
 import com.trackersurvey.util.Common;
 import com.trackersurvey.util.CustomDialog;
 import com.trackersurvey.util.GsonHelper;
-import com.trackersurvey.util.MobileInfoUtils;
 import com.trackersurvey.util.ShareToWeChat;
 import com.trackersurvey.util.SportTypeChangeDialog;
 import com.trackersurvey.util.SportTypeDialog;
@@ -122,111 +118,111 @@ import static android.content.Context.MODE_PRIVATE;
 public class MapFragment extends Fragment implements View.OnClickListener, LocationSource, AMapLocationListener,
         AMap.OnMapClickListener, AMap.OnMarkerClickListener {
 
-    private View           homepageLayout;
-    private ImageButton    startTrail;
-    private ImageButton    changeSportTypeIb;
-    private ImageButton    endTrail;
-    private ImageButton    takePhoto;
-    private TextView       stepTv;
-    private TextView       locationTv;
-    private TextView       calculateTv;
+    private View homepageLayout;
+    private ImageButton startTrail;
+    private ImageButton changeSportTypeIb;
+    private ImageButton endTrail;
+    private ImageButton takePhoto;
+    private TextView stepTv;
+    private TextView locationTv;
+    private TextView calculateTv;
     private ProgressDialog proDialog = null;
-    private int            sportType;
+    private int sportType;
 
-    private AMap            aMap;
-    private MapView         mapView;
-    private Marker          interestpoint;           //响应用户点击的位置
-    private Marker          startMarker = null;      //起点标记
-    private Marker          endMarker   = null;        //终点标记
-    private Polyline        polyline    = null;        //轨迹连线
+    private AMap aMap;
+    private MapView mapView;
+    private Marker interestpoint;           //响应用户点击的位置
+    private Marker startMarker = null;      //起点标记
+    private Marker endMarker = null;        //终点标记
+    private Polyline polyline = null;        //轨迹连线
     private PolylineOptions options;        //轨迹线属性
 
     private OnLocationChangedListener mListener;
-    private AMapLocationClient        mlocationClient;
+    private AMapLocationClient mlocationClient;
 
-    private LatLng       finalLatLng = new LatLng(0, 0);  //轨迹终点
-    private LatLng       currentLatLng;                 //定位到的当前位置
+    private LatLng finalLatLng = new LatLng(0, 0);  //轨迹终点
+    private LatLng currentLatLng;                 //定位到的当前位置
     private AMapLocation currentAlocation;
     private List<LatLng> points;                 //轨迹点的成员
 
-    private boolean isstart              = false;
-    private boolean ispause              = false;
-    private boolean isend                = true;
-    private boolean bound_trace          = false;
+    private boolean isstart = false;
+    private boolean ispause = false;
+    private boolean isend = true;
+    private boolean bound_trace = false;
     private boolean bound_comment_upload = false;
-    private boolean istimeset            = false;
-    private boolean iscountstep          = false;
-    private boolean isShowNonLocDlg      = false; //无法定位对话框是否正在显示
+    private boolean istimeset = false;
+    private boolean iscountstep = false;
+    private boolean isShowNonLocDlg = false; //无法定位对话框是否正在显示
     private boolean isShowBGRGuideChecked = true;
 
     private boolean isTraceIDchanged = false;
 
     public static final int MENU_ROUTE = 0;
-    public static final int MENU_NAVI  = 1;
+    public static final int MENU_NAVI = 1;
 
-    private long                      traceID            = 0;
-    private int                       total_step         = 0;   //走的总步数
-    private TraceData                 tracedata          = new TraceData(); // 轨迹信息
-    private String                    traceName          = "";
-    private StepData                  stepdata           = new StepData(); // 步行轨迹的步数信息
-    private List<GpsData>             tracegps           = new ArrayList<GpsData>();
-    private MyBroadcastReceiver       myReceiver         = null;//用于接收后台发送的定位广播
-    private AccuracyBroadcastReceiver accuracyReciver    = null;
-    private BroadcastReceiver         connectionReceiver = null; // 用于监听网络状态变化的广播
+    private long traceID = 0;
+    private int total_step = 0;   //走的总步数
+    private TraceData tracedata = new TraceData(); // 轨迹信息
+    private String traceName = "";
+    private StepData stepdata = new StepData(); // 步行轨迹的步数信息
+    private List<GpsData> tracegps = new ArrayList<GpsData>();
+    private MyBroadcastReceiver myReceiver = null;//用于接收后台发送的定位广播
+    private AccuracyBroadcastReceiver accuracyReciver = null;
+    private BroadcastReceiver connectionReceiver = null; // 用于监听网络状态变化的广播
 
-    private LocationService      locationService;
+    private LocationService locationService;
     private CommentUploadService commentUploadService;
-    private Intent               locationServiceIntent;
-    private Intent               commentServiceIntent;
-    private Intent               stepCountServiceIntent;
-    private Intent               updateServiceIntent;
-    private Thread               stepThread;
-    private MyTraceDBHelper      traceDBHelper;
-    private PhotoDBHelper   dbHelper = null;
-    private SharedPreferences    sp;  //存储基本配置信息 如账号、密码
-    private SharedPreferences    uploadCache;//存储待上传的评论信息
+    private Intent locationServiceIntent;
+    private Intent commentServiceIntent;
+    private Intent stepCountServiceIntent;
+    private Intent updateServiceIntent;
+    private Thread stepThread;
+    private MyTraceDBHelper traceDBHelper;
+    private PhotoDBHelper dbHelper = null;
+    private SharedPreferences sp;  //存储基本配置信息 如账号、密码
+    private SharedPreferences uploadCache;//存储待上传的评论信息
 
-    private final String              MY_ACTION          = "android.intent.action.LOCATION_RECEIVER";
-    private final String              PULLREFRESH_ACTION = "android.intent.action.PULLREFRESH_RECEIVER";
-    private final String              ACCURACY_ACTION    = "android.intent.action.ACCURACY_RECEIVER";
-    private final String              REFRESH_ACTION     = "android.intent.action.REFRESH_RECEIVER";
+    private final String MY_ACTION = "android.intent.action.LOCATION_RECEIVER";
+    private final String PULLREFRESH_ACTION = "android.intent.action.PULLREFRESH_RECEIVER";
+    private final String ACCURACY_ACTION = "android.intent.action.ACCURACY_RECEIVER";
+    private final String REFRESH_ACTION = "android.intent.action.REFRESH_RECEIVER";
     //private static final String URL_STARTTRAIL = Common.url+"reqTraceNo.aspx";
-    private       String              URL_ENDTRAIL       = null;
+    private String URL_ENDTRAIL = null;
     //private static final String URL_GET4TIME = Common.url+"request.aspx";
-    private       String              URL_CHECKUPDATE    = null;
-    private       String              URL_GETPOI         = null;
-    public final  int                 REQUSET_COMMENT    = 1;
-    private       PointOfInterestData behaviourData, durationData, partnerNumData, relationData;
+    private String URL_CHECKUPDATE = null;
+    private String URL_GETPOI = null;
+    public final int REQUSET_COMMENT = 1;
+    private PointOfInterestData behaviourData, durationData, partnerNumData, relationData;
     private PointOfInterestDBHelper poiDBHelper = null;
-    private Cursor                  cursor;
-    private int                     checkedItem = 0;
-    private double                  currentLongitude, currentLatitude, currentAltitude, currentLongitude1, currentLatitude1, currentAltitude1;
+    private Cursor cursor;
+    private int checkedItem = 0;
+    private double currentLongitude, currentLatitude, currentAltitude, currentLongitude1, currentLatitude1, currentAltitude1;
     private String[] degreeLngArr, minuteLngArr, secondLngArr, degreeLatArr, minuteLatArr, secondLatArr;
     private String degreeLngStr, minuteLngStr, secondLngStr, degreeLatStr, minuteLatStr, secondLatStr, currentAltitudeStr;
     private double minuteLng1, secondLng1, minuteLat1, secondLat1;
     private PopupWindow mPopupWindow;
 
-    private RelativeLayout     showDistance;    //测量模式界面
-    private RelativeLayout     showTips;
-    private TileProvider       tileProvider;        //瓦片提供者，用于转换地图图层
+    private RelativeLayout showDistance;    //测量模式界面
+    private RelativeLayout showTips;
+    private TileProvider tileProvider;        //瓦片提供者，用于转换地图图层
     private TileOverlayOptions tileOverlayOptions;
-    private TileOverlay        tileOverlay;
+    private TileOverlay tileOverlay;
 
-    private ListView                           dialogList;
+    private ListView dialogList;
     private ArrayList<HashMap<String, Object>> dialogListItem;
     //private LinearLayout dialogLayout;
-    private View                               view;
-    private AlertDialog                        dialog;
+    private View view;
+    private AlertDialog dialog;
 
-    private       PoiChoiceModel poiChoiceModel;
-    public static int            poiCount = 0;
+    private PoiChoiceModel poiChoiceModel;
+    public static int poiCount = 0;
 
     private SharedPreferences sp2;
     private SharedPreferences spl;
-    private int               l;
+    private int l;
 
-    private boolean       UiRefresh = false;
-    private List<GpsData> traces    = new ArrayList<GpsData>();
+    private boolean UiRefresh = false;
+    private List<GpsData> traces = new ArrayList<GpsData>();
 
     private boolean startSuccess = true;
 
@@ -424,9 +420,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 
     // 设置Service参数
     public void setUpService() {
-        // OnePxService
-        Intent OnePxServiceintent = new Intent(getContext(), OnePxService.class);
-        getActivity().startService(OnePxServiceintent);
+//        // OnePxService
+//        Intent OnePxServiceintent = new Intent(getContext(), OnePxService.class);
+//        getActivity().startService(OnePxServiceintent);
         // h后台音乐
         Intent PlayerMusicintent = new Intent(getContext(), PlayerMusicService.class);
         getActivity().startService(PlayerMusicintent);
@@ -937,7 +933,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                             // 获取到traceID后
                             if (traceID != 0) {
                                 traceDBHelper.updatetrail(tracedata, traceID, Common.getUserID(getContext()));
-//                                traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
+                                //                                traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
                                 Log.i("LogDemo", "数据的TraceID替换成功");
                             }
                             Log.i("LogDemo", "获得了轨迹号traceID : " + traceID);
@@ -950,7 +946,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     }
 
                 } else {
-                    ToastUtil.show(getContext(), "上传轨迹失败，轨迹保存在本地");
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtil.show(getContext(), "上传轨迹失败，轨迹保存在本地");
+                            startSuccess = false;
+                        }
+                    });
                     startSuccess = false;
                 }
             }
@@ -984,11 +986,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             if (tracedata.getSportTypes() == 1) {
                 //轨迹类型为步行，记录步数
                 locationService.changeSportType(true);
-//                StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserID(getContext())).getSteps();
+                //                StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserID(getContext())).getSteps();
                 total_step = StepDetector.CURRENT_STEP;
                 getActivity().startService(stepCountServiceIntent);
                 iscountstep = true;
-//                new Thread(stepThread).start();
+                //                new Thread(stepThread).start();
                 //            stepTv.setVisibility(View.VISIBLE);
                 stepTv.setText(getResources().getString(R.string.step_label) + "：" + total_step);
             }
@@ -1055,7 +1057,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         // 获取到traceID后
         if (traceID != 0) {
             traceDBHelper.updatetrail(tracedata, traceID, Common.getUserID(getContext()));
-//            traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
+            //            traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
             Log.i("LogDemo", "数据的TraceID替换成功");
         }
 
@@ -1090,11 +1092,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         if (tracedata.getSportTypes() == 1) {
             //轨迹类型为步行，记录步数
             locationService.changeSportType(true);
-//            StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserID(getContext())).getSteps();
+            //            StepDetector.CURRENT_STEP = traceDBHelper.querryformstepsbyTraceNo(traceID, Common.getUserID(getContext())).getSteps();
             total_step = StepDetector.CURRENT_STEP;
             getActivity().startService(stepCountServiceIntent);
             iscountstep = true;
-//            new Thread(stepThread).start();
+            //            new Thread(stepThread).start();
             //            stepTv.setVisibility(View.VISIBLE);
             stepTv.setText(getResources().getString(R.string.step_label) + "：" + total_step);
 
@@ -1178,7 +1180,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                 Log.i("traceDBHelperddshang", "run: ");
                                 traceDBHelper.updateStatus(traceID, 0, Common.getUserID(getContext()));
                                 Log.i("traceDBHelperdd", "run: ");
-//                                traceDBHelper.deleteStatus();
+                                //                                traceDBHelper.deleteStatus();
                                 // 云端新增轨迹提醒，提示用户下拉刷新
                                 Intent intent = new Intent();
                                 intent.setAction(PULLREFRESH_ACTION);
@@ -1218,49 +1220,49 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         } else {
             UiRefresh = false;
             ToastUtil.show(getContext(), getResources().getString(R.string.tips_recorderror_nogps));
-//            ArrayList<Long> tobedeleteNo = new ArrayList<Long>();
-//            tobedeleteNo.add(traceID);
-//            String tobedelete = GsonHelper.toJson(tobedeleteNo);
-//            DeleteTraceRequest deleteTraceRequest = new DeleteTraceRequest(sp.getString("token", ""), tobedelete);
-//            deleteTraceRequest.requestHttpData(new ResponseData() {
-//                @Override
-//                public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
-//                    if (isSuccess) {
-//                        if (code.equals("0")) {
-//                            getActivity().runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    Log.i("trailadapter", "删除成功");
-//                                    // 删本地
-//                                    traceDBHelper.deleteTrailByTraceNo(traceID, Common.getUserID(getContext()));
-//
-//                                    // 同时删除兴趣点
-//                                    deletePOI(traceID);
-//                                    dismissDialog();
-//                                    Intent intent = new Intent();
-//                                    intent.setAction(REFRESH_ACTION);
-//                                    getContext().sendBroadcast(intent);
-//                                }
-//                            });
-//                        }
-//                        if (code.equals("100") || code.equals("101")) {
-//                            getActivity().runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    dismissDialog();
-//                                    Toast.makeText(getContext(), "登录信息过期，请重新登录！", Toast.LENGTH_SHORT).show();
-//                                    SharedPreferences.Editor editor = sp.edit();
-//                                    editor.putString("token", ""); // 清空token
-//                                    editor.apply();
-//                                    ActivityCollector.finishActivity("TraceDetailActivity");
-//                                    ActivityCollector.finishActivity("TraceListActivity");
-//                                    ActivityCollector.finishActivity("MainActivity");
-//                                }
-//                            });
-//                        }
-//                    }
-//                }
-//            });
+            //            ArrayList<Long> tobedeleteNo = new ArrayList<Long>();
+            //            tobedeleteNo.add(traceID);
+            //            String tobedelete = GsonHelper.toJson(tobedeleteNo);
+            //            DeleteTraceRequest deleteTraceRequest = new DeleteTraceRequest(sp.getString("token", ""), tobedelete);
+            //            deleteTraceRequest.requestHttpData(new ResponseData() {
+            //                @Override
+            //                public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
+            //                    if (isSuccess) {
+            //                        if (code.equals("0")) {
+            //                            getActivity().runOnUiThread(new Runnable() {
+            //                                @Override
+            //                                public void run() {
+            //                                    Log.i("trailadapter", "删除成功");
+            //                                    // 删本地
+            //                                    traceDBHelper.deleteTrailByTraceNo(traceID, Common.getUserID(getContext()));
+            //
+            //                                    // 同时删除兴趣点
+            //                                    deletePOI(traceID);
+            //                                    dismissDialog();
+            //                                    Intent intent = new Intent();
+            //                                    intent.setAction(REFRESH_ACTION);
+            //                                    getContext().sendBroadcast(intent);
+            //                                }
+            //                            });
+            //                        }
+            //                        if (code.equals("100") || code.equals("101")) {
+            //                            getActivity().runOnUiThread(new Runnable() {
+            //                                @Override
+            //                                public void run() {
+            //                                    dismissDialog();
+            //                                    Toast.makeText(getContext(), "登录信息过期，请重新登录！", Toast.LENGTH_SHORT).show();
+            //                                    SharedPreferences.Editor editor = sp.edit();
+            //                                    editor.putString("token", ""); // 清空token
+            //                                    editor.apply();
+            //                                    ActivityCollector.finishActivity("TraceDetailActivity");
+            //                                    ActivityCollector.finishActivity("TraceListActivity");
+            //                                    ActivityCollector.finishActivity("MainActivity");
+            //                                }
+            //                            });
+            //                        }
+            //                    }
+            //                }
+            //            });
         }
         long termtraceID = traceID;
         traceID = 0;
@@ -1374,6 +1376,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 Date d1 = df.parse(tracedata.getStartTime());
                 Date d2 = df.parse(tracedata.getEndTime());
                 duration = d2.getTime() - d1.getTime();
+                duration = duration / 1000;
             } catch (Exception e) {
                 return false;
             }
@@ -1391,7 +1394,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             Log.i("dongiyuansetDuration", "duration: " + duration + " distance: " + distance);
             if (tracedata.getSportTypes() == 1) {
                 stepdata.setSteps(total_step);
-//                traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
+                //                traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
                 Log.i("LogDemo", "步数表更新数据了");
                 Log.i("LogDemo", "stepdata:" + GsonHelper.toJson(stepdata));
                 tracedata.setCalorie(calculateCalorie_Walk(distance));
@@ -1560,6 +1563,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                 d1 = df.parse(tracedata.getStartTime());
                                 Date d2 = df.parse(tracedata.getEndTime());
                                 duration = d2.getTime() - d1.getTime();
+                                duration = duration / 1000;
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -1613,7 +1617,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     stepTv.setText(getResources().getString(R.string.step_label) + "：" + total_step);
                     if (tracedata.getSportTypes() == 1) {
                         stepdata.setSteps(total_step);
-//                        traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
+                        //                        traceDBHelper.updatesteps(stepdata, traceID, Common.getUserID(getContext()));
                         Log.i("MyTraceDBDupdatesteps", "step:row:" + traceDBHelper);
                     }
                     break;
@@ -1946,10 +1950,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         builder.setCheckBox(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                SharedPreferences.Editor editor = sp.edit();
-//                editor.putBoolean("isShowBGRGuide", isChecked);
+                //                SharedPreferences.Editor editor = sp.edit();
+                //                editor.putBoolean("isShowBGRGuide", isChecked);
                 Log.i("dongisyuanshowBGRon", "onCheckedChanged: " + isChecked);
-//                editor.commit();
+                //                editor.commit();
                 isShowBGRGuideChecked = isChecked;
             }
         });

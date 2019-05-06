@@ -3,13 +3,10 @@ package com.trackersurvey.happynavi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,13 +18,10 @@ import com.trackersurvey.event.NetworkChangeEvent;
 import com.trackersurvey.util.ActivityCollector;
 import com.trackersurvey.util.LanguageUtil;
 import com.trackersurvey.util.NetUtils;
-import com.trackersurvey.util.StoreLanguageSP;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.Locale;
 
 /**
  * Created by zh931 on 2018/6/7.
@@ -139,4 +133,9 @@ public class BaseActivity extends AppCompatActivity {
         mLayoutParams.x = 0;
         mLayoutParams.y = 0;
     }
+
+//    @Override
+//    public boolean moveTaskToBack(boolean nonRoot) {
+//        return super.moveTaskToBack(true);
+//    }
 }

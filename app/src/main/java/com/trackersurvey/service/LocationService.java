@@ -814,7 +814,7 @@ public class LocationService extends Service implements AMapLocationListener {
                     data.setAltitude(aMapLocation.getAltitude());
                     data.setSpeed(aMapLocation.getSpeed());
                     data.setTraceID(traceID);
-                    //                    data.setDeviceID(Common.getDeviceId(getApplicationContext()));
+                    data.setDeviceID(Common.getDeviceId(getApplicationContext()));
                     data.setCityID(Integer.parseInt(aMapLocation.getCityCode()));
                     data.setSportType(sportType);
                     data.setCreateTime(Common.currentTime());

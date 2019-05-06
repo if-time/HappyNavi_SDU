@@ -11,12 +11,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v7.app.ActionBar;
-import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -27,19 +27,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.githang.statusbar.StatusBarCompat;
+import com.trackersurvey.broadcastreceiver.HuaweiPushRevicer;
 import com.trackersurvey.com.huawei.android.hms.agent.HMSAgent;
-import com.trackersurvey.com.huawei.android.hms.agent.common.handler.ConnectHandler;
 import com.trackersurvey.com.huawei.android.hms.agent.push.handler.GetTokenHandler;
 import com.trackersurvey.http.LoginRequest;
 import com.trackersurvey.http.ResponseData;
 import com.trackersurvey.model.LoginModel;
-import com.trackersurvey.broadcastreceiver.HuaweiPushRevicer;
 import com.trackersurvey.util.AppManager;
 import com.trackersurvey.util.Common;
 import com.trackersurvey.util.CustomDialog;
 import com.trackersurvey.util.DESUtil;
 import com.trackersurvey.util.MD5Util;
 import com.trackersurvey.util.MobileInfoUtils;
+import com.trackersurvey.util.SystemUtil;
 import com.trackersurvey.util.ToastUtil;
 
 import java.io.IOException;
@@ -80,6 +80,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     private boolean isAuto = false;
 
+    private static String getMobileType() {
+        return Build.MANUFACTURER;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,11 +115,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         //        String lastId = sp.getString("userPhone", "0");
         //        String nickname = sp.getString("nickname", "");
         //        String headphoto = sp.getString("headphoto", "");
-        //        String deviceid = sp.getString("deviceid", "null");
-        //        if(deviceid.equals("null")){//没有设置设备id，需要设置
-        //            editor.putString("deviceid", Common.setDeviceId(getApplicationContext(), LoginActivity.this));
-        //            editor.commit();
-        //        }
+        String deviceid = sp.getString("deviceid", "null");
+        String TAG = "系统参数：";
+        Log.e(TAG, "手机厂商：" + SystemUtil.getDeviceBrand());
+        Log.e(TAG, "手机型号：" + SystemUtil.getSystemModel());
+
+        if (deviceid.equals("null")) {//没有设置设备id，需要设置
+            editor.putString("deviceid", getMobileType() + " " + SystemUtil.getDeviceBrand() + " " + SystemUtil.getSystemModel());
+            editor.commit();
+        }
         Log.i("phonelog", "deviceID:" + Common.getDeviceId(getApplicationContext()));
         Log.i("phonelog", "getDeviceName :" + Common.getDeviceName());
         if (!sp.getString("token", "").equals("")) {

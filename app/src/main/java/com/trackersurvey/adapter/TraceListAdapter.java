@@ -167,7 +167,7 @@ public class TraceListAdapter extends BaseAdapter {
 
         holder.distance.setText(Common.transformDistance(km)+context.getResources().getString(R.string.dis_unit));
 
-        long duration=traceItems.get(position).getTrace().getDuration();
+        long duration=traceItems.get(position).getTrace().getDuration() * 1000;
 
         holder.holdTime.setText(Common.transformTime(duration));
 

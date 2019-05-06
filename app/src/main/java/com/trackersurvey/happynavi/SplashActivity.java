@@ -23,6 +23,12 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Android应用第一次安装成功点击“打开”后Home键切出应用后再点击桌面图标返回导致应用重启问题
+        if((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0){
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_splash);
         StatusBarCompat.setStatusBarColor(this, Color.BLACK); // 修改状态栏颜色
 
