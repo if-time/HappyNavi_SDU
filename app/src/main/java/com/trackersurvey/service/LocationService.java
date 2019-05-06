@@ -402,7 +402,7 @@ public class LocationService extends Service implements AMapLocationListener {
 
     // 上传位置数据
     public void uploadGPS() {
-        Log.i("dongphonelog", "uploadGPS: ");
+        Log.i("dongphonelog", "uploadGPS: " + Common.getUserID(getApplicationContext()));
 //        if (Common.getUserID(getApplicationContext()).length() < 10) {
 //            Log.i("getUserID", "uploadGPS: " + Common.getUserID(getApplicationContext()).length());
 //            return;
