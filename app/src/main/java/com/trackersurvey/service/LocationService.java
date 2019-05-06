@@ -10,7 +10,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -36,13 +35,11 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
-import com.google.gson.Gson;
 import com.trackersurvey.bean.PhoneEventsData;
 import com.trackersurvey.bean.TimeValueData;
 import com.trackersurvey.db.MyTraceDBHelper;
 import com.trackersurvey.happynavi.MainActivity;
 import com.trackersurvey.happynavi.R;
-import com.trackersurvey.http.EndTraceRequest;
 import com.trackersurvey.http.ResponseData;
 import com.trackersurvey.http.UpLoadGpsRequest;
 import com.trackersurvey.http.UploadTraceRequest;
@@ -53,7 +50,6 @@ import com.trackersurvey.model.StepData;
 import com.trackersurvey.model.TraceData;
 import com.trackersurvey.util.ActivityCollector;
 import com.trackersurvey.util.Common;
-import com.trackersurvey.util.CustomDialog;
 import com.trackersurvey.util.GsonHelper;
 import com.trackersurvey.util.WakeLockUtil;
 
@@ -199,7 +195,8 @@ public class LocationService extends Service implements AMapLocationListener {
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            //showmessage("开始上传");
+//            showmessage("开始上传");
+            Log.i("dongphonelog", "run: 开始上传");
             uploadGPS();
             sendHeartbeat();
             // 默认是1000 * 30，即30秒循环执行一次
@@ -405,9 +402,11 @@ public class LocationService extends Service implements AMapLocationListener {
 
     // 上传位置数据
     public void uploadGPS() {
-        if (Common.getUserID(getApplicationContext()).length() < 10) {
-            return;
-        }
+        Log.i("dongphonelog", "uploadGPS: ");
+//        if (Common.getUserID(getApplicationContext()).length() < 10) {
+//            Log.i("getUserID", "uploadGPS: " + Common.getUserID(getApplicationContext()).length());
+//            return;
+//        }
 
 //        Log.i("LogDemo", "wifi连接：" + Common.isWiFiConnected);
 //        if (!Common.isWiFiConnected) {

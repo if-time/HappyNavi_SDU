@@ -48,7 +48,7 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void onAnimationStart(Animation animation) {
                 // TODO Auto-generated method stub
-                iv_start.setBackgroundResource(R.mipmap.splash_page);
+                iv_start.setBackgroundResource(R.mipmap.splash_page1);
                 //iv_version.setBackgroundResource(R.drawable.version);
             }
 
