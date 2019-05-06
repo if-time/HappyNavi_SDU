@@ -1161,7 +1161,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             } else {
                 stepInfo = "";
             }
-            traceDBHelper.updateStatus(traceID, 2, Common.getUserID(getContext()));
+            traceDBHelper.updateStatus(traceID, 0, Common.getUserID(getContext()));
             UiRefresh = false;
             // 结束轨迹
             EndTraceRequest endTraceRequest = new EndTraceRequest(
@@ -1175,8 +1175,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                             public void run() {
                                 Toast.makeText(getContext(), "上传轨迹成功", Toast.LENGTH_SHORT).show();
                                 poiCount = 0;
+                                Log.i("traceDBHelperddshang", "run: ");
                                 traceDBHelper.updateStatus(traceID, 0, Common.getUserID(getContext()));
-                                traceDBHelper.deleteStatus();
+                                Log.i("traceDBHelperdd", "run: ");
+//                                traceDBHelper.deleteStatus();
                                 // 云端新增轨迹提醒，提示用户下拉刷新
                                 Intent intent = new Intent();
                                 intent.setAction(PULLREFRESH_ACTION);

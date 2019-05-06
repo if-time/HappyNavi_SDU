@@ -158,7 +158,7 @@ public class MyTraceDBHelper {
                         "select userID,TraceNo,TraceStatus from " + TABLE5_NAME + "_TEMP");
                 db.execSQL("drop table " + TABLE5_NAME + "_TEMP");
             }
-            //onCreate(db);                  //创建表格
+//            onCreate(db);                  //创建表格
         }
 
     }
@@ -204,10 +204,12 @@ public class MyTraceDBHelper {
     }
 
     public boolean isStatusExists(long num, String userID) {
+        Log.i("dongisStatusExists", "isStatusExists: " + num);
         SQLiteDatabase db = dbhelper.getReadableDatabase();
         Cursor cursor = db.query(TABLE5_NAME, null,
                 " userID='" + userID + "'" + " and  TraceID=('" + num + "')", null, null, null, null);
         int rows = cursor.getCount();
+        Log.i("dongisStatusExists", "isStatusExists: true" + rows);
         if (rows > 0) {
             cursor.close();
             //            db.close();
@@ -215,6 +217,7 @@ public class MyTraceDBHelper {
         }
         cursor.close();
         //        db.close();
+        Log.i("dongisStatusExists", "isStatusExists: false");
         return false;
     }
 
@@ -246,7 +249,7 @@ public class MyTraceDBHelper {
         SQLiteDatabase db = dbhelper.getReadableDatabase();
         ArrayList<Long> traceno_up = new ArrayList<Long>();
         Cursor cursor = db.query(TABLE5_NAME, null,
-                " userID='" + userID + "'" + " and  TraceStatus=('" + 2 + "')", null, null, null, null);
+                " userID='" + userID + "'" + " and  TraceStatus=2", null, null, null, null);
         int rows = cursor.getCount();
 
         if (rows > 0) {
@@ -307,6 +310,7 @@ public class MyTraceDBHelper {
             }
             //            db.close();
         } else {
+            Log.i("updateStatusdong", "updateStatus: ");
             insertintoStatus(traceNo, status, userID);
         }
     }

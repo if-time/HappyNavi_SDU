@@ -195,7 +195,7 @@ public class LocationService extends Service implements AMapLocationListener {
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-//            showmessage("开始上传");
+            //            showmessage("开始上传");
             Log.i("dongphonelog", "run: 开始上传");
             uploadGPS();
             sendHeartbeat();
@@ -403,18 +403,18 @@ public class LocationService extends Service implements AMapLocationListener {
     // 上传位置数据
     public void uploadGPS() {
         Log.i("dongphonelog", "uploadGPS: " + Common.getUserID(getApplicationContext()));
-//        if (Common.getUserID(getApplicationContext()).length() < 10) {
-//            Log.i("getUserID", "uploadGPS: " + Common.getUserID(getApplicationContext()).length());
-//            return;
-//        }
+        //        if (Common.getUserID(getApplicationContext()).length() < 10) {
+        //            Log.i("getUserID", "uploadGPS: " + Common.getUserID(getApplicationContext()).length());
+        //            return;
+        //        }
 
-//        Log.i("LogDemo", "wifi连接：" + Common.isWiFiConnected);
-//        if (!Common.isWiFiConnected) {
-//            if (Common.isOnlyWifiUploadLoc(getApplicationContext())) {
-//                Log.i("LogDemo", "设置仅wifi上传，当前非wifi连接");
-//                return;
-//            }
-//        }
+        //        Log.i("LogDemo", "wifi连接：" + Common.isWiFiConnected);
+        //        if (!Common.isWiFiConnected) {
+        //            if (Common.isOnlyWifiUploadLoc(getApplicationContext())) {
+        //                Log.i("LogDemo", "设置仅wifi上传，当前非wifi连接");
+        //                return;
+        //            }
+        //        }
 
         Log.i("LogDemo", "周期上传数据,from：" + lastPostTime);
 
@@ -457,7 +457,7 @@ public class LocationService extends Service implements AMapLocationListener {
                             mhandler.sendMessage(message);
                         }
                     } else {
-//                        gpsDataIsOnline = false;
+                        //                        gpsDataIsOnline = false;
                     }
                 }
             });
@@ -485,7 +485,7 @@ public class LocationService extends Service implements AMapLocationListener {
                 trail_up = helper.queryfromTrailbytraceID(traceno_up.get(i), Common.getUserID(getApplicationContext()));
                 trails_up.add(trail_up);
                 if (trail_up.getSportTypes() == 1) {
-//                    step_up = helper.querryformstepsbyTraceNo(traceno_up.get(i), Common.getUserID(getApplicationContext()));
+                    //                    step_up = helper.querryformstepsbyTraceNo(traceno_up.get(i), Common.getUserID(getApplicationContext()));
                     steps_up.add(step_up);
                     step_up = null;
                 }
@@ -500,11 +500,12 @@ public class LocationService extends Service implements AMapLocationListener {
                         if (isSuccess) {
                             if (code.equals("0")) {
                                 Log.i("LocationService", "上传成功");
-                                if (datalist != null && datalist.size() > 0) {
-                                    lastPostTime = datalist.get(datalist.size() - 1).getCreateTime();
-                                    Log.i("LocationService", "最近一次上传位置的时间:" + lastPostTime);
-                                } else {
+                                if (datalist == null || datalist.size() == 0) {
                                     lastPostTime = Common.currentTime();
+                                    Log.i("LocationService", "最近一次上传位置的时间:" + lastPostTime);
+                                } else if (datalist.size() > 0) {
+                                    //  if (datalist != null && datalist.size() > 0) {
+                                    lastPostTime = datalist.get(datalist.size() - 1).getCreateTime();
                                     Log.i("LocationService", "最近一次上传位置的时间:" + lastPostTime);
                                 }
                                 datalist = null;
