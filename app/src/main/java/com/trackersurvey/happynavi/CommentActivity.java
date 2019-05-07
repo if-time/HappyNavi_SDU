@@ -2,7 +2,6 @@ package com.trackersurvey.happynavi;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -21,6 +20,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -28,7 +28,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -54,9 +53,9 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.githang.statusbar.StatusBarCompat;
 import com.trackersurvey.bean.CommentMediaFilesData;
 import com.trackersurvey.bean.InterestMarkerData;
-import com.trackersurvey.model.TraceData;
-import com.trackersurvey.db.PhotoDBHelper;
 import com.trackersurvey.db.MyTraceDBHelper;
+import com.trackersurvey.db.PhotoDBHelper;
+import com.trackersurvey.model.TraceData;
 import com.trackersurvey.photoview.SelectedTreeMap;
 import com.trackersurvey.util.AppManager;
 import com.trackersurvey.util.Common;
@@ -470,18 +469,19 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                     Uri uri;
                     Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
                     // SDK>24 和 <24
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-
-//                        ContentValues contentValues = new ContentValues(1);
-//                        contentValues.put(MediaStore.Images.Media.DATA, imageName.getAbsolutePath());
-//
-//                        uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-//                        intent.setDataAndType(uri, "application/vnd.android.package-archive");
-                        uri = FileProvider.getUriForFile(CommentActivity.this,
-                                "com.trackersurvey.happynavi.fileProvider", imageName);
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                        uri = Uri.fromFile(imageName);
                     } else {
 
-                        uri = Uri.fromFile(imageName);
+                        //                        ContentValues contentValues = new ContentValues(1);
+                        //                        contentValues.put(MediaStore.Images.Media.DATA, imageName.getAbsolutePath());
+                        //
+                        //                        uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                        //                        intent.setDataAndType(uri, "application/vnd.android.package-archive");
+                        uri = FileProvider.getUriForFile(CommentActivity.this,
+                                "com.trackersurvey.happynavi.fileProvider", imageName);
+                        //7.0系统的操作
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//添加这一句表示对目标应用临时授权该Uri所代表的文件
                     }
 
                     Log.i("Eaa", "_photoPath_" + recentPhoto);
