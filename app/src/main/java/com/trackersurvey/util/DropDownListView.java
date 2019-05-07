@@ -96,7 +96,7 @@ public class DropDownListView extends LinearLayout {
      */
     public void setItemsData(ArrayList<String> list) {
         dataList = list;
-        tv_behavior.setText(list.get(4).toString());
+        tv_behavior.setText(list.get(1).toString());
     }
     public int getSelectedPosition(){
         return selectedPosition;

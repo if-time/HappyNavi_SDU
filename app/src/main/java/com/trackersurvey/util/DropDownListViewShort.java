@@ -100,6 +100,9 @@ public class DropDownListViewShort extends LinearLayout {
      */
     public void setItemsData(ArrayList<String> list) {
         dataList = list;
+        if (dataList.size() == 6) {
+            tv_behavior.setText(list.get(5).toString());
+        } else
         tv_behavior.setText(list.get(0).toString());
     }
     public int getSelectedPosition(){

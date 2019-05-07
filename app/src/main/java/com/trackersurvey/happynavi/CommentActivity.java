@@ -469,10 +469,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                     Uri uri;
                     Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
                     // SDK>24 和 <24
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                        uri = Uri.fromFile(imageName);
-                    } else {
-
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         //                        ContentValues contentValues = new ContentValues(1);
                         //                        contentValues.put(MediaStore.Images.Media.DATA, imageName.getAbsolutePath());
                         //
@@ -480,8 +477,10 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         //                        intent.setDataAndType(uri, "application/vnd.android.package-archive");
                         uri = FileProvider.getUriForFile(CommentActivity.this,
                                 "com.trackersurvey.happynavi.fileProvider", imageName);
-                        //7.0系统的操作
-                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//添加这一句表示对目标应用临时授权该Uri所代表的文件
+                    } else {
+
+
+                        uri = Uri.fromFile(imageName);
                     }
 
                     Log.i("Eaa", "_photoPath_" + recentPhoto);
