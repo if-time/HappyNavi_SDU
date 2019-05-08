@@ -1598,11 +1598,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                 @Override
                                 public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
                                     if (isSuccess) {
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                            }
-                                        });
+//                                        getActivity().runOnUiThread(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//                                            }
+//                                        });
                                     }
                                 }
                             });
