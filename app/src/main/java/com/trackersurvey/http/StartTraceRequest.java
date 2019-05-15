@@ -15,12 +15,14 @@ public class StartTraceRequest extends HttpUtil {
     private String tracename;
     private String starttime;
     private String sporttypes;
+    private String deviceid;
 
-    public StartTraceRequest(String token, String tracename, String starttime, String sporttypes) {
+    public StartTraceRequest(String token, String tracename, String starttime, String sporttypes, String deviceid) {
         this.token = token;
         this.tracename = tracename;
         this.starttime = starttime;
         this.sporttypes = sporttypes;
+        this.deviceid = deviceid;
     }
 
     @Override
@@ -35,6 +37,7 @@ public class StartTraceRequest extends HttpUtil {
                 .add("tracename", tracename)
                 .add("starttime", starttime)
                 .add("sporttypes", sporttypes)
+                .add("deviceid", deviceid)
                 .build();
         return requestBody;
     }

@@ -916,7 +916,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         Log.i("mmmmmmmmmmmmmmm", "请求接口获取轨迹号");
 
         StartTraceRequest startTraceRequest = new StartTraceRequest(sp.getString("token", ""),
-                tracedata.getTraceName(), tracedata.getStartTime(), String.valueOf(tracedata.getSportTypes()));
+                tracedata.getTraceName(), tracedata.getStartTime(), String.valueOf(tracedata.getSportTypes()), sp.getString("deviceid", "null"));
         startTraceRequest.requestHttpData(new ResponseData() {
             @Override
             public void onResponseData(boolean isSuccess, String code, Object responseObject, String msg) throws IOException {
@@ -1424,34 +1424,34 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             return true;
         } else {
             UiRefresh = false;
-            ToastUtil.show(getContext(), "未采集到位置信息，轨迹不保存");
+            ToastUtil.show(getContext(), "未采集到位置信息，轨迹不保存，建议重新记录！");
             // 重置到开始界面
 
-            Log.i("LogDemo", "记录结束了!!!!!!!!!!!!!!!!!!!!!我是记录结束分割线！！！！！！！！！！！！");
-            locationService.changeCurrentSportType(0); // 结束记录，运动类型改为0
-            traceID = 0;
-            locationService.setTraceID(0);
-            locationService.changeStatus(false); // 改为非记录状态
-            if (tracedata.getSportTypes() == 1) {
-                //轨迹类型为步行，结束轨迹时iswalk置为false，停止记录步数
-                iscountstep = false;//结束线程
-                locationService.changeSportType(false);//是否步行设置为否
-                getActivity().stopService(stepCountServiceIntent);//结束计步服务
-                //stepThread.stop();
-                //handler.removeCallbacks(stepThread);
-            }
-            //traceService.changeGpsTime(Common.getNoRecLocFrequenct(getApplicationContext()));
-            startTrail.setVisibility(View.VISIBLE);
-            changeSportTypeIb.setVisibility(View.INVISIBLE);
-            //pauseTrail.setVisibility(View.INVISIBLE);
-            endTrail.setVisibility(View.INVISIBLE);
-            stepTv.setVisibility(View.INVISIBLE);
-            isstart = false;
-            ispause = false;
-            isend = true;
-            clearTrace();
-            aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
-            UiRefresh = false;
+//            Log.i("LogDemo", "记录结束了!!!!!!!!!!!!!!!!!!!!!我是记录结束分割线！！！！！！！！！！！！");
+//            locationService.changeCurrentSportType(0); // 结束记录，运动类型改为0
+//            traceID = 0;
+//            locationService.setTraceID(0);
+//            locationService.changeStatus(false); // 改为非记录状态
+//            if (tracedata.getSportTypes() == 1) {
+//                //轨迹类型为步行，结束轨迹时iswalk置为false，停止记录步数
+//                iscountstep = false;//结束线程
+//                locationService.changeSportType(false);//是否步行设置为否
+//                getActivity().stopService(stepCountServiceIntent);//结束计步服务
+//                //stepThread.stop();
+//                //handler.removeCallbacks(stepThread);
+//            }
+//            //traceService.changeGpsTime(Common.getNoRecLocFrequenct(getApplicationContext()));
+//            startTrail.setVisibility(View.VISIBLE);
+//            changeSportTypeIb.setVisibility(View.INVISIBLE);
+//            //pauseTrail.setVisibility(View.INVISIBLE);
+//            endTrail.setVisibility(View.INVISIBLE);
+//            stepTv.setVisibility(View.INVISIBLE);
+//            isstart = false;
+//            ispause = false;
+//            isend = true;
+//            clearTrace();
+//            aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+//            UiRefresh = false;
             return false;
         }
     }
@@ -1549,7 +1549,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 
                     break;
                 case 8:
-                    tracegps = traceDBHelper.queryfromGpsbytraceID(traceID, Common.getUserID(getContext()));
+                    tracegps = traceDBHelper.queryfromGpsbytraceID(traceID, String.valueOf(sp.getInt("userID", 0)));
                     Log.i("LogDemo", "tracegps coontent:" + GsonHelper.toJson(tracedata));
                     Log.i("LogDemo", "tracegps size:" + tracegps.size());
                     if (UiRefresh) {

@@ -3,9 +3,7 @@ package com.trackersurvey.http;
 import android.util.Log;
 
 import com.trackersurvey.model.LoginModel;
-import com.trackersurvey.util.Common;
 import com.trackersurvey.util.DESUtil;
-import com.trackersurvey.util.HMAC_SHA1_Util;
 import com.trackersurvey.util.UrlHeader;
 
 import org.json.JSONObject;
@@ -23,12 +21,7 @@ public class LoginRequest extends HttpUtil {
     private String loginName = "";
     private String password = "";
     private String marshmallowMacAddress;
-
-//    public LoginRequest(String userID, String password, String deviceId) {
-//        this.userID = userID;
-//        this.password = password;
-//        this.deviceId = deviceId;
-//    }
+    private String mobilePlatform = "1";
 
     public LoginRequest(String loginName, String password, String marshmallowMacAddress) {
         this.loginName = loginName;
@@ -59,6 +52,7 @@ public class LoginRequest extends HttpUtil {
                 .add("loginName", loginName)
                 .add("password", password)
                 .add("macAddress", marshmallowMacAddress)
+                .add("MobilePlatform", mobilePlatform)
                 .build();
         return requestBody;
     }
